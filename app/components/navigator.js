@@ -9,7 +9,8 @@ const AppNavigator = createStackNavigator(
   Intro:IntroScreen
 },
 {
-  initialRouteName: "Intro"
+  initialRouteName: "Home",
+  headerMode: 'none'
 }
 
 );

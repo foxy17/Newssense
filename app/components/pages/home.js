@@ -1,14 +1,44 @@
 import React,{Component} from "react";
-import { View, Text } from "react-native";
+import { View, Text,ActivityIndicator,
+FlatList,Image,Dimensions,Animated,PanResponder  } from "react-native";
 import { createStackNavigator, createAppContainer } from "react-navigation";
-
+const {width, height} = Dimensions.get('window');
 export default class HomeScreen extends Component {
 
   constructor(props){
     super(props);
-    this.state ={ isLoading: true,  ColorHolder : '#00BCD4'
-    ,image:"",url:""
-      }
+    this.state ={ isLoading: true,image:"",url:"",
+    currentIndex:0,pan: new Animated.ValueXY(),
+    swiped_pan: new Animated.ValueXY({x:-width,y:0}),
+    };
+
+  this.state.panResponder = PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onPanResponderMove: Animated.event([
+        null,
+        {
+          dx: this.state.pan.x // x,y are Animated.Value
+          // dy: this.state.pan.y,
+        },
+      ]),
+      onPanResponderRelease: (e,{vx, dx}) => {
+        if (-vx >= 0.5 || -dx >= 0.5 * width) {
+          Animated.timing(this.state.pan, {
+            toValue: ({ x: -width, y: 0 }),
+            duration:400
+          }).start(() => {
+
+            this.setState({ currentIndex: this.state.currentIndex + 1 },()=>{this.state.pan.setValue({ x: 0, y: 0 })})
+          })
+        }
+        else{
+          Animated.spring(
+            this.state.pan, // Auto-multiplexed
+            {toValue: {x: 0, y: 0}}, // Back to zero
+          ).start();
+        }
+      },
+    });
   }
 
   componentDidMount(){
@@ -33,45 +63,55 @@ export default class HomeScreen extends Component {
 
 
 
-  viewfunc(url){
-    return(
+  renderArtciles=()=>{
+    return this.state.dataSource.map((item,i)=>{
+        if (i < this.state.currentIndex)
+        {
+          return null
+        }
+         if (i == this.state.currentIndex)
+        {
+          return(
+            <Animated.View key={item._id} {...this.state.panResponder.panHandlers} style={this.state.pan.getLayout()}>
+              < View  style={{  flex: 1,position:'absolute',height:height,width:width,backgroundColor:'white'}}>
 
-      this.state.dataSource.map((item)=>{
+                < View style={styles.Imagebody}>
+                  <Image source={{ uri:item.img.data }} style={styles.image} />
+                </View>
 
+                <View style={styles.inner}>
+                  <Text>{item.body} i==={i}{this.state.currentIndex} </Text>
+                </View>
+
+              </View>
+          </Animated.View>
+
+        )
+      }
+      else{
         return(
+          <Animated.View key={item._id} >
+            < View  style={{  flex: 1,position:'absolute',height:height,width:width,backgroundColor:'white'}}>
 
-        < View key={Math.random()} style={styles.slide3}>
+              < View style={styles.Imagebody}>
+                <Image source={{ uri:item.img.data }} style={styles.image} />
+              </View>
 
-          <Text style={styles.text}>{item.title}</Text>
-          <Image
-          style={{
-            width: 90,
-            height: 100,
+              <View style={styles.inner}>
+                <Text>{item.body} i==={i}{this.state.currentIndex} ﻿</Text>
+              </View>
 
-          }}
-          source={{
-            uri:
-              item.img.data
-          }}
-        />
+            </View>
+        </Animated.View>
 
-          <Image
-          style={{
-            width: 51,
-            height: 51,
+      )
 
-          }}
-          source={{
-            uri:
-              'data:image/png;base64,'+item.img,
-          }}
-        />
-          <Text style={styles.body}>{item.body}{item._id}</Text>
 
-        </View>)
+      }
 
-  }
-  ))}
+    }
+  ).reverse()
+}
 
 
   render(){
@@ -84,58 +124,34 @@ export default class HomeScreen extends Component {
             )}
 
       return(
-
-      <Swiper
-       style={styles.wrapper}
-        paginationStyle={{ container: { backgroundColor: 'transparent' } }}
-       paginationLeft={''}
-
-       paginationRight={''}
-       smoothTransition
-       stack
-       loop
-       dragDownToBack
-       dragY>
-       {this.viewfunc()}
-     </Swiper>
+        <View style={{flex:1}}>
+          {this.renderArtciles()}
+       </View>
 
       )
     }
   }
 
   const styles = {
-    wrapper: {
-      backgroundColor: '#009688',
+    image: {
+
       flex: 1,
-      height:5,
+      height:null,
+      width:null,
+      resizeMode:'center'
 
     },
-    slide1: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: '#e91e63',
-      borderRadius: 20 ,
-      marginRight:5,
-      marginLeft:5,
+
+    Imagebody: {
+      flex: 2,
+      backgroundColor:'black'
+
+
     },
-    slide2: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: '#673ab7',
-      borderRadius: 20 ,
-      marginRight:5,
-      marginLeft:5,
-    },
-    slide3: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: '#3f51b5',
-      borderRadius: 20 ,
-      marginRight:5,
-      marginLeft:5,
+    inner: {
+      flex: 3,
+      padding:4
+
     },
     text: {
       flex:1,
@@ -154,7 +170,8 @@ export default class HomeScreen extends Component {
     },
     container: {
       flex: 1,
-      justifyContent: 'center'
+      justifyContent: 'center',
+      alignItems:'center'
     },
     horizontal: {
       flexDirection: 'row',

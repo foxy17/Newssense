@@ -5,7 +5,7 @@ import {
   ActivityIndicator,
   FlatList,Image,
 } from 'react-native';
-import { createStackNavigator, createAppContainer } from "react-navigation";
+import { createStackNavigator, createAppContainer, SafeAreaView } from "react-navigation";
 import Swiper from 'react-native-swiper-animated';
 
 
