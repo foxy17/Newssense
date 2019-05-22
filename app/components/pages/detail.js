@@ -3,7 +3,7 @@ import { View, Text,ActivityIndicator,Dimensions,Image } from "react-native";
 import { createStackNavigator, createAppContainer } from "react-navigation";
 const {width, height} = Dimensions.get('window');
 
-export default class DetailsScreen extends Component {
+export default class ExternalScreen extends Component {
   constructor(props){
     super(props);
     this.state ={ isLoading: "true"};

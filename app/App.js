@@ -3,21 +3,24 @@ import {
   Text,
   View,
   ActivityIndicator,
-  FlatList,Image,
+  FlatList,Image,Platform
 } from 'react-native';
 import { createStackNavigator, createAppContainer, SafeAreaView } from "react-navigation";
 import Swiper from 'react-native-swiper-animated';
 
-
+import ExternalScreen from './components/pages/external';
 import Routes from './components/routes'
 
-export default class AwesomeComponent extends Component{
-
-  render() {
-    return (
-         <Routes/>
-         );
-
-
-}
-}
+const AppNavigator = createStackNavigator({
+  Routes: { screen: Routes },
+  Article: { screen: ExternalScreen, path: 'news/:id', },
+},
+{
+   initialRouteName: "Routes",
+   headerMode: 'none'
+ }
+);
+const prefix = Platform.OS == 'android' ? 'news://' : 'news://';
+const App = createAppContainer(AppNavigator)
+const MainApp = () => <App uriPrefix={prefix} />;
+export default MainApp;

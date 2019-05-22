@@ -4,7 +4,7 @@ import {
   View,
   ActivityIndicator,
   FlatList,Image,
-  StyleSheet,Alert,Button,TouchableOpacity
+  StyleSheet,Alert,Button,TouchableOpacity,Linking,Platform
 } from 'react-native';
 import AppIntroSlider from 'react-native-app-intro-slider';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -38,6 +38,36 @@ export default class IntroScreen extends Component {
   this.state = {
    showRealApp: false
  }}
+
+ componentDidMount() { // B
+  if (Platform.OS === 'android') {
+    Linking.getInitialURL().then(url => {
+      this.navigate(url);
+    });
+  } else {
+      Linking.addEventListener('url', this.handleOpenURL);
+    }
+  }
+
+  componentWillUnmount() { // C
+    Linking.removeEventListener('url', this.handleOpenURL);
+  }
+  handleOpenURL = (event) => { // D
+    this.navigate(event.url);
+  }
+  navigate = (url) => { // E
+
+
+  const route = url.replace(/.*?:\/\//g, '');
+  const id = route.match(/\/([^\/]+)\/?$/)[1];
+  const routeName = route.split('/')[0];
+
+  if (routeName === 'details') {
+    this.props.navigation.navigate('External', {id: id })
+  };
+}
+
+
  _onDone = () => {
 
     this.props.navigation.navigate('Home');
@@ -54,7 +84,7 @@ export default class IntroScreen extends Component {
       onPress={this._onDone}
     />
       </TouchableOpacity>
-          
+
 
    );
  }

@@ -3,11 +3,14 @@ import {AsyncStorage} from 'react-native';
 import HomeScreen from './pages/home';
 import DetailsScreen from './pages/detail';
 import IntroScreen from './pages/intro';
+import ExternalScreen from './pages/external';
 const AppNavigator = createStackNavigator(
   {
   Home: HomeScreen,
   Details: DetailsScreen,
-  Intro:IntroScreen
+  Intro:IntroScreen,
+  Article: { screen: ExternalScreen, path: 'news/:id', },
+
 },
 {
   initialRouteName: "Home",
@@ -21,10 +24,8 @@ const AppNavigatorIntro = createStackNavigator(
   Home: HomeScreen,
   Details: DetailsScreen,
   Intro:IntroScreen,
-  Link: {
-    screen: LinkScreen,
-    path: 'Link/:id',
-  }
+  Article: { screen: ExternalScreen, path: 'news/:id', },
+
 },
 {
   initialRouteName: "Intro",
@@ -32,6 +33,6 @@ const AppNavigatorIntro = createStackNavigator(
 }
 
 );
-const prefix = 'link://';
+
 const AppContainerIntro = createAppContainer(AppNavigatorIntro);
 export {AppContainer,AppContainerIntro};

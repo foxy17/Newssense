@@ -4,6 +4,7 @@ FlatList,Image,Dimensions,Animated,PanResponder,TouchableOpacity,TouchableWithou
 import { createStackNavigator, createAppContainer } from "react-navigation";
 const {width, height} = Dimensions.get('window');
 const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
+import DeepLinking from 'react-native-deep-linking';
 
 export default class HomeScreen extends Component {
   constructor(props){
@@ -289,7 +290,7 @@ update(){
       flex: 3,
       padding:4
 
-    },s
+    },
     text: {
       flex:1,
       color: '#fff',
