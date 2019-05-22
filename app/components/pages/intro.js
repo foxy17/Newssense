@@ -44,8 +44,8 @@ export default class IntroScreen extends Component {
   }
   _renderDoneButton = () => {
    return (
-     <View style={styles.buttonCircle}>
-     <TouchableOpacity  onPress={this._onDone}>
+
+     <TouchableOpacity  onPress={this._onDone} style={styles.buttonCircle}>
      <Icon
       raised
       name='check'
@@ -54,7 +54,7 @@ export default class IntroScreen extends Component {
       onPress={this._onDone}
     />
       </TouchableOpacity>
-           </View>
+          
 
    );
  }
