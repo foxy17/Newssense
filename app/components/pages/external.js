@@ -11,7 +11,7 @@ export default class ExternalScreen extends Component {
     super(props);
     const { navigation } = this.props;
     const { id } =  navigation.getParam('id');
-    let link="http://192.168.0.123:3000/find/"+id;
+    let link="https://news119.herokuapp.com/find/"+id;
     this.state ={ isLoading: "true",params:link,dataSource:{},img:''};
 
   }

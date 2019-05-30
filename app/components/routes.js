@@ -20,39 +20,31 @@ export default class Routes extends React.Component {
 
 
    componentDidMount() {
-     var url = Linking.getInitialURL().then((url) => {
-     if (url) {
-           Linking.openURL(url);
-         }
-       }).catch(err => console.error('An error occurred', err));
-
-     DeepLinking.addScheme('example://');
      Linking.addEventListener('url', this.handleUrl);
-
-     DeepLinking.addRoute('/test', (response) => {
-       // example://test
-       this.setState({ response });
-     });
-
-     DeepLinking.addRoute('/test/:id', (response) => {
-       // example://test/23
-       this.props.navigation.navigate('Article',{id:response});
-     });
-
-     DeepLinking.addRoute('/test/:id/details', (response) => {
-       // example://test/100/details
-       this.setState({ response });
-     });
-
      Linking.getInitialURL().then((url) => {
        if (url) {
          Linking.openURL(url);
        }
      }).catch(err => console.error('An error occurred', err));
+     DeepLinking.addScheme('https://');
+
+
+     DeepLinking.addRoute('news119.herokuapp.com/:id', (response) => {
+
+       this.props.navigation.navigate('Article',{id:response});
+     });
+
+
    }
 
    componentWillUnmount() {
-     Linking.removeEventListener('url', this.handleUrl);
+     try {
+       Linking.removeEventListener('url', this.handleUrl);
+     } catch (e) {
+       
+     } finally {
+
+     }
    }
 
    handleUrl = ({ url }) => {
