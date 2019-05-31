@@ -4,7 +4,7 @@ import {
   View,
   ActivityIndicator,
   FlatList,Image,
-  StyleSheet,Alert,Button,TouchableOpacity,Linking,Platform
+  StyleSheet,Alert,Button,TouchableOpacity,Linking,Platform,ImageBackground,StatusBar
 } from 'react-native';
 import AppIntroSlider from 'react-native-app-intro-slider';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -13,22 +13,33 @@ const slides = [
     key: 'somethun',
     title: 'Title 1',
     text: 'Description.\nSay something cool',
-    image: require('../images/circle.png'),
+    image: require('../images/1.png'),
     backgroundColor: '#59b2ab',
+    color:'#0099cb'
   },
   {
     key: 'somethun-dos',
     title: 'Title 2',
     text: 'Other cool stuff',
-    image: require('../images/circle.png'),
-    backgroundColor: '#febe29',
+    image: require('../images/2.png'),
+      backgroundColor: '#febe29',
+    color:'#F15050'
   },
   {
     key: 'somethun1',
     title: 'Rocket guy',
     text: 'I\'m already out of descriptions\n\nLorem ipdsfdsfdsfdsf\nsdfsdf\nsdndssum bla bla bla',
-    image: require('../images/triangle.png'),
+    image: require('../images/3.png'),
     backgroundColor: '#22bcb5',
+    color:'#0099cb'
+  },
+  {
+    key: 'somethun12',
+    title: 'Rocket guy',
+    text: 'I\'m already out of descriptions\n\nLorem ipdsfdsfdsfdsf\nsdfsdf\nsdndssum bla bla bla',
+    image: require('../images/4.png'),
+    backgroundColor: '#22bcb5',
+    color:'#F15050'
   }
 ];
 
@@ -90,11 +101,13 @@ export default class IntroScreen extends Component {
  }
   _renderItem = (item) => {
       return (
-        <View style={styles.mainContent}>
-          <Text style={styles.title}>{item.title}</Text>
-          <Image source={item.image} />
-          <Text style={styles.text}>{item.text}</Text>
-        </View>
+
+        <ImageBackground  source={item.image} style={{width: '100%', height: '100%'}} >
+        <StatusBar
+        backgroundColor={item.color}
+           animated/>
+        </ImageBackground>
+
       );
     }
     render() {

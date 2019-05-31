@@ -2,6 +2,7 @@ import React,{Component} from "react";
 import { View, Text,ActivityIndicator,Dimensions,Image } from "react-native";
 import { createStackNavigator, createAppContainer } from "react-navigation";
 const {width, height} = Dimensions.get('window');
+import ShareItem from '../utils/ShareItem'
 
 export default class ExternalScreen extends Component {
   static navigationOptions = {
@@ -83,15 +84,19 @@ const styles = {
   image: {
 
     flex: 1,
-    height:100,
+    height:null,
     width:null,
-    resizeMode:'center'
+    resizeMode:'cover',
+    borderTopLeftRadius: 50,
+  borderTopRightRadius: 50,
 
   },
 
+
   Imagebody: {
     flex: 2,
-    backgroundColor:'black'
+    backgroundColor:'black',
+    borderRadius:50
 
 
   },

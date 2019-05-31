@@ -1,21 +1,22 @@
 import React,{Component} from "react";
 import { View, Text,ActivityIndicator,StatusBar,
-FlatList,Image,Dimensions,Animated,PanResponder,TouchableOpacity,TouchableWithoutFeedback,ImageBackground  } from "react-native";
+FlatList,Image,Dimensions,Animated,ScrollView ,RefreshControl,PanResponder,TouchableOpacity,TouchableWithoutFeedback,ImageBackground  } from "react-native";
 import { createStackNavigator, createAppContainer } from "react-navigation";
 const {width, height} = Dimensions.get('window');
 const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
 import DeepLinking from 'react-native-deep-linking';
 import ShareItem from '../utils/ShareItem'
-
+import { connect } from 'react-redux';
+import checkPointer from '../utils/checkPointer';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default class HomeScreen extends Component {
   constructor(props){
     super(props);
-    this.state ={ isLoading: true,len:"false",views:0,priority:0,
+    this.state ={ isLoading: true,len:"false",views:0,Pointer:0,hasPointer:false,
     currentIndex:0,pan: new Animated.ValueXY(),
     swiped_pan: new Animated.ValueXY({x:-width,y:0}),
     };
-
   this.state.panResponder = PanResponder.create({
     onStartShouldSetPanResponderCapture: (evt, gestureState) => false,
       onMoveShouldSetPanResponderCapture: (evt, gestureState) => {
@@ -56,13 +57,8 @@ export default class HomeScreen extends Component {
             // dy: this.state.pan.y,
           },
       ]) (e, gestureState)
-
     }
-
-
   },
-
-
       onPanResponderRelease: (e,gestureState) => {
         if(this.state.len=="true" && -gestureState.dx >= 50)
         {
@@ -86,7 +82,7 @@ export default class HomeScreen extends Component {
             toValue: ({ x: -width, y: 0 }),
             duration:400
           }).start(() => {
-
+              AsyncStorage.setItem('POINTER', (this.state.currentIndex+this.state.Pointer+1).toString());
             this.setState({ currentIndex: this.state.currentIndex + 1 },()=>{this.state.pan.setValue({ x: 0, y: 0 })})
           })
         }
@@ -105,7 +101,17 @@ export default class HomeScreen extends Component {
         }
       },
     });
-  }
+  }//Pan onPanResponderRelease
+
+//Check article postion
+
+async componentWillMount() {
+  const has = await checkPointer();
+  let pointer = parseInt(await AsyncStorage.getItem('POINTER'));
+  this.setState({ hasPointer:true, Pointer: pointer });
+}
+
+
 
   componentDidMount(){
     return fetch('https://news119.herokuapp.com/getData')
@@ -132,10 +138,12 @@ update(){
 }
 
   renderArtciles=()=>{
+    const startingIndex =this.state.Pointer;
     var AnimatedImage = Animated.createAnimatedComponent(ImageBackground);
     var len =this.state.dataSource.length;
-    return this.state.dataSource.map((item,i)=>{
-
+    return this.state.dataSource.map((_,i)=>{
+      const shiftedIndex = (startingIndex + i) %  this.state.dataSource.length
+      const item = this.state.dataSource[shiftedIndex];
         if (i == this.state.currentIndex-1)
         {
           if(item.special==false)
@@ -143,7 +151,7 @@ update(){
             return(
               <Animated.View key={item._id} {...this.state.panResponder.panHandlers} style={this.state.swiped_pan.getLayout()}>
 
-                <View style={{  flex: 1,position:'absolute',height:height-(height*0.1),width:width-(width*0.05) ,
+                <View style={{ marginTop:25, flex: 1,position:'absolute',height:height-(height*0.1),width:width-(width*0.05) ,
                  backgroundColor:'white',borderRadius:50,margin:10,shadowColor: '#003182',shadowOffset: { width: 0, height: 9 },shadowOpacity: 0.48,shadowRadius: 11.95,elevation:18}}>
 
 
@@ -174,7 +182,7 @@ update(){
             return(
 
               <Animated.View key={item._id} {...this.state.panResponder.panHandlers} style={this.state.swiped_pan.getLayout()}>
-              <AnimatedImage  source={{ uri:item.img.data }}  imageStyle={{ borderRadius: 50 }} style={{flex: 1,position:'absolute',height:height-(height*0.1),width:width-(width*0.05),borderRadius:50,margin:10,
+              <AnimatedImage  source={{ uri:item.img.data }}  imageStyle={{ borderRadius: 50 }} style={{marginTop:25,flex: 1,position:'absolute',height:height-(height*0.1),width:width-(width*0.05),borderRadius:50,margin:10,
             borderRadius:50,margin:10,shadowColor: '#003182',shadowOffset: { width: 0, height: 9 },shadowOpacity: 0.48,shadowRadius: 11.95,elevation:18}}>
               <TouchableOpacity activeOpacity={1}  onPress={()=>{this.props.navigation.navigate('Details', {itemId: item})}}  >
                 <Text>    </Text>
@@ -201,7 +209,7 @@ update(){
                 {
                   return(
                     <Animated.View key={item._id} {...this.state.panResponder.panHandlers} style={[this.state.pan.getLayout(),{borderRadius:100}]}>
-                      <AnimatedImage  source={{ uri:item.img.data }}  imageStyle={{ borderRadius: 50 }} style={{flex: 1,position:'absolute',height:height-(height*0.1),width:width-(width*0.05),borderRadius:50,margin:10,shadowColor: '#003182',shadowOffset: { width: 0, height: 9 },shadowOpacity: 0.48,shadowRadius: 11.95,elevation:18}}>
+                      <AnimatedImage  source={{ uri:item.img.data }}  imageStyle={{ borderRadius: 50 }} style={{marginTop:25,flex: 1,position:'absolute',height:height-(height*0.1),width:width-(width*0.05),borderRadius:50,margin:10,shadowColor: '#003182',shadowOffset: { width: 0, height: 9 },shadowOpacity: 0.48,shadowRadius: 11.95,elevation:18}}>
                       <TouchableOpacity activeOpacity={1}  onPress={()=>{this.props.navigation.navigate('Details', {itemId: item})}}
                         >
                     <View style={{height:height-(height*0.1),width:width-(width*0.05),backgroundColor:'transparent',borderRadius:50}}>
@@ -220,7 +228,7 @@ update(){
                         <Animated.View key={item._id} {...this.state.panResponder.panHandlers} style={this.state.pan.getLayout()}>
 
 
-                          <View style={{ flex: 1,position:'absolute',height:height-(height*0.1),width:width-(width*0.05),
+                          <View style={{ marginTop:25,flex: 1,position:'absolute',height:height-(height*0.1),width:width-(width*0.05),
                         backgroundColor:'white',borderRadius:50,margin:10,shadowColor: '#003182',shadowOffset: { width: 0, height: 9 },shadowOpacity: 0.48,shadowRadius: 11.95,elevation:18}}>
 
 
@@ -229,7 +237,7 @@ update(){
                             </View>
 
                             <View  style={styles.inner}>
-                            <ShareItem id={item._id} />
+                            <ShareItem id={item._id} name={item.title}/>
                               <View style={styles.inner}>
                               <Text style={styles.titleArrtibute}>Trending</Text>
                                 <Text style={styles.titleText} >{item.title}﻿</Text>
@@ -252,7 +260,7 @@ update(){
             return(
               <Animated.View key={item._id} >
 
-                <View style={{  flex: 1,position:'absolute',height:height-(height*0.1),width:width-(width*0.05),backgroundColor:'white',borderRadius:50,margin:10}}>
+                <View style={{ marginTop:25, flex: 1,position:'absolute',height:height-(height*0.1),width:width-(width*0.05),backgroundColor:'white',borderRadius:50,margin:10}}>
 
 
                   < View style={styles.Imagebody}>
@@ -280,7 +288,7 @@ update(){
           return(
 
             <Animated.View key={item._id} >
-              <AnimatedImage  source={{ uri:item.img.data }}  imageStyle={{ borderRadius: 50 }} style={{flex: 1,position:'absolute',height:height-(height*0.1),width:width-(width*0.05),borderRadius:50,margin:10}}>
+              <AnimatedImage  source={{ uri:item.img.data }}  imageStyle={{ borderRadius: 50 }} style={{marginTop:25,flex: 1,position:'absolute',height:height-(height*0.1),width:width-(width*0.05),borderRadius:50,margin:10}}>
               <TouchableOpacity activeOpacity={1}  onPress={()=>{this.props.navigation.navigate('Details', {itemId: item})}}  >
                 <Text>  </Text>
                 </TouchableOpacity>
@@ -307,27 +315,36 @@ update(){
             )}
 
       return(
-        <View>
-         <StatusBar
-  backgroundColor="#0099cb"
-  animated />
-          <View >
-              {this.renderArtciles()}
+
+      <View style={{flex:1}}>
+       <StatusBar
+          backgroundColor="#0099cb"
+          animated />
+          <ScrollView   contentContainerStyle={{  flexGrow: 1 }}
+          // refreshControl={
+          //                <RefreshControl
+          //                  refreshing={loading}
+          //                  onRefresh={refresh}
+          //                />}
+          >
+            {this.renderArtciles()}
+                 </ScrollView>
+          <View style={{position:'absolute',zIndex:-20,backgroundColor:'#00cafe'}}>
+
+                          <View style={{  flex: 1,position:'absolute',height:height,width:width,backgroundColor:'#00cafe'}}>
+                            <View  style={styles.inner}>
+                              <View style={styles.inner}>
+                                <Text style={{color:'black',  top:5,fontSize: 40,fontWeight: 'bold',left:30}} >No More Cards</Text>
+
+                              </View>
+                            </View >
+
+
+                          </View>
+          </View>
          </View>
-            <View style={{position:'absolute',zIndex:-20,backgroundColor:'#00cafe'}}>
-
-                            <View style={{  flex: 1,position:'absolute',height:height,width:width,backgroundColor:'#00cafe'}}>
-                              <View  style={styles.inner}>
-                                <View style={styles.inner}>
-                                  <Text style={{color:'black',  top:5,fontSize: 40,fontWeight: 'bold',left:30}} >No More Cards</Text>
-
-                                </View>
-                              </View >
 
 
-                            </View>
-            </View>
-           </View>
       )
     }
   }
@@ -348,7 +365,9 @@ update(){
     Imagebody: {
       flex: 2,
       backgroundColor:'black',
-      borderRadius:50
+      borderRadius:50,
+
+
 
 
     },

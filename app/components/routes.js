@@ -6,6 +6,16 @@ import HomeScreen from './pages/home';
 import DetailsScreen from './pages/detail';
 import DeepLinking from 'react-native-deep-linking';
 import {AppContainer , AppContainerIntro} from './navigator';
+import { createStore, applyMiddleware } from 'redux';
+import { Provider } from 'react-redux';
+import { apiMiddleware, reducer } from './redux/redux';
+
+// Create Redux store
+const store = createStore(reducer, {}, applyMiddleware(apiMiddleware));
+
+// Fetch movie data
+store.dispatch({type: 'GET_MOVIE_DATA'});
+
 
 export default class Routes extends React.Component {
   constructor(props) {
@@ -41,7 +51,7 @@ export default class Routes extends React.Component {
      try {
        Linking.removeEventListener('url', this.handleUrl);
      } catch (e) {
-       
+
      } finally {
 
      }
@@ -68,9 +78,23 @@ export default class Routes extends React.Component {
        return null;
      }
 
-     return isFirstLaunch ?
-       <AppContainerIntro/> :
-       <AppContainer/>
+     if(isFirstLaunch)  {
+       return(
+       <Provider store={store}>
+       <AppContainerIntro/>
+        </Provider>
+      )
+
+     }
+     else{
+       return(
+         <Provider store={store}>
+         <AppContainer/>
+         </Provider>
+       )
+
+     }
+
      ;
    }
 }

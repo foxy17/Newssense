@@ -1,21 +1,45 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet  } from 'react-native';
+import { View, ToastAndroid,Text, TouchableOpacity, StyleSheet  } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 import Share, {ShareSheet, Button} from 'react-native-share';
-
+import Datastore from 'react-native-local-mongodb';
+db = new Datastore({ filename: 'asyncStorageKey', autoload: true });
 export default class ShareItem extends Component {
   handleOnPress = () => {
     this.props.onPress();
   };
   constructor(props){
+
         super(props);
+
         this.state = {
-           id: 0,
-           visible: false
+           visible: false,
+           favourite:false
        };
     }
-    onCancel() {
+//Share logic and Favourite logic
+
+componentWillMount() {
+    let { id,name} = this.props;
+
+  db.find({ _id: id}, (err, docs) =>{
+    console.log(docs.length);
+
+    if(docs.length>0)
+    {
+      this.setState({favourite:true});
+        console.log("HEYY");
+    }
+    else{
+      this.setState({favourite:false});
+        console.log("222");
+    }
+      });
+  }
+
+
+onCancel() {
    console.log("CANCEL")
    this.setState({visible:false});
  }
@@ -43,48 +67,110 @@ export default class ShareItem extends Component {
     };
      Share.shareSingle(shareOptions);
   }
+    _Favourite=()=>
+    { let { id,name} = this.props;
 
+
+      db.insert({_id:id,name:name}, function (err, newDoc) {
+          console.log(newDoc);
+
+          ToastAndroid.show("Added to Bookmarks", ToastAndroid.SHORT);
+      });
+      this.setState({favourite:true});
+
+    }
+    _unFavourite=()=>
+    { let { id,name} = this.props;
+
+      db.remove({ _id:id }, {}, function (err, numRemoved) {
+
+        ToastAndroid.show('Removed From Bookmarks', ToastAndroid.SHORT);
+          });
+        this.setState({favourite:false});
+
+    }
   render() {
-    let { id } = this.props;
-    this.state.id=id;
+      let { id,name} = this.props;
+      console.log(this.state.favourite)
+    if(this.state.favourite)
+    {
+      return (
+        <View>
+            <View  style={styles.shareButton}><Icon
+             raised
+             name='share'
+             type='material'
+             color='black'
+             size= {29}
+             onPress={this._onDone}
 
-    return (
-      <View>
 
-          <View  style={styles.shareButton}><Icon
+           />
+            </View>
+
+
+         <View style={styles.shareWhatsapp}><Icon2
+          raised
+          name='whatsapp'
+          type='material'
+          color='black'
+          size= {29}
+          onPress={this._onShare}
+
+        /></View>
+          <View style={styles.bookmark}><Icon
            raised
-           name='share'
+           name='bookmark'
            type='material'
            color='black'
            size= {29}
-           onPress={this._onDone}
+           onPress={this._unFavourite}
+         /></View>
 
 
-         />
-          </View>
+       </View>);
+    }
+    else{
+      return (
+        <View>
+
+            <View  style={styles.shareButton}><Icon
+             raised
+             name='share'
+             type='material'
+             color='black'
+             size= {29}
+             onPress={this._onDone}
 
 
-       <View style={styles.shareWhatsapp}><Icon2
-        raised
-        name='whatsapp'
-        type='material'
-        color='black'
-        size= {29}
-        onPress={this._onShare}
-
-      /></View>
-        <View style={styles.bookmark}><Icon
-         raised
-         name='bookmark'
-         type='material'
-         color='black'
-         size= {29}
-
-       /></View>
+           />
+            </View>
 
 
-     </View>
+         <View style={styles.shareWhatsapp}><Icon2
+          raised
+          name='whatsapp'
+          type='material'
+          color='black'
+          size= {29}
+          onPress={this._onShare}
+
+        /></View>
+          <View style={styles.bookmark}><Icon
+           raised
+           name='bookmark-border'
+           type='material'
+           color='black'
+           size= {29}
+           onPress={this._Favourite}
+         /></View>
+
+
+       </View>
+
+
     );
+  }
   }
 }
 

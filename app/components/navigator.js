@@ -7,7 +7,9 @@ import ExternalScreen from './pages/external';
 const AppNavigator = createStackNavigator(
   {
   Home: HomeScreen,
-  Details: DetailsScreen,
+  Details: {screen:DetailsScreen,header: {style: {
+          backgroundColor: '#00cafe'
+        }}},
   Intro:IntroScreen,
   Article: { screen: ExternalScreen, path: 'news/:id', },
 
@@ -22,7 +24,9 @@ const AppContainer = createAppContainer(AppNavigator);
 const AppNavigatorIntro = createStackNavigator(
   {
   Home: HomeScreen,
-  Details: DetailsScreen,
+  Details: {screen:DetailsScreen,style: {
+          backgroundColor: '#00cafe'
+        }},
   Intro:IntroScreen,
   Article: { screen: ExternalScreen, path: 'news/:id', },
 
