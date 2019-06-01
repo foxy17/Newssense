@@ -47,36 +47,11 @@ export default class IntroScreen extends Component {
   constructor(props){
     super(props);
   this.state = {
-   showRealApp: false
+   showRealApp: false,
+   color1:'#14CAF4',
+    color2:'#F15050',
+   index:0
  }}
-
- componentDidMount() { // B
-  if (Platform.OS === 'android') {
-    Linking.getInitialURL().then(url => {
-      this.navigate(url);
-    });
-  } else {
-      Linking.addEventListener('url', this.handleOpenURL);
-    }
-  }
-
-  componentWillUnmount() { // C
-    Linking.removeEventListener('url', this.handleOpenURL);
-  }
-  handleOpenURL = (event) => { // D
-    this.navigate(event.url);
-  }
-  navigate = (url) => { // E
-
-
-  const route = url.replace(/.*?:\/\//g, '');
-  const id = route.match(/\/([^\/]+)\/?$/)[1];
-  const routeName = route.split('/')[0];
-
-  if (routeName === 'details') {
-    this.props.navigation.navigate('External', {id: id })
-  };
-}
 
 
  _onDone = () => {
@@ -100,18 +75,34 @@ export default class IntroScreen extends Component {
    );
  }
   _renderItem = (item) => {
+
+
+      StatusBar.setBackgroundColor(this.state.color1, true);
       return (
 
         <ImageBackground  source={item.image} style={{width: '100%', height: '100%'}} >
-        <StatusBar
-        backgroundColor={item.color}
-           animated/>
+
         </ImageBackground>
 
       );
     }
+
+    changecolor = () =>{
+          console.log(this.state.index);
+      if(this.state.index===0){
+          StatusBar.setBackgroundColor(this.state.color2, true);
+          this.state.index=1;
+      }
+      else{
+          StatusBar.setBackgroundColor(this.state.color1, true);
+          this.state.index=0;
+      }
+
+
+
+    }
     render() {
-      return <AppIntroSlider renderItem={this._renderItem} slides={slides}  renderDoneButton={this._renderDoneButton}/>;
+      return <AppIntroSlider renderItem={this._renderItem} slides={slides} onSlideChange={this.changecolor} renderDoneButton={this._renderDoneButton}/>;
 
           }
 

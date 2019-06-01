@@ -6,6 +6,7 @@ const {width, height} = Dimensions.get('window');
 const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
 import DeepLinking from 'react-native-deep-linking';
 import ShareItem from '../utils/ShareItem'
+import SettingButton from '../utils/settings'
 import { connect } from 'react-redux';
 import checkPointer from '../utils/checkPointer';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -317,6 +318,7 @@ update(){
       return(
 
       <View style={{flex:1}}>
+      <SettingButton navigate={this.props.navigation.navigate}  />
        <StatusBar
           backgroundColor="#0099cb"
           animated />
