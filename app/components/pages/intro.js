@@ -88,7 +88,7 @@ export default class IntroScreen extends Component {
     }
 
     changecolor = () =>{
-          console.log(this.state.index);
+          // console.log(this.state.index);
       if(this.state.index===0){
           StatusBar.setBackgroundColor(this.state.color2, true);
           this.state.index=1;

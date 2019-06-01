@@ -5,7 +5,9 @@ import DetailsScreen from './pages/detail';
 import IntroScreen from './pages/intro';
 import ExternalScreen from './pages/external';
 import SettingsScreen from './pages/setting';
-import { fromLeft,fromBottom } from 'react-navigation-transitions';
+import BookmarksScreen from './pages/bookmarks';
+import SingleBookmarkScreen from './pages/singleBookmark';
+import { fromLeft,fromBottom ,fadeIn} from 'react-navigation-transitions';
 const handleCustomTransition = ({ scenes }) => {
   const prevScene = scenes[scenes.length - 2];
   const nextScene = scenes[scenes.length - 1];
@@ -16,17 +18,19 @@ const handleCustomTransition = ({ scenes }) => {
     && nextScene.route.routeName === 'Settings') {
     return fromBottom();
   }
-  return fromLeft();
+  return fadeIn();
 }
 const AppNavigator = createStackNavigator(
   {
-  Home: HomeScreen,
+  Home: {screen:HomeScreen,key:"Home"},
   Details: {screen:DetailsScreen,header: {style: {
           backgroundColor: '#00cafe'
         }}},
   Intro:IntroScreen,
   Article: { screen: ExternalScreen, path: 'news/:id', },
   Settings:SettingsScreen,
+  Bookmarks:BookmarksScreen,
+  SingleBookmark:SingleBookmarkScreen
 
 },
 {
@@ -39,13 +43,15 @@ const AppNavigator = createStackNavigator(
 const AppContainer = createAppContainer(AppNavigator);
 const AppNavigatorIntro = createStackNavigator(
   {
-  Home: HomeScreen,
+  Home: {screen:HomeScreen,key:"Home"},
   Details: {screen:DetailsScreen,style: {
           backgroundColor: '#00cafe'
         }},
   Intro:IntroScreen,
   Article: { screen: ExternalScreen, path: 'news/:id', },
   Settings:SettingsScreen,
+    Bookmarks:BookmarksScreen,
+    SingleBookmark:SingleBookmarkScreen
 
 },
 {

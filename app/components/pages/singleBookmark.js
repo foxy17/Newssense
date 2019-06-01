@@ -1,10 +1,10 @@
 import React,{Component} from "react";
-import { View, Text,ActivityIndicator,Dimensions,Image } from "react-native";
+import { View, Text,ActivityIndicator,Dimensions,Image ,StatusBar} from "react-native";
 import { createStackNavigator, createAppContainer } from "react-navigation";
 const {width, height} = Dimensions.get('window');
 import ShareItem from '../utils/ShareItem'
 
-export default class ExternalScreen extends Component {
+export default class SingleBookmarkScreen extends Component {
   static navigationOptions = {
    title: 'Article',
  };
@@ -38,44 +38,51 @@ export default class ExternalScreen extends Component {
   }
 
   render() {
-
-
+    const { navigation } = this.props;
+    const id = navigation.getParam('id', 'NO-ID');
+    console.log("HEYY"+id);
+    this.state.params="https://news119.herokuapp.com/find/"+id;
+     StatusBar.setBackgroundColor('#0099cb', true);
       if(this.state.isLoading){
             return(
               <View >
                 <ActivityIndicator />
               </View>
             )}
+            return(
+              <View style={{flex:1,backgroundColor:'#00cafe'}}>
+                <View style={{ flex: 1,position:'absolute',height:height-(height*0.1),width:width-(width*0.05),
+              backgroundColor:'white',borderRadius:50,margin:10,shadowColor: '#003182',shadowOffset: { width: 0, height: 9 },shadowOpacity: 0.48,shadowRadius: 11.95,elevation:18}}>
 
-      return(
-        <View style={{flex:1,backgroundColor:'#00cafe'}}>
-          <View style={{ flex: 1,position:'absolute',height:height-(height*0.1),width:width-(width*0.05),
-        backgroundColor:'white',borderRadius:50,margin:10,shadowColor: '#003182',shadowOffset: { width: 0, height: 9 },shadowOpacity: 0.48,shadowRadius: 11.95,elevation:18}}>
+
+                  < View style={styles.Imagebody}>
+                    <Image source={{ uri:this.state.img }} style={styles.image} />
+                  </View>
+
+                  <View  style={styles.inner}>
+                  <ShareItem id={this.state.dataSource._id} name={this.state.dataSource.title} />
+                    <View style={styles.inner}>
+
+                      <Text style={styles.titleText} >{this.state.dataSource.title}﻿</Text>
+                      <View>
+                        <Text style={styles.body}>{this.state.dataSource.body}﻿</Text>
+                      </View>
+                    </View>
 
 
-            < View style={styles.Imagebody}>
-              <Image source={{ uri:this.state.img }} style={styles.image} />
-            </View>
 
-            <View  style={styles.inner}>
-            <ShareItem id={this.state.dataSource._id} name={this.state.dataSource.title} />
-              <View style={styles.inner}>
-
-                <Text style={styles.titleText} >{this.state.dataSource.title}﻿</Text>
-                <View>
-                  <Text style={styles.body}>{this.state.dataSource.body}﻿</Text>
+                  </View>
                 </View>
-              </View>
+                </View>
 
 
 
-            </View>
-          </View>
-          </View>
+          )
 
 
 
-    )
+
+
 
 
 }

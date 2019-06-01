@@ -3,10 +3,13 @@ import {
   Text,
   View,
   ActivityIndicator,
-  FlatList,Image,Platform,StyleSheet,Button, Dimensions
+  FlatList,Image,Platform,StyleSheet,Button, Dimensions,StatusBar
 } from 'react-native';
+import { AndroidBackHandler } from 'react-navigation-backhandler';
 var width = Dimensions.get('window').width;
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon2 from 'react-native-vector-icons/Entypo';
+
 import ToggleSwitch from 'toggle-switch-react-native';
 
 
@@ -18,10 +21,22 @@ export default class SettingsScreen extends Component {
       isOnDefaultToggleSwitch: true,
 
     }}
+    onBackButtonPressAndroid = () => {
+       StatusBar.setBackgroundColor('#0099cb', true);
+       return false;
+     };
+
+
+
  render() {
+   StatusBar.setBackgroundColor('#848484', true);
    return(
+       <AndroidBackHandler onBackPress={this.onBackButtonPressAndroid}>
      <View style={{  height: '100%',
-  display: 'flex',flexDirection: 'column', backgroundColor:"#f1f1f1"}}>
+  display: 'flex',flexDirection: 'column', backgroundColor:"#e2e2e2"}}>
+        <Icon2  name="cross" size={30} color="black" style={{  position: 'absolute',alignSelf:'flex-end',right:10,top:10}}
+        onPress={() => {   StatusBar.setBackgroundColor('#0099cb', true);this.props.navigation.goBack();}}
+         />
         <View>
           <Text style={{fontSize: 30,fontWeight: 'bold',top:60,left:55,color:'black'}}>
           Settings</Text>
@@ -30,26 +45,31 @@ export default class SettingsScreen extends Component {
          <View style={styles.upper}><Text>Test Label</Text>
          </View>
           <View  style={styles.Middle} >
-          <Icon.Button name="star" backgroundColor="white" color='yellow' size={35}>
-              <Text style={{ left:40,padding:5,fontFamily: 'Arial', fontSize: 20 ,color:'black',justifyContent:'center'}}>
+          <Icon.Button name="star" backgroundColor="white" color='yellow' size={35}
+          paddingHorizontal={23} paddingVertical={10} onPress={()=>this.props.navigation.navigate('Bookmarks')}
+
+          >
+              <Text style={{ left:23,padding:5,fontFamily: 'Arial', fontSize: 20 ,color:'black',justifyContent:'center'}}>
                 Bookmarks
               </Text>
             </Icon.Button>
 
-            <View  style={{flexDirection: 'row',marginLeft:10,    justifyContent: 'space-between',}}>
+            <View  style={{flexDirection: 'row',marginLeft:10,  justifyContent:'space-around' }}>
                   <Icon name="notifications" size={30} color="yellow"  />
+
                   <ToggleSwitch
                     isOn={this.state.isOnDefaultToggleSwitch}
-                    onColor='green'
-                    offColor='red'
+                    onColor='purple'
+                    offColor='#d1d1d1'
                     label='Notifications'
-                    labelStyle={{color: 'black', fontFamily: 'Arial', fontSize: 20,right:15 }}
+                    labelStyle={{color: 'black', fontFamily: 'Arial', fontSize: 20,right:0 }}
                     size='small'
                     onToggle={isOnDefaultToggleSwitch => {this.setState({ isOnDefaultToggleSwitch });}}
                     />
             </View>
           </View>
       </View>
+      </AndroidBackHandler>
  );
  }
 }
@@ -62,12 +82,15 @@ const styles = StyleSheet.create({
     top:60,
     marginLeft:60,
     marginRight:60,
-    width:width*0.7,
-    shadowColor: '#003182',
-    shadowOffset: { width: 0, height: 9 },
-    shadowOpacity: 0.48,
-    shadowRadius: 11.95,
-    elevation:10
+    width:width*0.701,
+    shadowColor: "#000",
+    shadowOffset: {
+    	width: 0,
+    	height: 1,
+    },
+    shadowOpacity: 0.20,
+    shadowRadius: 1.41,
+    elevation: 2,
   },
   Middle:{
     flex: 3,
@@ -76,11 +99,15 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
       margin:60,
       width:width*0.7,
-      shadowColor: '#003182',
-      shadowOffset: { width: 0, height: 5 },
-      shadowOpacity: 0.28,
-      shadowRadius: 11.95,
-      elevation:10
+      shadowColor: "#000",
+      shadowOffset: {
+      	width: 0,
+      	height: 1,
+      },
+      shadowOpacity: 0.20,
+      shadowRadius: 1.41,
+
+      elevation: 2,
   },
   Bottom:{
     zIndex:1,

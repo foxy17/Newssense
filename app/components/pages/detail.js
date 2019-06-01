@@ -16,6 +16,7 @@ export default class ExternalScreen extends Component {
     const { navigation } = this.props;
     const itemId = navigation.getParam('itemId', 'NO-ID');
 
+
       return(
         <View style={{flex:1,backgroundColor:'#00cafe'}}>
           <View style={{ flex: 1,position:'absolute',height:height-(height*0.1),width:width-(width*0.05),
@@ -27,7 +28,7 @@ export default class ExternalScreen extends Component {
             </View>
 
             <View  style={styles.inner}>
-            <ShareItem id={itemId._id} />
+            <ShareItem id={itemId._id} name={itemId.title} />
               <View style={styles.inner}>
 
                 <Text style={styles.titleText} >{itemId.title}﻿</Text>

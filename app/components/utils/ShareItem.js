@@ -92,6 +92,7 @@ onCancel() {
   render() {
       let { id,name} = this.props;
       console.log(this.state.favourite)
+      this.state.id=id;
     if(this.state.favourite)
     {
       return (
