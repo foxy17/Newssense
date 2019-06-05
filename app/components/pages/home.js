@@ -10,6 +10,8 @@ import SettingButton from '../utils/settings'
 import { connect } from 'react-redux';
 import checkPointer from '../utils/checkPointer';
 import AsyncStorage from '@react-native-community/async-storage';
+import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+
 
 export default class HomeScreen extends Component {
   constructor(props){
@@ -61,13 +63,13 @@ export default class HomeScreen extends Component {
     }
   },
       onPanResponderRelease: (e,gestureState) => {
-        if(this.state.len=="true" && -gestureState.dx >= 50)
+        if(this.state.len=="true" &&( -gestureState.vx >0.7 || -gestureState.dx >= 50))
         {
           Animated.spring(this.state.pan, {
               toValue: ({ x: 0, y: 0 })
           }).start()
         }
-      else if (this.state.currentIndex > 0 && gestureState.dx > 50 && gestureState.vx > 0.6) {
+      else if (this.state.currentIndex > 0 && (gestureState.dx > 50 || gestureState.vx > 0.7)) {
             Animated.timing(this.state.swiped_pan, {
                 toValue: ({ x: 0, y: 0 }),
                 duration: 400
@@ -152,8 +154,8 @@ update(){
             return(
               <Animated.View key={item._id} {...this.state.panResponder.panHandlers} style={this.state.swiped_pan.getLayout()}>
 
-                <View style={{ marginTop:25, flex: 1,position:'absolute',height:height-(height*0.1),width:width-(width*0.05) ,
-                 backgroundColor:'white',borderRadius:50,margin:10,shadowColor: '#003182',shadowOffset: { width: 0, height: 9 },shadowOpacity: 0.48,shadowRadius: 11.95,elevation:18}}>
+                <View style={{ marginTop:hp('5%'), flex: 1,position:'absolute',height:height-(height*0.15),width:width-(width*0.05) ,
+                 backgroundColor:'white',borderRadius:10,margin:wp('3%'),shadowColor: '#003182',shadowOffset: { width: 0, height: 9 },shadowOpacity: 0.48,shadowRadius: 11.95,elevation:18}}>
 
 
                   < View style={styles.Imagebody}>
@@ -163,7 +165,7 @@ update(){
                   <View  style={styles.inner}>
                   <ShareItem id={item._id} />
                     <View style={styles.inner}>
-                    <Text style={styles.titleArrtibute}>Trending</Text>
+                    <Text style={styles.titleArrtibute}>{item.category}</Text>
                       <Text style={styles.titleText} >{item.title}﻿</Text>
                       <View>
                         <Text style={styles.body}>{item.body}﻿</Text>
@@ -183,8 +185,9 @@ update(){
             return(
 
               <Animated.View key={item._id} {...this.state.panResponder.panHandlers} style={this.state.swiped_pan.getLayout()}>
-              <AnimatedImage  source={{ uri:item.img.data }}  imageStyle={{ borderRadius: 50 }} style={{marginTop:25,flex: 1,position:'absolute',height:height-(height*0.1),width:width-(width*0.05),borderRadius:50,margin:10,
-            borderRadius:50,margin:10,shadowColor: '#003182',shadowOffset: { width: 0, height: 9 },shadowOpacity: 0.48,shadowRadius: 11.95,elevation:18}}>
+              <AnimatedImage  source={{ uri:item.img.data }}
+               imageStyle={{ borderRadius: 10 }} style={{marginTop:hp('5%'),flex: 1,position:'absolute',height:height-(height*0.15),width:width-(width*0.05),borderRadius:50,margin:10,
+            borderRadius:10,margin:wp('3%'),shadowColor: '#003182',shadowOffset: { width: 0, height: 9 },shadowOpacity: 0.48,shadowRadius: 11.95,elevation:18}}>
               <TouchableOpacity activeOpacity={1}  onPress={()=>{this.props.navigation.navigate('Details', {itemId: item})}}  >
                 <Text>    </Text>
                 </TouchableOpacity>
@@ -209,11 +212,13 @@ update(){
                 if(item.special)
                 {
                   return(
-                    <Animated.View key={item._id} {...this.state.panResponder.panHandlers} style={[this.state.pan.getLayout(),{borderRadius:100}]}>
-                      <AnimatedImage  source={{ uri:item.img.data }}  imageStyle={{ borderRadius: 50 }} style={{marginTop:25,flex: 1,position:'absolute',height:height-(height*0.1),width:width-(width*0.05),borderRadius:50,margin:10,shadowColor: '#003182',shadowOffset: { width: 0, height: 9 },shadowOpacity: 0.48,shadowRadius: 11.95,elevation:18}}>
+                    <Animated.View key={item._id} {...this.state.panResponder.panHandlers} style={[this.state.pan.getLayout()]}>
+                      <AnimatedImage  source={{ uri:item.img.data }}
+                       imageStyle={{ borderRadius: 10 }} style={{marginTop:hp('5%'),flex: 1,position:'absolute',height:height-(height*0.15),width:width-(width*0.05),
+                       borderRadius:50,margin:wp('3%'),shadowColor: '#003182',shadowOffset: { width: 0, height: 9 },shadowOpacity: 0.48,shadowRadius: 11.95,elevation:18}}>
                       <TouchableOpacity activeOpacity={1}  onPress={()=>{this.props.navigation.navigate('Details', {itemId: item})}}
                         >
-                    <View style={{height:height-(height*0.1),width:width-(width*0.05),backgroundColor:'transparent',borderRadius:50}}>
+                    <View style={{height:height-(height*0.15),width:width-(width*0.05),backgroundColor:'transparent',borderRadius:50}}>
 
                     </View>
                         </TouchableOpacity>
@@ -229,8 +234,8 @@ update(){
                         <Animated.View key={item._id} {...this.state.panResponder.panHandlers} style={this.state.pan.getLayout()}>
 
 
-                          <View style={{ marginTop:25,flex: 1,position:'absolute',height:height-(height*0.1),width:width-(width*0.05),
-                        backgroundColor:'white',borderRadius:50,margin:10,shadowColor: '#003182',shadowOffset: { width: 0, height: 9 },shadowOpacity: 0.48,shadowRadius: 11.95,elevation:18}}>
+                          <View style={{ marginTop:hp('5%'),flex: 1,position:'absolute',height:height-(height*0.15),width:width-(width*0.05),
+                        backgroundColor:'white',borderRadius:10,margin:wp('3%'),shadowColor: '#003182',shadowOffset: { width: 0, height: 9 },shadowOpacity: 0.48,shadowRadius: 11.95,elevation:18}}>
 
 
                             < View style={styles.Imagebody}>
@@ -238,12 +243,14 @@ update(){
                             </View>
 
                             <View  style={styles.inner}>
-                            <ShareItem id={item._id} name={item.title}/>
+
+                            <ShareItem id={item._id} name={item.title} />
+
                               <View style={styles.inner}>
-                              <Text style={styles.titleArrtibute}>Trending</Text>
+                              <Text style={styles.titleArrtibute}>{item.category}</Text>
                                 <Text style={styles.titleText} >{item.title}﻿</Text>
                                 <View>
-                                  <Text style={styles.body}>{item.body}﻿</Text>
+                                  <Text numberOfLines={12} adjustsFontSizeToFit allowFontScaling minimumFontScale={.01} style={styles.body}>{item.body}﻿</Text>
                                 </View>
                               </View>
 
@@ -261,7 +268,8 @@ update(){
             return(
               <Animated.View key={item._id} >
 
-                <View style={{ marginTop:25, flex: 1,position:'absolute',height:height-(height*0.1),width:width-(width*0.05),backgroundColor:'white',borderRadius:50,margin:10}}>
+                <View style={{ marginTop:hp('5%'), flex: 1,position:'absolute',height:height-(height*0.15),width:width-(width*0.05),backgroundColor:'white',
+                borderRadius:10,margin:wp('3%')}}>
 
 
                   < View style={styles.Imagebody}>
@@ -271,7 +279,7 @@ update(){
                   <View  style={styles.inner}>
                   <ShareItem id={item._id} />
                     <View style={styles.inner}>
-                    <Text style={styles.titleArrtibute}>Trending</Text>
+                    <Text style={styles.titleArrtibute}>{item.category}</Text>
                       <Text style={styles.titleText} >{item.title}﻿</Text>
                       <View>
                         <Text style={styles.body}>{item.body}﻿</Text>
@@ -289,7 +297,8 @@ update(){
           return(
 
             <Animated.View key={item._id} >
-              <AnimatedImage  source={{ uri:item.img.data }}  imageStyle={{ borderRadius: 50 }} style={{marginTop:25,flex: 1,position:'absolute',height:height-(height*0.1),width:width-(width*0.05),borderRadius:50,margin:10}}>
+              <AnimatedImage  source={{ uri:item.img.data }}  imageStyle={{ borderRadius: 10 }}
+              style={{marginTop:hp('5%'),flex: 1,position:'absolute',height:height-(height*0.15),width:width-(width*0.05),borderRadius:10,margin:wp('3%')}}>
               <TouchableOpacity activeOpacity={1}  onPress={()=>{this.props.navigation.navigate('Details', {itemId: item})}}  >
                 <Text>  </Text>
                 </TouchableOpacity>
@@ -311,7 +320,7 @@ update(){
       if(this.state.isLoading){
             return(
               <View >
-                <ActivityIndicator />
+                <Image source={require('../images/load.gif')}    style={{left:wp('1%') ,width: wp('100'), height: hp('100')}}/>
               </View>
             )}
 
@@ -320,9 +329,9 @@ update(){
       <View style={{flex:1}}>
       <SettingButton navigate={this.props.navigation.navigate}  />
        <StatusBar
-          backgroundColor="#0099cb"
+          backgroundColor="black"
           animated />
-          <ScrollView   contentContainerStyle={{  flexGrow: 1 }}
+          <ScrollView   contentContainerStyle={{  flexGrow: 1 ,top:hp('4%')}}
           // refreshControl={
           //                <RefreshControl
           //                  refreshing={loading}
@@ -331,12 +340,12 @@ update(){
           >
             {this.renderArtciles()}
                  </ScrollView>
-          <View style={{position:'absolute',zIndex:-20,backgroundColor:'#00cafe'}}>
+          <View style={{position:'absolute',zIndex:-20,backgroundColor:'#f3f3f3'}}>
 
-                          <View style={{  flex: 1,position:'absolute',height:height,width:width,backgroundColor:'#00cafe'}}>
+                          <View style={{  flex: 1,position:'absolute',height:height,width:width,backgroundColor:'white'}}>
                             <View  style={styles.inner}>
                               <View style={styles.inner}>
-                                <Text style={{color:'black',  top:5,fontSize: 40,fontWeight: 'bold',left:30}} >No More Cards</Text>
+                                <Text style={{color:'black',  top:hp('10%'),fontSize: wp('10%'),fontWeight: 'bold'}} >No More Cards</Text>
 
                               </View>
                             </View >
@@ -358,20 +367,20 @@ update(){
       height:null,
       width:null,
       resizeMode:'cover',
-      borderTopLeftRadius: 50,
-    borderTopRightRadius: 50,
+      borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
 
     },
+    textwrap: {
 
+            flexGrow: 1,
+            flex: 1,
+        },
 
     Imagebody: {
       flex: 2,
       backgroundColor:'black',
-      borderRadius:50,
-
-
-
-
+      borderRadius:10,
     },
     inner: {
       flex: 3,
@@ -383,28 +392,30 @@ update(){
     text: {
       flex:1,
       color: '#fff',
-      fontSize: 20,
+      fontSize: wp('8%'),
       fontWeight: 'bold',
     },
     body: {
 
       color: 'black',
-      fontSize: 15,
-      marginBottom:5,
+      fontSize: wp('4%'),
+
+
+
 
     },
 
   titleArrtibute:{
-      color:'black',
+      color:'#679CEA',
       top:0,
-      fontSize: 20,
+      fontSize: wp('5%'),
       fontWeight: 'bold',
   }
 ,
   titleText: {
     color:'black',
     top:5,
-   fontSize: 40,
+   fontSize: wp('8%'),
    fontWeight: 'bold',
  },
     container: {

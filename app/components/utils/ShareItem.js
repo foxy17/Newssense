@@ -4,6 +4,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 import Share, {ShareSheet, Button} from 'react-native-share';
 import Datastore from 'react-native-local-mongodb';
+import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 db = new Datastore({ filename: 'asyncStorageKey', autoload: true });
 export default class ShareItem extends Component {
   handleOnPress = () => {
@@ -60,7 +61,7 @@ onCancel() {
   _onShare= () =>{
     let shareOptions = {
       title: "React Native",
-      message: "Read This Awsome Article",
+      message: "Read This Awsome Article  ",
       url: "https://news119.herokuapp.com/"+this.state.id,
       subject: "Share Link",
       social: Share.Social.WHATSAPP
@@ -96,13 +97,13 @@ onCancel() {
     if(this.state.favourite)
     {
       return (
-        <View>
-            <View  style={styles.shareButton}><Icon
+        <View >
+            <View  style={styles.shareButton}><Icon2
              raised
-             name='share'
+             name='share-outline'
              type='material'
-             color='black'
-             size= {29}
+             color='#707070'
+             size= {wp('7%')}
              onPress={this._onDone}
 
 
@@ -114,8 +115,8 @@ onCancel() {
           raised
           name='whatsapp'
           type='material'
-          color='black'
-          size= {29}
+          color='#707070'
+          size= {wp('7%')}
           onPress={this._onShare}
 
         /></View>
@@ -123,8 +124,8 @@ onCancel() {
            raised
            name='bookmark'
            type='material'
-           color='black'
-           size= {29}
+           color='#707070'
+           size= {wp('7%')}
            onPress={this._unFavourite}
          /></View>
 
@@ -135,12 +136,12 @@ onCancel() {
       return (
         <View>
 
-            <View  style={styles.shareButton}><Icon
+            <View  style={styles.shareButton}><Icon2
              raised
-             name='share'
+             name='share-outline'
              type='material'
-             color='black'
-             size= {29}
+             color='#707070'
+             size= {wp('7%')}
              onPress={this._onDone}
 
 
@@ -152,8 +153,8 @@ onCancel() {
           raised
           name='whatsapp'
           type='material'
-          color='black'
-          size= {29}
+          color='#707070'
+          size= {wp('7%')}
           onPress={this._onShare}
 
         /></View>
@@ -161,8 +162,8 @@ onCancel() {
            raised
            name='bookmark-border'
            type='material'
-           color='black'
-           size= {29}
+           color='#707070'
+           size= {wp('7%')}
            onPress={this._Favourite}
          /></View>
 
@@ -179,19 +180,19 @@ const styles = StyleSheet.create({
   shareButton:{
     position:'absolute',
     zIndex:1,
-  top: 9,
-  right: 90
+  top: hp('0.5%'),
+  right:  wp('0%'),
   },
   shareWhatsapp:{
     zIndex:1,
     position: 'absolute',
-  top: 9,
-  right: 45
+  top: hp('0.5%'),
+  right: wp('20%'),
   },
   bookmark:{
     zIndex:1,
   position: 'absolute',
-  top: 9,
-  right: 0
+  top:  hp('0.5%'),
+  right: wp('10%'),
   }
 });

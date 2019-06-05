@@ -7,11 +7,13 @@ import {
 } from 'react-native';
 import { AndroidBackHandler } from 'react-navigation-backhandler';
 var width = Dimensions.get('window').width;
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon from 'react-native-vector-icons/Foundation';
 import Icon2 from 'react-native-vector-icons/Entypo';
+import Icon3 from 'react-native-vector-icons/MaterialIcons';
 
-import ToggleSwitch from 'toggle-switch-react-native';
+import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
+import SwitchToggle from 'react-native-switch-toggle';
 
 
 export default class SettingsScreen extends Component {
@@ -25,47 +27,72 @@ export default class SettingsScreen extends Component {
        StatusBar.setBackgroundColor('#0099cb', true);
        return false;
      };
-
+     onPress2 = () => {
+      this.setState({ isOnDefaultToggleSwitch: !this.state.isOnDefaultToggleSwitch });
+    }
 
 
  render() {
-   StatusBar.setBackgroundColor('#848484', true);
+   StatusBar.setBackgroundColor('white', true);
    return(
        <AndroidBackHandler onBackPress={this.onBackButtonPressAndroid}>
      <View style={{  height: '100%',
-  display: 'flex',flexDirection: 'column', backgroundColor:"#e2e2e2"}}>
-        <Icon2  name="cross" size={30} color="black" style={{  position: 'absolute',alignSelf:'flex-end',right:10,top:10}}
+     display: 'flex',flexDirection: 'column', backgroundColor:"#F3F3F3"}}>
+
+        <Icon2  name="cross" size={30} color="black" style={{  position: 'absolute',alignSelf:'flex-end',right:wp('4%'),top:hp('1%')}}
         onPress={() => {   StatusBar.setBackgroundColor('#0099cb', true);this.props.navigation.goBack();}}
          />
+
         <View>
-          <Text style={{fontSize: 30,fontWeight: 'bold',top:60,left:55,color:'black'}}>
-          Settings</Text>
+
         </View>
 
-         <View style={styles.upper}><Text>Test Label</Text>
+         <View style={styles.upper}>
+           <Icon.Button raised name="book-bookmark" backgroundColor="white" color='#2A2E43' size={wp('10%')}
+           paddingHorizontal={wp('5%')} paddingVertical={hp('1%')} onPress={()=>this.props.navigation.navigate('Bookmarks')}>
+               <Text style={{ left:wp('0%'),padding:5,fontFamily: 'Arial', fontSize: wp('7%')  ,color:'black',justifyContent:'center'}}>
+               Bookmarks
+             </Text>
+           </Icon.Button>
          </View>
+
           <View  style={styles.Middle} >
-          <Icon.Button name="star" backgroundColor="white" color='yellow' size={35}
-          paddingHorizontal={23} paddingVertical={10} onPress={()=>this.props.navigation.navigate('Bookmarks')}
 
-          >
-              <Text style={{ left:23,padding:5,fontFamily: 'Arial', fontSize: 20 ,color:'black',justifyContent:'center'}}>
-                Bookmarks
-              </Text>
-            </Icon.Button>
+            <View  style={{flexDirection: 'row',marginLeft:5, justifyContent:'space-around' }}>
+                  <View  style={{flexDirection: 'row',marginTop:hp('2.5%')}}>
+                  <Icon3 name="notifications" size={wp('10%')} color="#2A2E43"  />
 
-            <View  style={{flexDirection: 'row',marginLeft:10,  justifyContent:'space-around' }}>
-                  <Icon name="notifications" size={30} color="yellow"  />
+                    <Text style={{ left:wp('3%'),fontFamily: 'Arial', fontSize: wp('7%') ,color:'black',justifyContent:'center'}}>
+                      Notification
+                    </Text>
+                  </View>
 
-                  <ToggleSwitch
-                    isOn={this.state.isOnDefaultToggleSwitch}
-                    onColor='purple'
-                    offColor='#d1d1d1'
-                    label='Notifications'
-                    labelStyle={{color: 'black', fontFamily: 'Arial', fontSize: 20,right:0 }}
-                    size='small'
-                    onToggle={isOnDefaultToggleSwitch => {this.setState({ isOnDefaultToggleSwitch });}}
-                    />
+                  <SwitchToggle
+                   containerStyle={{
+                     marginTop: hp('3%'),
+
+                  width: wp('12%'),
+                  height: hp('3%'),
+                  borderRadius: wp('10%'),
+                  backgroundColor: '#1D7FFF',
+                  padding: 0,
+
+                   }}
+                   circleStyle={{
+
+                     width: wp('6%'),
+                       height: wp('6%'),
+                       borderRadius: 19,
+                       backgroundColor: 'white',  // rgb(102,134,205)
+                   }}
+                   switchOn={this.state.isOnDefaultToggleSwitch}
+                   onPress={this.onPress2}
+                   circleColorOff='#2A2E43'
+                   circleColorOn='#2A2E43'
+                   backgroundColorOn='#1D7FFF'
+                   backgroundColorOff='#F4F4F4'
+                   duration={500}
+                 />
             </View>
           </View>
       </View>
@@ -75,14 +102,14 @@ export default class SettingsScreen extends Component {
 }
 const styles = StyleSheet.create({
   upper:{
-    flex:1,
-    display: 'flex',
+
+    borderRadius:wp('2%'),
     backgroundColor: 'white',
-    height: 20,
-    top:60,
-    marginLeft:60,
-    marginRight:60,
-    width:width*0.701,
+    height: hp('9%'),
+    top:hp('30%'),
+    marginLeft:wp('13%'),
+
+    width:width*0.75,
     shadowColor: "#000",
     shadowOffset: {
     	width: 0,
@@ -93,12 +120,14 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   Middle:{
-    flex: 3,
-    display: 'flex',
-    top:10,
+
+    borderRadius:wp('2%'),
+    top:hp('30%'),
     backgroundColor: 'white',
-      margin:60,
-      width:width*0.7,
+      marginLeft:wp('13%'),
+      marginTop:hp('15%'),
+      width:width*0.75,
+        height: hp('10%'),
       shadowColor: "#000",
       shadowOffset: {
       	width: 0,
