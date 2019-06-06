@@ -13,15 +13,21 @@ import AsyncStorage from '@react-native-community/async-storage';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
 
+
 export default class HomeScreen extends Component {
   constructor(props){
     super(props);
     this.state ={ isLoading: true,len:"false",views:0,Pointer:0,hasPointer:false,
-    currentIndex:0,pan: new Animated.ValueXY(),
+    currentIndex:0,pan: new Animated.ValueXY(0),
     swiped_pan: new Animated.ValueXY({x:-width,y:0}),
     };
-  this.state.panResponder = PanResponder.create({
-    onStartShouldSetPanResponderCapture: (evt, gestureState) => false,
+
+
+
+
+
+    this.state.panResponder = PanResponder.create({
+      onStartShouldSetPanResponderCapture: (evt, gestureState) => false,
       onMoveShouldSetPanResponderCapture: (evt, gestureState) => {
         var x = gestureState.dx;
       var y = gestureState.dy;
@@ -61,15 +67,55 @@ export default class HomeScreen extends Component {
           },
       ]) (e, gestureState)
     }
-  },
+  }, onPanResponderTerminate: (evt, gestureState) => {
+    if(this.state.len=="true" &&( -gestureState.vx >0.1 || -gestureState.dx >= wp('30%')))
+    {
+      Animated.spring(this.state.pan, {
+          toValue: ({ x: 0, y: 0 })
+      }).start()
+    }
+  else if (this.state.currentIndex > 0 && (gestureState.dx > wp('30%') || gestureState.vx > 0.1)) {
+        Animated.timing(this.state.swiped_pan, {
+            toValue: ({ x: 0, y: 0 }),
+            duration: 400
+        }).start(() => {
+
+            this.setState({ currentIndex: this.state.currentIndex - 1 ,len:"false"})
+            this.state.swiped_pan.setValue({ x: -width, y: 0 })
+
+        })
+    }
+    else if (-gestureState.vx >0.1 || -gestureState.dx >= wp('30%')) {
+      Animated.timing(this.state.pan, {
+        toValue: ({ x: -width, y: 0 }),
+        duration:400
+      }).start(() => {
+          AsyncStorage.setItem('POINTER', (this.state.currentIndex+this.state.Pointer+1).toString());
+        this.setState({ currentIndex: this.state.currentIndex + 1 },()=>{this.state.pan.setValue({ x: 0, y: 0 })})
+      })
+    }
+
+    else {
+         Animated.parallel([
+             Animated.spring(this.state.pan, {
+                 toValue: ({ x: 0, y: 0 })
+             }),
+             Animated.spring(this.state.swiped_pan, {
+                 toValue: ({ x: -width, y: 0 })
+             })
+
+         ]).start()
+
+    }
+      },
       onPanResponderRelease: (e,gestureState) => {
-        if(this.state.len=="true" &&( -gestureState.vx >0.7 || -gestureState.dx >= 50))
+        if(this.state.len=="true" &&( -gestureState.vx >0.1 || -gestureState.dx >= wp('30%')))
         {
           Animated.spring(this.state.pan, {
               toValue: ({ x: 0, y: 0 })
           }).start()
         }
-      else if (this.state.currentIndex > 0 && (gestureState.dx > 50 || gestureState.vx > 0.7)) {
+      else if (this.state.currentIndex > 0 && (gestureState.dx > wp('30%') || gestureState.vx > 0.1)) {
             Animated.timing(this.state.swiped_pan, {
                 toValue: ({ x: 0, y: 0 }),
                 duration: 400
@@ -80,7 +126,7 @@ export default class HomeScreen extends Component {
 
             })
         }
-        else if (-gestureState.vx >0.7 || -gestureState.dx >= 50) {
+        else if (-gestureState.vx >0.1 || -gestureState.dx >= wp('30%')) {
           Animated.timing(this.state.pan, {
             toValue: ({ x: -width, y: 0 }),
             duration:400
@@ -115,7 +161,7 @@ async componentWillMount() {
 }
 
 
-
+componentWillMount(){}
   componentDidMount(){
     return fetch('https://news119.herokuapp.com/getData')
       .then((response) => response.json())
@@ -136,13 +182,38 @@ async componentWillMount() {
       });
   }
 
-update(){
+  flipCard() {
+     if (this.value >= 90) {
+       this.value=0;
+       Animated.spring(this.state.pan,{
+         toValue: 0,
+         friction: 8,
+         tension: 10
+       }).start();
+     } else {
+       this.value=120;
+       Animated.spring(this.state.pan,{
+         toValue: 180,
+         friction: 8,
+         tension: 10
+       }).start();
+     }
 
-}
+   }
 
   renderArtciles=()=>{
     const startingIndex =this.state.Pointer;
     var AnimatedImage = Animated.createAnimatedComponent(ImageBackground);
+    const frontAnimatedStyle = {
+      transform: [
+        { rotateY: this.frontInterpolate }
+      ]
+    }
+    const backAnimatedStyle = {
+      transform: [
+        { rotateY: this.backInterpolate }
+      ]
+    };
     var len =this.state.dataSource.length;
     return this.state.dataSource.map((_,i)=>{
       const shiftedIndex = (startingIndex + i) %  this.state.dataSource.length
@@ -212,19 +283,22 @@ update(){
                 if(item.special)
                 {
                   return(
-                    <Animated.View key={item._id} {...this.state.panResponder.panHandlers} style={[this.state.pan.getLayout()]}>
-                      <AnimatedImage  source={{ uri:item.img.data }}
-                       imageStyle={{ borderRadius: 10 }} style={{marginTop:hp('5%'),flex: 1,position:'absolute',height:height-(height*0.15),width:width-(width*0.05),
-                       borderRadius:50,margin:wp('3%'),shadowColor: '#003182',shadowOffset: { width: 0, height: 9 },shadowOpacity: 0.48,shadowRadius: 11.95,elevation:18}}>
-                      <TouchableOpacity activeOpacity={1}  onPress={()=>{this.props.navigation.navigate('Details', {itemId: item})}}
-                        >
-                    <View style={{height:height-(height*0.15),width:width-(width*0.05),backgroundColor:'transparent',borderRadius:50}}>
 
-                    </View>
-                        </TouchableOpacity>
-                      </AnimatedImage>
+                  <Animated.View key={item._id} {...this.state.panResponder.panHandlers} style={[this.state.pan.getLayout()]}>
 
+                        <AnimatedImage  source={{ uri:item.img.data }}
+                         imageStyle={{ borderRadius: 10 }} style={{marginTop:hp('5%'),flex: 1,position:'absolute',height:height-(height*0.15),width:width-(width*0.05),
+                         borderRadius:50,margin:wp('3%'),shadowColor: '#003182',shadowOffset: { width: 0, height: 9 },shadowOpacity: 0.48,shadowRadius: 11.95,elevation:18}}>
+                        <TouchableOpacity activeOpacity={1}  onPress={() => this.flipCard()}
+                          >
+                      <View style={{height:height-(height*0.15),width:width-(width*0.05),backgroundColor:'transparent',borderRadius:50}}>
+
+                      </View>
+                          </TouchableOpacity>
+                        </AnimatedImage>
                   </Animated.View>
+
+
 
                   )
                 }
@@ -250,7 +324,7 @@ update(){
                               <Text style={styles.titleArrtibute}>{item.category}</Text>
                                 <Text style={styles.titleText} >{item.title}﻿</Text>
                                 <View>
-                                  <Text numberOfLines={12} adjustsFontSizeToFit allowFontScaling minimumFontScale={.01} style={styles.body}>{item.body}﻿</Text>
+                                  <Text numberOfLines={hp('2.5%')} style={styles.body}>{item.body}﻿</Text>
                                 </View>
                               </View>
 
@@ -398,7 +472,7 @@ update(){
     body: {
 
       color: 'black',
-      fontSize: wp('4%'),
+      fontSize: hp('2.2%'),
 
 
 
@@ -415,7 +489,7 @@ update(){
   titleText: {
     color:'black',
     top:5,
-   fontSize: wp('8%'),
+   fontSize: wp('4.5%'),
    fontWeight: 'bold',
  },
     container: {

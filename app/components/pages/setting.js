@@ -59,29 +59,32 @@ export default class SettingsScreen extends Component {
           <View  style={styles.Middle} >
 
             <View  style={{flexDirection: 'row',marginLeft:5, justifyContent:'space-around' }}>
-                  <View  style={{flexDirection: 'row',marginTop:hp('2.5%')}}>
-                  <Icon3 name="notifications" size={wp('10%')} color="#2A2E43"  />
+                <View  style={{flexDirection: 'row',marginTop:hp('2%')}}>
+                    <Icon3 name="notifications" size={wp('10%')} color="#2A2E43"  />
+                </View>
 
-                    <Text style={{ left:wp('3%'),fontFamily: 'Arial', fontSize: wp('7%') ,color:'black',justifyContent:'center'}}>
-                      Notification
-                    </Text>
+                  <View style={{right:wp('5%'),marginTop:hp('2%')}}>
+                      <Text style={{ left:wp('3%'),fontFamily: 'Arial', fontSize: wp('7%') ,color:'black',justifyContent:'center'}}>
+                        Notification
+                      </Text >
                   </View>
 
                   <SwitchToggle
                    containerStyle={{
                      marginTop: hp('3%'),
 
-                  width: wp('12%'),
+                  width: wp('10%'),
                   height: hp('3%'),
                   borderRadius: wp('10%'),
                   backgroundColor: '#1D7FFF',
                   padding: 0,
+                  margin:5
 
                    }}
                    circleStyle={{
 
-                     width: wp('6%'),
-                       height: wp('6%'),
+                     width: wp('5%'),
+                       height: wp('5%'),
                        borderRadius: 19,
                        backgroundColor: 'white',  // rgb(102,134,205)
                    }}
@@ -92,7 +95,7 @@ export default class SettingsScreen extends Component {
                    backgroundColorOn='#1D7FFF'
                    backgroundColorOff='#F4F4F4'
                    duration={500}
-                 />
+                 />  
             </View>
           </View>
       </View>

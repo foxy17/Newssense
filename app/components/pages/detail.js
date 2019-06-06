@@ -1,8 +1,9 @@
 import React,{Component} from "react";
-import { View, Text,ActivityIndicator,Dimensions,Image } from "react-native";
+import { View, Text,ActivityIndicator,Dimensions,Image,StatusBar } from "react-native";
 import { createStackNavigator, createAppContainer } from "react-navigation";
 const {width, height} = Dimensions.get('window');
 import ShareItem from '../utils/ShareItem'
+import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
 export default class ExternalScreen extends Component {
   constructor(props){
@@ -18,9 +19,13 @@ export default class ExternalScreen extends Component {
 
 
       return(
-        <View style={{flex:1,backgroundColor:'#00cafe'}}>
-          <View style={{ flex: 1,position:'absolute',height:height-(height*0.1),width:width-(width*0.05),
-        backgroundColor:'white',borderRadius:50,margin:10,shadowColor: '#003182',shadowOffset: { width: 0, height: 9 },shadowOpacity: 0.48,shadowRadius: 11.95,elevation:18}}>
+
+        <View style={{flex:1,backgroundColor:'#f3f3f3'}}>
+        <StatusBar
+           backgroundColor="black"
+           animated />
+          <View style={{ flex: 1,position:'absolute',height:height-(height*0.15),width:width-(width*0.05),
+        backgroundColor:'white',top:hp('5%'),borderRadius:10,margin:wp('3%'),shadowColor: '#003182',shadowOffset: { width: 0, height: 9 },shadowOpacity: 0.48,shadowRadius: 11.95,elevation:18}}>
 
 
             < View style={styles.Imagebody}>
@@ -56,11 +61,11 @@ const styles = {
   image: {
 
     flex: 1,
-    height:null,
-    width:null,
-    resizeMode:'cover',
-    borderTopLeftRadius: 50,
-  borderTopRightRadius: 50,
+    height:height-(height*0.15),
+    width:width-(width*0.05),
+    resizeMode:'contain',
+    borderTopLeftRadius: 10,
+  borderTopRightRadius: 10,
 
   },
 
@@ -68,38 +73,59 @@ const styles = {
   Imagebody: {
     flex: 2,
     backgroundColor:'black',
-    borderRadius:50
+    borderTopLeftRadius: 10,
+  borderTopRightRadius: 10,
 
 
   },
   inner: {
     flex: 3,
-    padding:4
+    padding:6,
+    marginLeft:10,
+    marginRight:10
 
   },
   text: {
     flex:1,
     color: '#fff',
-    fontSize: 20,
+    fontSize: wp('8%'),
     fontWeight: 'bold',
   },
   body: {
-    flex:4,
-    color: '#fff',
-    fontSize: 15,
-    marginBottom:5,
-
+    color: 'black',
+    fontSize: wp('4%'),
 
 
   },
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems:'center'
-  },
-  horizontal: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    padding: 10
+  titleArrtibute:{
+    color:'#679CEA',
+    top:0,
+    fontSize: wp('5%'),
+    fontWeight: 'bold',
   }
+  ,
+  titleText: {
+    color:'black',
+    top:5,
+   fontSize: wp('8%'),
+   fontWeight: 'bold',
+  },
+    container: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems:'center'
+    },
+    horizontal: {
+      flexDirection: 'row',
+      justifyContent: 'space-around',
+      padding: 10
+    },
+    subView:{
+      flexDirection:'row',
+      justifyContent:'space-between',
+      alignItems:'center',
+      backgroundColor:'transparent'
+  },
+
+
 };

@@ -150,11 +150,12 @@ android {
 }
 
 dependencies {
+    implementation project(':react-native-push-notification')
 
 
   // For animated GIF support
   implementation 'com.facebook.fresco:animated-gif:1.10.0'
-
+  implementation 'com.google.firebase:firebase-core:16.0.9'
   // For WebP support, including animated WebP
   implementation 'com.facebook.fresco:animated-webp:1.10.0'
   implementation 'com.facebook.fresco:webpsupport:1.10.0'
@@ -177,3 +178,4 @@ task copyDownloadableDepsToLibs(type: Copy) {
     from configurations.compile
     into 'libs'
 }
+apply plugin: 'com.google.gms.google-services'

@@ -3,6 +3,8 @@ import { View, Text,ActivityIndicator,Dimensions,Image ,StatusBar} from "react-n
 import { createStackNavigator, createAppContainer } from "react-navigation";
 const {width, height} = Dimensions.get('window');
 import ShareItem from '../utils/ShareItem'
+import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+
 
 export default class SingleBookmarkScreen extends Component {
   static navigationOptions = {
@@ -42,7 +44,7 @@ export default class SingleBookmarkScreen extends Component {
     const id = navigation.getParam('id', 'NO-ID');
     console.log("HEYY"+id);
     this.state.params="https://news119.herokuapp.com/find/"+id;
-     StatusBar.setBackgroundColor('#0099cb', true);
+     StatusBar.setBackgroundColor('black', true);
       if(this.state.isLoading){
             return(
               <View >
@@ -50,9 +52,9 @@ export default class SingleBookmarkScreen extends Component {
               </View>
             )}
             return(
-              <View style={{flex:1,backgroundColor:'#00cafe'}}>
-                <View style={{ flex: 1,position:'absolute',height:height-(height*0.1),width:width-(width*0.05),
-              backgroundColor:'white',borderRadius:50,margin:10,shadowColor: '#003182',shadowOffset: { width: 0, height: 9 },shadowOpacity: 0.48,shadowRadius: 11.95,elevation:18}}>
+              <View style={{flex:1,backgroundColor:'#f3f3f3'}}>
+                <View style={{ flex: 1,top:hp('5%'),position:'absolute',height:height-(height*0.15),width:width-(width*0.05),
+              backgroundColor:'white',borderRadius:10,margin:wp('3%'),shadowColor: '#003182',shadowOffset: { width: 0, height: 9 },shadowOpacity: 0.48,shadowRadius: 11.95,elevation:18}}>
 
 
                   < View style={styles.Imagebody}>
@@ -94,8 +96,8 @@ const styles = {
     height:null,
     width:null,
     resizeMode:'cover',
-    borderTopLeftRadius: 50,
-  borderTopRightRadius: 50,
+    borderTopLeftRadius: 10,
+  borderTopRightRadius: 10,
 
   },
 
@@ -103,7 +105,8 @@ const styles = {
   Imagebody: {
     flex: 2,
     backgroundColor:'black',
-    borderRadius:50,
+    borderTopLeftRadius: 10,
+  borderTopRightRadius: 10,
 
 
 
@@ -119,28 +122,26 @@ const styles = {
   text: {
     flex:1,
     color: '#fff',
-    fontSize: 20,
+    fontSize: wp('8%'),
     fontWeight: 'bold',
   },
   body: {
-
     color: 'black',
-    fontSize: 15,
-    marginBottom:5,
+    fontSize: wp('4%'),
 
   },
 
 titleArrtibute:{
-    color:'black',
-    top:0,
-    fontSize: 20,
-    fontWeight: 'bold',
+  color:'#679CEA',
+  top:0,
+  fontSize: wp('5%'),
+  fontWeight: 'bold',
 }
 ,
 titleText: {
   color:'black',
   top:5,
- fontSize: 40,
+ fontSize: wp('8%'),
  fontWeight: 'bold',
 },
   container: {

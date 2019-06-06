@@ -34,7 +34,7 @@ export default class SettingButton extends Component {
          containerStyle={{
            marginTop: 0,
 
-        width: wp('15%'),
+        width: wp('12%'),
         height: hp('4%'),
         borderRadius: 25,
         backgroundColor: '#1D7FFF',
@@ -42,8 +42,8 @@ export default class SettingButton extends Component {
 
          }}
          circleStyle={{
-
-           width: wp('6%'),
+           left:wp('1%'),
+           width: wp('6.5%'),
              height: wp('6%'),
              borderRadius: 19,
              backgroundColor: 'white',  // rgb(102,134,205)
@@ -69,6 +69,7 @@ const styles = StyleSheet.create({
   marginLeft:wp('2.5%'),
   marginTop:hp('4%'),
   flexDirection:'row',
+  top:hp('0.8%')
 
 },
 header:{
@@ -77,11 +78,12 @@ header:{
   fontSize: wp('5%'),
   color:'#1D7FFF',
     flexDirection:'row',
+    top:hp('0.5%')
 
 },
 toggle:{
   flex:1,
-  left:wp('58%'),
+  left:wp('57%'),
   fontWeight: 'bold',
   fontSize: wp('5%'),
   color:'#1D7FFF',
