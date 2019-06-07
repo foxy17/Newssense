@@ -6,7 +6,7 @@ import {
   FlatList,Image,Platform
 } from 'react-native';
 import { createStackNavigator, createAppContainer, SafeAreaView } from "react-navigation";
-import Swiper from 'react-native-swiper-animated';
+
 
 import ExternalScreen from './components/pages/external';
 import Routes from './components/routes'

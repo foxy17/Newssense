@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-community/async-storage';
 
-const POINTER = '0';
+var POINTER = 0;
 
 function newPointer() {
   AsyncStorage.setItem('POINTER', '0');
@@ -9,11 +9,12 @@ function newPointer() {
 export default async function checkPointer() {
   try {
     const hadPointer = await AsyncStorage.getItem('POINTER');
+    console.log("pointer"+hadPointer);
     if (hadPointer === null) {
       newPointer();
-      return false;
+      return 0;
     }
-    return true;
+    return parseInt(hadPointer);
   } catch (error) {
     return false;
   }

@@ -7,24 +7,21 @@ const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
 import DeepLinking from 'react-native-deep-linking';
 import ShareItem from '../utils/ShareItem'
 import SettingButton from '../utils/settings'
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import checkPointer from '../utils/checkPointer';
 import AsyncStorage from '@react-native-community/async-storage';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import Share, {ShareSheet, Button} from 'react-native-share';
 
 
 
-export default class HomeScreen extends Component {
+export default  class HomeScreen extends Component {
   constructor(props){
     super(props);
-    this.state ={ isLoading: true,len:"false",views:0,Pointer:0,hasPointer:false,
+    this.state ={ isLoading: true,len:"false",views:0,Pointer:0,hasPointer:true,
     currentIndex:0,pan: new Animated.ValueXY(0),
     swiped_pan: new Animated.ValueXY({x:-width,y:0}),
     };
-
-
-
-
 
     this.state.panResponder = PanResponder.create({
       onStartShouldSetPanResponderCapture: (evt, gestureState) => false,
@@ -115,12 +112,12 @@ export default class HomeScreen extends Component {
               toValue: ({ x: 0, y: 0 })
           }).start()
         }
-      else if (this.state.currentIndex > 0 && (gestureState.dx > wp('30%') || gestureState.vx > 0.1)) {
+      else if (this.state.currentIndex > 0 && (gestureState.dx > wp('10%') || gestureState.vx > 0.08)) {
             Animated.timing(this.state.swiped_pan, {
                 toValue: ({ x: 0, y: 0 }),
                 duration: 400
             }).start(() => {
-
+                AsyncStorage.setItem('POINTER', (this.state.currentIndex-1).toString());
                 this.setState({ currentIndex: this.state.currentIndex - 1 ,len:"false"})
                 this.state.swiped_pan.setValue({ x: -width, y: 0 })
 
@@ -131,7 +128,8 @@ export default class HomeScreen extends Component {
             toValue: ({ x: -width, y: 0 }),
             duration:400
           }).start(() => {
-              AsyncStorage.setItem('POINTER', (this.state.currentIndex+this.state.Pointer+1).toString());
+            console.log("INside pan responder"+this.state.currentIndex);
+            AsyncStorage.setItem('POINTER', (this.state.currentIndex+1).toString());
             this.setState({ currentIndex: this.state.currentIndex + 1 },()=>{this.state.pan.setValue({ x: 0, y: 0 })})
           })
         }
@@ -156,12 +154,12 @@ export default class HomeScreen extends Component {
 
 async componentWillMount() {
   const has = await checkPointer();
-  let pointer = parseInt(await AsyncStorage.getItem('POINTER'));
-  this.setState({ hasPointer:true, Pointer: pointer });
+  console.log('has'+has)
+  this.setState({ hasPointer:false, currentIndex: has });
 }
 
 
-componentWillMount(){}
+
   componentDidMount(){
     return fetch('https://news119.herokuapp.com/getData')
       .then((response) => response.json())
@@ -202,22 +200,16 @@ componentWillMount(){}
    }
 
   renderArtciles=()=>{
-    const startingIndex =this.state.Pointer;
+    console.log(this.state.currentIndex);
     var AnimatedImage = Animated.createAnimatedComponent(ImageBackground);
-    const frontAnimatedStyle = {
-      transform: [
-        { rotateY: this.frontInterpolate }
-      ]
-    }
-    const backAnimatedStyle = {
-      transform: [
-        { rotateY: this.backInterpolate }
-      ]
-    };
+
+
+
     var len =this.state.dataSource.length;
-    return this.state.dataSource.map((_,i)=>{
-      const shiftedIndex = (startingIndex + i) %  this.state.dataSource.length
-      const item = this.state.dataSource[shiftedIndex];
+    return this.state.dataSource.map((item,i)=>{
+      // const shiftedIndex = (startingIndex + i) %  this.state.dataSource.length
+      // const item = this.state.dataSource[shiftedIndex];
+
         if (i == this.state.currentIndex-1)
         {
           if(item.special==false)
@@ -289,7 +281,16 @@ componentWillMount(){}
                         <AnimatedImage  source={{ uri:item.img.data }}
                          imageStyle={{ borderRadius: 10 }} style={{marginTop:hp('5%'),flex: 1,position:'absolute',height:height-(height*0.15),width:width-(width*0.05),
                          borderRadius:50,margin:wp('3%'),shadowColor: '#003182',shadowOffset: { width: 0, height: 9 },shadowOpacity: 0.48,shadowRadius: 11.95,elevation:18}}>
-                        <TouchableOpacity activeOpacity={1}  onPress={() => this.flipCard()}
+                        <TouchableOpacity activeOpacity={1}  onPress={() => {
+                          let shareOptions = {
+                            title: "Sahre This Story",
+                            message: "Read This Awsome Article  ",
+                            url: "https://news119.herokuapp.com/"+item._id,
+                            subject: "Share Link",
+
+                          };
+                            Share.open(shareOptions).catch((err) => { err && console.log(err); });
+                        }}
                           >
                       <View style={{height:height-(height*0.15),width:width-(width*0.05),backgroundColor:'transparent',borderRadius:50}}>
 
@@ -391,7 +392,7 @@ componentWillMount(){}
 
   render(){
 
-      if(this.state.isLoading){
+      if(this.state.isLoading ){
             return(
               <View >
                 <Image source={require('../images/load.gif')}    style={{left:wp('1%') ,width: wp('100'), height: hp('100')}}/>
@@ -405,7 +406,7 @@ componentWillMount(){}
        <StatusBar
           backgroundColor="black"
           animated />
-          <ScrollView   contentContainerStyle={{  flexGrow: 1 ,top:hp('4%')}}
+          <ScrollView   contentContainerStyle={{  flexGrow: 1 ,top:hp('0.5%')}}
           // refreshControl={
           //                <RefreshControl
           //                  refreshing={loading}
@@ -459,8 +460,8 @@ componentWillMount(){}
     inner: {
       flex: 3,
       padding:6,
-      marginLeft:10,
-      marginRight:10
+      marginLeft:1,
+      marginRight:1
 
     },
     text: {
@@ -482,14 +483,14 @@ componentWillMount(){}
   titleArrtibute:{
       color:'#679CEA',
       top:0,
-      fontSize: wp('5%'),
+      fontSize: wp('4%'),
       fontWeight: 'bold',
   }
 ,
   titleText: {
     color:'black',
     top:5,
-   fontSize: wp('4.5%'),
+   fontSize: wp('4%'),
    fontWeight: 'bold',
  },
     container: {

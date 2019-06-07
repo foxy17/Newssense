@@ -14,7 +14,7 @@ import { apiMiddleware, reducer } from './redux/redux';
 const store = createStore(reducer, {}, applyMiddleware(apiMiddleware));
 
 // Fetch movie data
-store.dispatch({type: 'GET_MOVIE_DATA'});
+store.dispatch({type: 'GET_DATA'});
 
 
 export default class Routes extends React.Component {
