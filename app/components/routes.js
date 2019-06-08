@@ -2,19 +2,13 @@ import React from "react";
 import { View, Text ,Platform,Linking } from "react-native";
 import checkIfFirstLaunch from './utils/init';
 import { createStackNavigator, createAppContainer } from "react-navigation";
-import HomeScreen from './pages/home';
-import DetailsScreen from './pages/detail';
 import DeepLinking from 'react-native-deep-linking';
+import store from './redux/Store';
 import {AppContainer , AppContainerIntro} from './navigator';
-import { createStore, applyMiddleware } from 'redux';
+
 import { Provider } from 'react-redux';
 import { apiMiddleware, reducer } from './redux/redux';
 
-// Create Redux store
-const store = createStore(reducer, {}, applyMiddleware(apiMiddleware));
-
-// Fetch movie data
-store.dispatch({type: 'GET_DATA'});
 
 
 export default class Routes extends React.Component {

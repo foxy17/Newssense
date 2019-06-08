@@ -8,6 +8,50 @@ import SettingsScreen from './pages/setting';
 import BookmarksScreen from './pages/bookmarks';
 import SingleBookmarkScreen from './pages/singleBookmark';
 import { fromLeft,fromBottom ,fadeIn} from 'react-navigation-transitions';
+import * as ActionTypes from './redux/ActionTypes';
+import { connect } from 'react-redux';
+
+const mapStateToProps = (state) => ({
+    isLoading: state.serviceReducer.isLoading,
+    error: state.serviceReducer.error,
+    data: state.serviceReducer.data
+});
+
+const mapDispatchToProps = (dispatch) => (
+
+  {
+
+    callService: () => dispatch(callWebservice())
+})
+export const callWebservice = () => {
+    console.log("this is getting calles")
+    return dispatch => {
+        dispatch(serviceActionPending())
+        console.log("COMING HERE?")
+        fetch(`https://news119.herokuapp.com/getData`)
+        .then(response => {
+            console.log(response.data)
+            dispatch(serviceActionSuccess(response.data))
+        })
+        .catch(error => {
+            dispatch(serviceActionError(error))
+        });
+    }
+}
+
+export const serviceActionPending = () => ({
+    type: ActionTypes.SERVICE_PENDING
+})
+
+export const serviceActionError = (error) => ({
+    type: ActionTypes.SERVICE_ERROR,
+    error: error
+})
+
+export const serviceActionSuccess = (data) => ({
+    type: ActionTypes.SERVICE_SUCCESS,
+    data: data
+})
 const handleCustomTransition = ({ scenes }) => {
   const prevScene = scenes[scenes.length - 2];
   const nextScene = scenes[scenes.length - 1];
@@ -20,9 +64,10 @@ const handleCustomTransition = ({ scenes }) => {
   }
   return fadeIn();
 }
+let ReduxAppContainer= connect(mapStateToProps, mapDispatchToProps)(HomeScreen);
 const AppNavigator = createStackNavigator(
   {
-  Home: {screen:HomeScreen,key:"Home"},
+  Home: {screen:ReduxAppContainer,key:"Home"},
   Details: {screen:DetailsScreen,header: {style: {
           backgroundColor: '#00cafe'
         }}},
@@ -40,10 +85,11 @@ const AppNavigator = createStackNavigator(
 }
 
 );
+
 const AppContainer = createAppContainer(AppNavigator);
 const AppNavigatorIntro = createStackNavigator(
   {
-  Home: {screen:HomeScreen,key:"Home"},
+  Home: {screen:ReduxAppContainer,key:"Home"},
   Details: {screen:DetailsScreen,style: {
           backgroundColor: '#00cafe'
         }},
@@ -63,4 +109,4 @@ const AppNavigatorIntro = createStackNavigator(
 );
 
 const AppContainerIntro = createAppContainer(AppNavigatorIntro);
-export {AppContainer,AppContainerIntro};
+export  {AppContainer,AppContainerIntro};

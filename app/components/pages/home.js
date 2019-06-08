@@ -12,7 +12,7 @@ import checkPointer from '../utils/checkPointer';
 import AsyncStorage from '@react-native-community/async-storage';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import Share, {ShareSheet, Button} from 'react-native-share';
-
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 
 export default  class HomeScreen extends Component {
@@ -160,16 +160,41 @@ async componentWillMount() {
 
 
 
-  componentDidMount(){
-    return fetch('https://news119.herokuapp.com/getData')
+  async componentDidMount(){
+
+    const data = await AsyncStorage.getItem('ApiData')
+    if(!data) {
+      try{
+        console.log("THISIS CALLED")
+        this.setState({
+
+          isLoading: false,
+          loaded:true,
+          dataSource: JSON.parse(data).data,
+        })
+      }catch(e) {
+        console.warn("fetch Error: ", error)
+     }}
+      else {
+        this.getData();
+      }
+       this.timer = setInterval(()=> this.getData(), 100000)
+}
+  async getData(){
+    console.log("Called")
+    this.setState({
+
+      isLoading: true})
+    fetch('https://news119.herokuapp.com/getData')
       .then((response) => response.json())
       .then((responseJson) => {
+        console.log("API")
 
         this.setState({
 
           isLoading: false,
           loaded:true,
-          dataSource: responseJson.data,
+          dataSource: responseJson.data.sort((a,b)=>a.date<b.date),
         }, function(){
 
         });
@@ -293,7 +318,7 @@ async componentWillMount() {
                         }}
                           >
                       <View style={{height:height-(height*0.15),width:width-(width*0.05),backgroundColor:'transparent',borderRadius:50}}>
-
+                      <Text>REFRESH</Text>
                       </View>
                           </TouchableOpacity>
                         </AnimatedImage>
@@ -307,7 +332,6 @@ async componentWillMount() {
 
                       return(
                         <Animated.View key={item._id} {...this.state.panResponder.panHandlers} style={this.state.pan.getLayout()}>
-
 
                           <View style={{ marginTop:hp('5%'),flex: 1,position:'absolute',height:height-(height*0.15),width:width-(width*0.05),
                         backgroundColor:'white',borderRadius:10,margin:wp('3%'),shadowColor: '#003182',shadowOffset: { width: 0, height: 9 },shadowOpacity: 0.48,shadowRadius: 11.95,elevation:18}}>
@@ -326,6 +350,8 @@ async componentWillMount() {
                                 <Text style={styles.titleText} >{item.title}﻿</Text>
                                 <View>
                                   <Text numberOfLines={hp('2.5%')} style={styles.body}>{item.body}﻿</Text>
+
+
                                 </View>
                               </View>
 
@@ -333,6 +359,7 @@ async componentWillMount() {
 
                             </View>
                           </View>
+
                       </Animated.View>
 
                     )
@@ -403,6 +430,7 @@ async componentWillMount() {
 
       <View style={{flex:1}}>
       <SettingButton navigate={this.props.navigation.navigate}  />
+
        <StatusBar
           backgroundColor="black"
           animated />
@@ -414,7 +442,18 @@ async componentWillMount() {
           //                />}
           >
             {this.renderArtciles()}
+
                  </ScrollView>
+                 <View style={{backgroundColor:'#f3f3f3'}}>
+                 <Icon
+                  name='refresh'
+                  type='material'
+                  color='#707070'
+                  style={{  marginRight:wp('80%'),left:wp('1%'),backgroundColor:'#f3f3f3'}}
+
+                  size= {wp('7%')}
+                  onPress={this.getData.bind(this)}/></View>
+
           <View style={{position:'absolute',zIndex:-20,backgroundColor:'#f3f3f3'}}>
 
                           <View style={{  flex: 1,position:'absolute',height:height,width:width,backgroundColor:'white'}}>
@@ -428,7 +467,9 @@ async componentWillMount() {
 
                           </View>
           </View>
+
          </View>
+
 
 
       )
@@ -490,7 +531,7 @@ async componentWillMount() {
   titleText: {
     color:'black',
     top:5,
-   fontSize: wp('4%'),
+   fontSize: wp('5%'),
    fontWeight: 'bold',
  },
     container: {
