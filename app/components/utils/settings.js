@@ -14,6 +14,7 @@ export default class SettingButton extends Component {
          isOnDefaultToggleSwitch: true,
        }
    }
+
    onPress2 = () => {
     this.setState({ isOnDefaultToggleSwitch: !this.state.isOnDefaultToggleSwitch });
   }
@@ -30,32 +31,16 @@ export default class SettingButton extends Component {
        />
         <Text style={styles.header}>NEWS   </Text>
         <View style={styles.toggle}>
-        <SwitchToggle
-         containerStyle={{
-           marginTop: 0,
 
-        width: wp('12%'),
-        height: hp('4%'),
-        borderRadius: 25,
-        backgroundColor: '#1D7FFF',
-        padding: 5,
+              <Icon
+               name='refresh'
+               type='material'
+               color='#1D7FFF'
 
-         }}
-         circleStyle={{
-           left:wp('1%'),
-           width: wp('6.5%'),
-             height: hp('3%'),
-             borderRadius: 19,
-             backgroundColor: 'white',  // rgb(102,134,205)
-         }}
-         switchOn={this.state.isOnDefaultToggleSwitch}
-         onPress={this.onPress2}
-         circleColorOff='white'
-         circleColorOn='white'
-         backgroundColorOn='#1D7FFF'
-         backgroundColorOff='#F4F4F4'
-         duration={500}
-       /></View>
+               onPress={this.props.parentMethod}
+               size= {wp('7%')}
+
+               /></View>
        </View>
       );
 
@@ -83,7 +68,7 @@ header:{
 },
 toggle:{
   flex:1,
-  left:wp('57%'),
+  left:wp('62%'),
   fontWeight: 'bold',
   fontSize: wp('5%'),
   color:'#1D7FFF',

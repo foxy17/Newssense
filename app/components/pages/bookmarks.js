@@ -4,7 +4,7 @@ import Datastore from 'react-native-local-mongodb';
 db = new Datastore({ filename: 'asyncStorageKey', autoload: true });
 import Swipeout from 'react-native-swipeout';
 import { AndroidBackHandler } from 'react-navigation-backhandler';
-
+import normalize from '../utils/normalize'
 export default class BookmarksScreen extends Component {
   constructor(props) {
      super(props);
@@ -62,9 +62,9 @@ export default class BookmarksScreen extends Component {
               <Swipeout right={swipeBtns}
                 autoClose= {true}
                 backgroundColor= 'transparent'>
-                <TouchableHighlight onPress={()=>{console.log(data._id);this.props.navigation.navigate('SingleBookmark', {id: data._id})}}>
-              <View style={{padding:10}}><Text  style={{ fontSize: 20,padding: 15,}}> {data.name}</Text></View>
-              </TouchableHighlight>
+                <TouchableOpacity onPress={()=>{console.log(data._id);this.props.navigation.navigate('SingleBookmark', {id: data._id})}}>
+              <View style={{padding:10}}><Text  style={{ fontSize: normalize(16),padding: 15,}}> {data.name}</Text></View>
+              </TouchableOpacity>
             </Swipeout>
             </View>
             </AndroidBackHandler>

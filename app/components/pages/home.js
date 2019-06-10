@@ -1,8 +1,10 @@
 import React,{Component} from "react";
 import { View, Text,ActivityIndicator,StatusBar,
-FlatList,Image,Dimensions,Animated,ScrollView ,RefreshControl,PanResponder,TouchableOpacity,TouchableWithoutFeedback,ImageBackground  } from "react-native";
+FlatList,Image,Dimensions,Animated,ScrollView ,Platform, PixelRatio,TouchableHighlight ,RefreshControl,PanResponder,TouchableOpacity,TouchableWithoutFeedback,ImageBackground  } from "react-native";
 import { createStackNavigator, createAppContainer } from "react-navigation";
 const {width, height} = Dimensions.get('window');
+const diagonal=Math.sqrt((width*width)+(height*height));
+import normalize from '../utils/normalize'
 const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
 import DeepLinking from 'react-native-deep-linking';
 import ShareItem from '../utils/ShareItem'
@@ -13,11 +15,14 @@ import AsyncStorage from '@react-native-community/async-storage';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import Share, {ShareSheet, Button} from 'react-native-share';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import Toast from 'react-native-simple-toast';
+
 
 
 export default  class HomeScreen extends Component {
   constructor(props){
     super(props);
+
     this.state ={ isLoading: true,len:"false",views:0,Pointer:0,hasPointer:true,
     currentIndex:0,pan: new Animated.ValueXY(0),
     swiped_pan: new Animated.ValueXY({x:-width,y:0}),
@@ -74,7 +79,7 @@ export default  class HomeScreen extends Component {
   else if (this.state.currentIndex > 0 && (gestureState.dx > wp('30%') || gestureState.vx > 0.1)) {
         Animated.timing(this.state.swiped_pan, {
             toValue: ({ x: 0, y: 0 }),
-            duration: 400
+            duration: 200
         }).start(() => {
 
             this.setState({ currentIndex: this.state.currentIndex - 1 ,len:"false"})
@@ -85,7 +90,7 @@ export default  class HomeScreen extends Component {
     else if (-gestureState.vx >0.1 || -gestureState.dx >= wp('30%')) {
       Animated.timing(this.state.pan, {
         toValue: ({ x: -width, y: 0 }),
-        duration:400
+        duration:200
       }).start(() => {
           AsyncStorage.setItem('POINTER', (this.state.currentIndex+this.state.Pointer+1).toString());
         this.setState({ currentIndex: this.state.currentIndex + 1 },()=>{this.state.pan.setValue({ x: 0, y: 0 })})
@@ -106,16 +111,16 @@ export default  class HomeScreen extends Component {
     }
       },
       onPanResponderRelease: (e,gestureState) => {
-        if(this.state.len=="true" &&( -gestureState.vx >0.1 || -gestureState.dx >= wp('30%')))
+        if(this.state.len=="true" &&( -gestureState.vx >0.01 || -gestureState.dx >= wp('30%')))
         {
           Animated.spring(this.state.pan, {
               toValue: ({ x: 0, y: 0 })
           }).start()
         }
-      else if (this.state.currentIndex > 0 && (gestureState.dx > wp('10%') || gestureState.vx > 0.08)) {
+      else if (this.state.currentIndex > 0 && (gestureState.dx > wp('1%') || gestureState.vx > 0.01)) {
             Animated.timing(this.state.swiped_pan, {
                 toValue: ({ x: 0, y: 0 }),
-                duration: 400
+                duration: 200
             }).start(() => {
                 AsyncStorage.setItem('POINTER', (this.state.currentIndex-1).toString());
                 this.setState({ currentIndex: this.state.currentIndex - 1 ,len:"false"})
@@ -126,7 +131,7 @@ export default  class HomeScreen extends Component {
         else if (-gestureState.vx >0.1 || -gestureState.dx >= wp('30%')) {
           Animated.timing(this.state.pan, {
             toValue: ({ x: -width, y: 0 }),
-            duration:400
+            duration:200
           }).start(() => {
             console.log("INside pan responder"+this.state.currentIndex);
             AsyncStorage.setItem('POINTER', (this.state.currentIndex+1).toString());
@@ -153,8 +158,9 @@ export default  class HomeScreen extends Component {
 //Check article postion
 
 async componentWillMount() {
+  console.log("retrace",this.id);
   const has = await checkPointer();
-  console.log('has'+has)
+
   this.setState({ hasPointer:false, currentIndex: has });
 }
 
@@ -163,14 +169,15 @@ async componentWillMount() {
   async componentDidMount(){
 
     const data = await AsyncStorage.getItem('ApiData')
-    if(!data) {
+
+    if(data!=null) {
       try{
         console.log("THISIS CALLED")
         this.setState({
 
           isLoading: false,
           loaded:true,
-          dataSource: JSON.parse(data).data,
+          dataSource: JSON.parse(data),
         })
       }catch(e) {
         console.warn("fetch Error: ", error)
@@ -178,7 +185,7 @@ async componentWillMount() {
       else {
         this.getData();
       }
-       this.timer = setInterval(()=> this.getData(), 100000)
+
 }
   async getData(){
     console.log("Called")
@@ -189,13 +196,17 @@ async componentWillMount() {
       .then((response) => response.json())
       .then((responseJson) => {
         console.log("API")
-
+        Toast.show('Refreshed');
         this.setState({
 
           isLoading: false,
           loaded:true,
+          currentIndex:0,
           dataSource: responseJson.data.sort((a,b)=>a.date<b.date),
         }, function(){
+          console.log("REACHING HERE")
+          AsyncStorage.setItem('ApiData',JSON.stringify(this.state.dataSource))
+          AsyncStorage.setItem('POINTER', '0');
 
         });
 
@@ -205,24 +216,6 @@ async componentWillMount() {
       });
   }
 
-  flipCard() {
-     if (this.value >= 90) {
-       this.value=0;
-       Animated.spring(this.state.pan,{
-         toValue: 0,
-         friction: 8,
-         tension: 10
-       }).start();
-     } else {
-       this.value=120;
-       Animated.spring(this.state.pan,{
-         toValue: 180,
-         friction: 8,
-         tension: 10
-       }).start();
-     }
-
-   }
 
   renderArtciles=()=>{
     console.log(this.state.currentIndex);
@@ -251,7 +244,7 @@ async componentWillMount() {
                   </View>
 
                   <View  style={styles.inner}>
-                  <ShareItem id={item._id} />
+                  <ShareItem id={item._id} name={item.title} />
                     <View style={styles.inner}>
                     <Text style={styles.titleArrtibute}>{item.category}</Text>
                       <Text style={styles.titleText} >{item.title}﻿</Text>
@@ -306,20 +299,18 @@ async componentWillMount() {
                         <AnimatedImage  source={{ uri:item.img.data }}
                          imageStyle={{ borderRadius: 10 }} style={{marginTop:hp('5%'),flex: 1,position:'absolute',height:height-(height*0.15),width:width-(width*0.05),
                          borderRadius:50,margin:wp('3%'),shadowColor: '#003182',shadowOffset: { width: 0, height: 9 },shadowOpacity: 0.48,shadowRadius: 11.95,elevation:18}}>
-                        <TouchableOpacity activeOpacity={1}  onPress={() => {
+                        <TouchableOpacity activeOpacity={1} style={{height:height-(height*0.15),width:width-(width*0.05)}}  onPress={()=>{
                           let shareOptions = {
-                            title: "Sahre This Story",
-                            message: "Read This Awsome Article  ",
-                            url: "https://news119.herokuapp.com/"+item._id,
-                            subject: "Share Link",
+                           title: "Share This Story",
+                           message: "Read This Awsome Article :\n "+item.title,
+                           url: "\n https://news119.herokuapp.com/"+item._id,
+                           subject: "Share Link",
 
-                          };
-                            Share.open(shareOptions).catch((err) => { err && console.log(err); });
-                        }}
-                          >
-                      <View style={{height:height-(height*0.15),width:width-(width*0.05),backgroundColor:'transparent',borderRadius:50}}>
-                      <Text>REFRESH</Text>
-                      </View>
+                         };
+                           Share.open(shareOptions).catch((err) => { err && console.log(err); });
+                       }}
+                        >
+                            <Text>  </Text>
                           </TouchableOpacity>
                         </AnimatedImage>
                   </Animated.View>
@@ -379,7 +370,7 @@ async componentWillMount() {
                   </View>
 
                   <View  style={styles.inner}>
-                  <ShareItem id={item._id} />
+                  <ShareItem  id={item._id} name={item.title} />
                     <View style={styles.inner}>
                     <Text style={styles.titleArrtibute}>{item.category}</Text>
                       <Text style={styles.titleText} >{item.title}﻿</Text>
@@ -418,6 +409,7 @@ async componentWillMount() {
 
 
   render(){
+    console.log("Diagonal",diagonal);
 
       if(this.state.isLoading ){
             return(
@@ -429,12 +421,13 @@ async componentWillMount() {
       return(
 
       <View style={{flex:1}}>
-      <SettingButton navigate={this.props.navigation.navigate}  />
+      <SettingButton navigate={this.props.navigation.navigate} parentMethod={this.getData.bind(this)}  />
+
 
        <StatusBar
           backgroundColor="black"
           animated />
-          <ScrollView   contentContainerStyle={{  flexGrow: 1 ,top:hp('0.5%')}}
+          <ScrollView   contentContainerStyle={{  flexGrow: 1 ,top:hp('0.9%')}}
           // refreshControl={
           //                <RefreshControl
           //                  refreshing={loading}
@@ -444,15 +437,7 @@ async componentWillMount() {
             {this.renderArtciles()}
 
                  </ScrollView>
-                 <View style={{backgroundColor:'#f3f3f3'}}>
-                 <Icon
-                  name='refresh'
-                  type='material'
-                  color='#707070'
-                  style={{  marginRight:wp('80%'),left:wp('1%'),backgroundColor:'#f3f3f3'}}
 
-                  size= {wp('7%')}
-                  onPress={this.getData.bind(this)}/></View>
 
           <View style={{position:'absolute',zIndex:-20,backgroundColor:'#f3f3f3'}}>
 
@@ -514,9 +499,7 @@ async componentWillMount() {
     body: {
 
       color: 'black',
-      fontSize: hp('2.2%'),
-
-
+      fontSize:normalize(15)
 
 
     },
@@ -524,15 +507,17 @@ async componentWillMount() {
   titleArrtibute:{
       color:'#679CEA',
       top:0,
-      fontSize: wp('4%'),
+      fontSize:normalize(14),
+
       fontWeight: 'bold',
   }
 ,
   titleText: {
     color:'black',
     top:5,
-   fontSize: wp('5%'),
+   fontSize:normalize(17),
    fontWeight: 'bold',
+   marginBottom:hp('2%')
  },
     container: {
       flex: 1,

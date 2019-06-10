@@ -51,8 +51,8 @@ onCancel() {
    _onDone = () => {
 
      let shareOptions = {
-       title: "React Native",
-       message: "Read This Awsome Article",
+       title: "Share This Story",
+       message: "Read This Awsome Article:",
        url: "https://news119.herokuapp.com/"+this.state.id,
        subject: "Share Link"
      };
@@ -60,9 +60,9 @@ onCancel() {
     }
   _onShare= () =>{
     let shareOptions = {
-      title: "React Native",
-      message: "Read This Awsome Article  ",
-      url: "https://news119.herokuapp.com/"+this.state.id,
+      title: "Share This Story",
+      message: "Read This Awsome Article:\n  "+this.state.name,
+      url: "\n https://news119.herokuapp.com/"+this.state.id,
       subject: "Share Link",
       social: Share.Social.WHATSAPP
     };
@@ -92,8 +92,10 @@ onCancel() {
     }
   render() {
       let { id,name} = this.props;
-      console.log(this.state.favourite)
+      console.log("name",this.props.name)
       this.state.id=id;
+
+      this.state.name=name;
     if(this.state.favourite)
     {
       return (

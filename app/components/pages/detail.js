@@ -4,7 +4,7 @@ import { createStackNavigator, createAppContainer } from "react-navigation";
 const {width, height} = Dimensions.get('window');
 import ShareItem from '../utils/ShareItem'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
-
+import normalize from '../utils/normalize'
 export default class ExternalScreen extends Component {
   constructor(props){
     super(props);
@@ -24,9 +24,8 @@ export default class ExternalScreen extends Component {
         <StatusBar
            backgroundColor="black"
            animated />
-          <View style={{ flex: 1,position:'absolute',height:height-(height*0.15),width:width-(width*0.05),
-        backgroundColor:'white',top:hp('5%'),borderRadius:10,margin:wp('3%'),shadowColor: '#003182',shadowOffset: { width: 0, height: 9 },shadowOpacity: 0.48,shadowRadius: 11.95,elevation:18}}>
-
+           <View style={{ marginTop:hp('5%'),flex: 1,position:'absolute',height:height-(height*0.15),width:width-(width*0.05),
+         backgroundColor:'white',borderRadius:10,margin:wp('3%'),shadowColor: '#003182',shadowOffset: { width: 0, height: 9 },shadowOpacity: 0.48,shadowRadius: 11.95,elevation:18}}>
 
             < View style={styles.Imagebody}>
               <Image source={{ uri:itemId.img.data }} style={styles.image} />
@@ -57,59 +56,65 @@ export default class ExternalScreen extends Component {
 
 }
 }
-const styles = {
-  image: {
 
-    flex: 1,
-    height:height-(height*0.15),
-    width:width-(width*0.05),
-    resizeMode:'contain',
-    borderTopLeftRadius: 10,
-  borderTopRightRadius: 10,
+  const styles = {
+    image: {
 
-  },
+      flex: 1,
+      height:null,
+      width:null,
+      resizeMode:'cover',
+      borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+
+    },
+    textwrap: {
+
+            flexGrow: 1,
+            flex: 1,
+        },
+
+    Imagebody: {
+      flex: 2,
+      backgroundColor:'black',
+      borderRadius:10,
+    },
+    inner: {
+      flex: 3,
+      padding:6,
+      marginLeft:1,
+      marginRight:1
+
+    },
+    text: {
+      flex:1,
+      color: '#fff',
+      fontSize: wp('8%'),
+      fontWeight: 'bold',
+    },
+    body: {
+
+      color: 'black',
+      fontSize:normalize(15)
 
 
-  Imagebody: {
-    flex: 2,
-    backgroundColor:'black',
-    borderTopLeftRadius: 10,
-  borderTopRightRadius: 10,
+    },
 
-
-  },
-  inner: {
-    flex: 3,
-    padding:6,
-    marginLeft:10,
-    marginRight:10
-
-  },
-  text: {
-    flex:1,
-    color: '#fff',
-    fontSize: wp('8%'),
-    fontWeight: 'bold',
-  },
-  body: {
-    color: 'black',
-    fontSize: wp('4%'),
-
-
-  },
   titleArrtibute:{
-    color:'#679CEA',
-    top:0,
-    fontSize: wp('5%'),
-    fontWeight: 'bold',
+      color:'#679CEA',
+      top:0,
+      fontSize:normalize(14),
+
+      fontWeight: 'bold',
   }
-  ,
+,
   titleText: {
     color:'black',
     top:5,
-   fontSize: wp('8%'),
+   fontSize:normalize(17),
    fontWeight: 'bold',
-  },
+   marginBottom:hp('2%')
+ },
     container: {
       flex: 1,
       justifyContent: 'center',
@@ -125,7 +130,5 @@ const styles = {
       justifyContent:'space-between',
       alignItems:'center',
       backgroundColor:'transparent'
-  },
-
-
-};
+  }
+  };
