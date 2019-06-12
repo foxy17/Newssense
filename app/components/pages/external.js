@@ -1,5 +1,5 @@
 import React,{Component} from "react";
-import { View, Text,ActivityIndicator,Dimensions,Image } from "react-native";
+import { View, Text,ActivityIndicator,Dimensions,Image,Animated,ImageBackground,TouchableOpacity } from "react-native";
 import { createStackNavigator, createAppContainer } from "react-navigation";
 const {width, height} = Dimensions.get('window');
 import ShareItem from '../utils/ShareItem'
@@ -40,7 +40,7 @@ export default class ExternalScreen extends Component {
 
   render() {
 
-
+var AnimatedImage = Animated.createAnimatedComponent(ImageBackground);
       if(this.state.isLoading){
             return(
               <View >
@@ -49,7 +49,9 @@ export default class ExternalScreen extends Component {
             )}
         var item=this.state.dataSource;
 
-      return(
+
+            if(item.special==false){
+              return(
         <View style={{flex:1,backgroundColor:'#f3f3f3'}}>
         <View style={{ marginTop:hp('5%'), flex: 1,position:'absolute',height:height-(height*0.15),width:width-(width*0.05) ,
          backgroundColor:'white',borderRadius:10,margin:wp('3%'),shadowColor: '#003182',shadowOffset: { width: 0, height: 9 },shadowOpacity: 0.48,shadowRadius: 11.95,elevation:18}}>
@@ -73,13 +75,25 @@ export default class ExternalScreen extends Component {
 
           </View>
           </View>
+        )
+        }
+          else{
+            return(
 
+              <Animated.View key={item._id} >
+                <AnimatedImage  source={{ uri:item.img.data }}  imageStyle={{ borderRadius: 10 }}
+                style={{marginTop:normalize(35),flex: 1,position:'absolute',height:height-(height*0.15),width:width-(width*0.05),borderRadius:10,margin:wp('3%')}}>
+                <TouchableOpacity activeOpacity={1}  onPress={()=>{this.props.navigation.navigate('Details', {itemId: item})}}  >
+                  <Text>  </Text>
+                  </TouchableOpacity>
+                </AnimatedImage>
 
+            </Animated.View>
+          )
 
-    )
+          }
 
-
-}
+        }
 }
  const styles = {
     image: {

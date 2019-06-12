@@ -6,6 +6,7 @@ import com.facebook.react.ReactApplication;
 import com.dylanvann.fastimage.FastImageViewPackage;
 import com.chirag.RNMail.RNMail;
 import io.invertase.firebase.RNFirebasePackage;
+import io.invertase.firebase.links.RNFirebaseLinksPackage;
 import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
 import cl.json.RNSharePackage;
 import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
@@ -34,6 +35,7 @@ public class MainApplication extends Application implements ReactApplication {
             new FastImageViewPackage(),
             new RNMail(),
             new RNFirebasePackage(),
+             new RNFirebaseLinksPackage() ,
             new ReactNativePushNotificationPackage(),
             new RNSharePackage(),
             new AsyncStoragePackage(),

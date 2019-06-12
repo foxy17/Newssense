@@ -16,7 +16,6 @@ import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-nativ
 import Share, {ShareSheet, Button} from 'react-native-share';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Toast from 'react-native-simple-toast';
-import FastImage from 'react-native-fast-image'
 
 
 
@@ -197,7 +196,7 @@ async componentWillMount() {
     fetch('https://news119.herokuapp.com/getData')
       .then((response) => response.json())
       .then((responseJson) => {
-        FastImage.preload
+
         Toast.show('Refreshed');
         this.setState({
 
@@ -242,7 +241,7 @@ async componentWillMount() {
 
 
                   < View style={styles.Imagebody}>
-                    <FastImage source={{ uri:item.img.data ,priority: FastImage.priority.normal,cache:FastImage.cacheControl.immutable }} style={styles.image} />
+                    <Image source={{ uri:item.img.data }} style={styles.image} />
                   </View>
 
                   <View  style={styles.inner}>
@@ -331,7 +330,7 @@ async componentWillMount() {
 
 
                             < View style={styles.Imagebody}>
-                              <FastImage source={{ uri:item.img.data ,priority: FastImage.priority.normal,cache:FastImage.cacheControl.immutable }} style={styles.image} />
+                              <Image source={{ uri:item.img.data }} style={styles.image} />
                             </View>
 
                             <View  style={styles.inner}>
@@ -368,7 +367,7 @@ async componentWillMount() {
 
 
                   < View style={styles.Imagebody}>
-                    <FastImage source={{ uri:item.img.data ,priority: FastImage.priority.normal,cache:FastImage.cacheControl.immutable }} style={styles.image} />
+                    <Image source={{ uri:item.img.data }} style={styles.image} />
                   </View>
 
                   <View  style={styles.inner}>
@@ -483,7 +482,8 @@ async componentWillMount() {
     Imagebody: {
       flex: 2,
       backgroundColor:'black',
-      borderRadius:10,
+      borderTopLeftRadius: 10,
+      borderTopRightRadius: 10,
     },
     inner: {
       flex: 3,
