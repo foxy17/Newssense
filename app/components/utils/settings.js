@@ -6,7 +6,7 @@ import { createStackNavigator, createAppContainer } from "react-navigation";
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import SwitchToggle from 'react-native-switch-toggle';
 const {width, height} = Dimensions.get('window');
-
+import normalize from '../utils/normalize'
 export default class SettingButton extends Component {
   constructor(props) {
      super(props);
@@ -25,7 +25,7 @@ export default class SettingButton extends Component {
          name='menu'
          type='material'
          color='#1D7FFF'
-         size= {wp('7%')}
+         size= {normalize(23)}
          onPress={()=>this.props.navigate('Settings')}
 
        />
@@ -38,7 +38,7 @@ export default class SettingButton extends Component {
                color='#1D7FFF'
 
                onPress={this.props.parentMethod}
-               size= {wp('7%')}
+               size= {normalize(23)}
 
                /></View>
        </View>
@@ -54,23 +54,25 @@ const styles = StyleSheet.create({
   marginLeft:wp('2.5%'),
   marginTop:hp('1%'),
   flexDirection:'row',
-  top:hp('0.1%')
+  top:normalize(7
+  )
 
 },
 header:{
-  left:wp('32%'),
+  left:normalize(109),
   fontWeight: 'bold',
   fontSize: wp('5%'),
   color:'#1D7FFF',
     flexDirection:'row',
-    top:hp('0.7%')
+    top:normalize(3)
 
 },
 toggle:{
   flex:1,
-  left:wp('62%'),
+  left:normalize(205),
   fontWeight: 'bold',
   fontSize: wp('5%'),
   color:'#1D7FFF',
+  top:normalize(2)
 }
 });

@@ -3,6 +3,8 @@ package com.app;
 import android.app.Application;
 import cl.json.ShareApplication;
 import com.facebook.react.ReactApplication;
+import com.dylanvann.fastimage.FastImageViewPackage;
+import com.chirag.RNMail.RNMail;
 import io.invertase.firebase.RNFirebasePackage;
 import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
 import cl.json.RNSharePackage;
@@ -29,6 +31,8 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new FastImageViewPackage(),
+            new RNMail(),
             new RNFirebasePackage(),
             new ReactNativePushNotificationPackage(),
             new RNSharePackage(),

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { View, ToastAndroid,Text, TouchableOpacity, ScrollView,StyleSheet ,  FlatList,TouchableHighlight,StatusBar } from 'react-native';
+import { View, ToastAndroid,Text, TouchableOpacity, ScrollView,StyleSheet ,
+  Dimensions,ActivityIndicator, Image, FlatList,TouchableHighlight,StatusBar } from 'react-native';
 import Datastore from 'react-native-local-mongodb';
 db = new Datastore({ filename: 'asyncStorageKey', autoload: true });
 import Swipeout from 'react-native-swipeout';
@@ -44,7 +45,9 @@ export default class BookmarksScreen extends Component {
         if(this.state.loading)
         { console.log("HEYY"+JSON.stringify(this.state.data));
           return(
-          <Text>HGeyey</Text>)
+            <View>
+           <ActivityIndicator size="small" color="#848484" />
+           </View>)
         }
         else{
            console.log("222"+JSON.stringify(this.state.data));
@@ -58,12 +61,13 @@ export default class BookmarksScreen extends Component {
             ];
             return (
                  <AndroidBackHandler onBackPress={this.onBackButtonPressAndroid} key={data._id}>
-              <View  >
+              <View   >
               <Swipeout right={swipeBtns}
                 autoClose= {true}
                 backgroundColor= 'transparent'>
-                <TouchableOpacity onPress={()=>{console.log(data._id);this.props.navigation.navigate('SingleBookmark', {id: data._id})}}>
-              <View style={{padding:10}}><Text  style={{ fontSize: normalize(16),padding: 15,}}> {data.name}</Text></View>
+                <TouchableOpacity style={{flexDirection:'row',marginBottom:normalize(5)}} onPress={()=>{console.log(data._id);this.props.navigation.navigate('SingleBookmark', {id: data._id})}}>
+                <Image   style={{width: normalize(60), height: normalize(60),padding:normalize(1)}} source={{uri:data.img}}/>
+                <Text  style={{  flex: 1, flexWrap: 'wrap',color:'black',fontSize: normalize(16)}}> {data.name}</Text>
               </TouchableOpacity>
             </Swipeout>
             </View>
@@ -76,6 +80,7 @@ export default class BookmarksScreen extends Component {
 
    }
    render(){
+      StatusBar.setBackgroundColor('black', true);
       return(
         <ScrollView contentContainerStyle={{paddingVertical: 20}}>{this.render1()}</ScrollView>
       )

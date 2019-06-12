@@ -9,7 +9,7 @@ function newPointer() {
 export default async function checkPointer() {
   try {
     const hadPointer = await AsyncStorage.getItem('POINTER');
-    console.log("pointer"+hadPointer);
+
     if (hadPointer === null) {
       newPointer();
       return 0;

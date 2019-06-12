@@ -16,6 +16,7 @@ import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-nativ
 import Share, {ShareSheet, Button} from 'react-native-share';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Toast from 'react-native-simple-toast';
+import FastImage from 'react-native-fast-image'
 
 
 
@@ -133,7 +134,7 @@ export default  class HomeScreen extends Component {
             toValue: ({ x: -width, y: 0 }),
             duration:200
           }).start(() => {
-            console.log("INside pan responder"+this.state.currentIndex);
+
             AsyncStorage.setItem('POINTER', (this.state.currentIndex+1).toString());
             this.setState({ currentIndex: this.state.currentIndex + 1 },()=>{this.state.pan.setValue({ x: 0, y: 0 })})
           })
@@ -158,7 +159,7 @@ export default  class HomeScreen extends Component {
 //Check article postion
 
 async componentWillMount() {
-  console.log("retrace",this.id);
+
   const has = await checkPointer();
 
   this.setState({ hasPointer:false, currentIndex: has });
@@ -172,7 +173,7 @@ async componentWillMount() {
 
     if(data!=null) {
       try{
-        console.log("THISIS CALLED")
+
         this.setState({
 
           isLoading: false,
@@ -185,17 +186,18 @@ async componentWillMount() {
       else {
         this.getData();
       }
+       this.timer = setInterval(()=> this.getData(), 3600000)
 
 }
   async getData(){
-    console.log("Called")
+
     this.setState({
 
       isLoading: true})
     fetch('https://news119.herokuapp.com/getData')
       .then((response) => response.json())
       .then((responseJson) => {
-        console.log("API")
+        FastImage.preload
         Toast.show('Refreshed');
         this.setState({
 
@@ -204,7 +206,7 @@ async componentWillMount() {
           currentIndex:0,
           dataSource: responseJson.data.sort((a,b)=>a.date<b.date),
         }, function(){
-          console.log("REACHING HERE")
+
           AsyncStorage.setItem('ApiData',JSON.stringify(this.state.dataSource))
           AsyncStorage.setItem('POINTER', '0');
 
@@ -218,7 +220,7 @@ async componentWillMount() {
 
 
   renderArtciles=()=>{
-    console.log(this.state.currentIndex);
+
     var AnimatedImage = Animated.createAnimatedComponent(ImageBackground);
 
 
@@ -235,16 +237,16 @@ async componentWillMount() {
             return(
               <Animated.View key={item._id} {...this.state.panResponder.panHandlers} style={this.state.swiped_pan.getLayout()}>
 
-                <View style={{ marginTop:hp('5%'), flex: 1,position:'absolute',height:height-(height*0.15),width:width-(width*0.05) ,
+                <View style={{ marginTop:normalize(35), flex: 1,position:'absolute',height:height-(height*0.15),width:width-(width*0.05) ,
                  backgroundColor:'white',borderRadius:10,margin:wp('3%'),shadowColor: '#003182',shadowOffset: { width: 0, height: 9 },shadowOpacity: 0.48,shadowRadius: 11.95,elevation:18}}>
 
 
                   < View style={styles.Imagebody}>
-                    <Image source={{ uri:item.img.data }} style={styles.image} />
+                    <FastImage source={{ uri:item.img.data ,priority: FastImage.priority.normal,cache:FastImage.cacheControl.immutable }} style={styles.image} />
                   </View>
 
                   <View  style={styles.inner}>
-                  <ShareItem id={item._id} name={item.title} />
+                  <ShareItem id={item._id} name={item.title} img={item.img.data}/>
                     <View style={styles.inner}>
                     <Text style={styles.titleArrtibute}>{item.category}</Text>
                       <Text style={styles.titleText} >{item.title}﻿</Text>
@@ -267,7 +269,7 @@ async componentWillMount() {
 
               <Animated.View key={item._id} {...this.state.panResponder.panHandlers} style={this.state.swiped_pan.getLayout()}>
               <AnimatedImage  source={{ uri:item.img.data }}
-               imageStyle={{ borderRadius: 10 }} style={{marginTop:hp('5%'),flex: 1,position:'absolute',height:height-(height*0.15),width:width-(width*0.05),borderRadius:50,margin:10,
+               imageStyle={{ borderRadius: 10 }} style={{marginTop:normalize(35),flex: 1,position:'absolute',height:height-(height*0.15),width:width-(width*0.05),borderRadius:50,margin:10,
             borderRadius:10,margin:wp('3%'),shadowColor: '#003182',shadowOffset: { width: 0, height: 9 },shadowOpacity: 0.48,shadowRadius: 11.95,elevation:18}}>
               <TouchableOpacity activeOpacity={1}  onPress={()=>{this.props.navigation.navigate('Details', {itemId: item})}}  >
                 <Text>    </Text>
@@ -297,7 +299,7 @@ async componentWillMount() {
                   <Animated.View key={item._id} {...this.state.panResponder.panHandlers} style={[this.state.pan.getLayout()]}>
 
                         <AnimatedImage  source={{ uri:item.img.data }}
-                         imageStyle={{ borderRadius: 10 }} style={{marginTop:hp('5%'),flex: 1,position:'absolute',height:height-(height*0.15),width:width-(width*0.05),
+                         imageStyle={{ borderRadius: 10 }} style={{marginTop:normalize(35),flex: 1,position:'absolute',height:height-(height*0.15),width:width-(width*0.05),
                          borderRadius:50,margin:wp('3%'),shadowColor: '#003182',shadowOffset: { width: 0, height: 9 },shadowOpacity: 0.48,shadowRadius: 11.95,elevation:18}}>
                         <TouchableOpacity activeOpacity={1} style={{height:height-(height*0.15),width:width-(width*0.05)}}  onPress={()=>{
                           let shareOptions = {
@@ -324,17 +326,17 @@ async componentWillMount() {
                       return(
                         <Animated.View key={item._id} {...this.state.panResponder.panHandlers} style={this.state.pan.getLayout()}>
 
-                          <View style={{ marginTop:hp('5%'),flex: 1,position:'absolute',height:height-(height*0.15),width:width-(width*0.05),
+                          <View style={{ marginTop:normalize(35),flex: 1,position:'absolute',height:height-(height*0.15),width:width-(width*0.05),
                         backgroundColor:'white',borderRadius:10,margin:wp('3%'),shadowColor: '#003182',shadowOffset: { width: 0, height: 9 },shadowOpacity: 0.48,shadowRadius: 11.95,elevation:18}}>
 
 
                             < View style={styles.Imagebody}>
-                              <Image source={{ uri:item.img.data }} style={styles.image} />
+                              <FastImage source={{ uri:item.img.data ,priority: FastImage.priority.normal,cache:FastImage.cacheControl.immutable }} style={styles.image} />
                             </View>
 
                             <View  style={styles.inner}>
 
-                            <ShareItem id={item._id} name={item.title} />
+                            <ShareItem id={item._id} name={item.title} img={item.img.data} />
 
                               <View style={styles.inner}>
                               <Text style={styles.titleArrtibute}>{item.category}</Text>
@@ -361,16 +363,16 @@ async componentWillMount() {
             return(
               <Animated.View key={item._id} >
 
-                <View style={{ marginTop:hp('5%'), flex: 1,position:'absolute',height:height-(height*0.15),width:width-(width*0.05),backgroundColor:'white',
+                <View style={{ marginTop:normalize(35), flex: 1,position:'absolute',height:height-(height*0.15),width:width-(width*0.05),backgroundColor:'white',
                 borderRadius:10,margin:wp('3%')}}>
 
 
                   < View style={styles.Imagebody}>
-                    <Image source={{ uri:item.img.data }} style={styles.image} />
+                    <FastImage source={{ uri:item.img.data ,priority: FastImage.priority.normal,cache:FastImage.cacheControl.immutable }} style={styles.image} />
                   </View>
 
                   <View  style={styles.inner}>
-                  <ShareItem  id={item._id} name={item.title} />
+                  <ShareItem  id={item._id} name={item.title} img={item.img.data} />
                     <View style={styles.inner}>
                     <Text style={styles.titleArrtibute}>{item.category}</Text>
                       <Text style={styles.titleText} >{item.title}﻿</Text>
@@ -391,7 +393,7 @@ async componentWillMount() {
 
             <Animated.View key={item._id} >
               <AnimatedImage  source={{ uri:item.img.data }}  imageStyle={{ borderRadius: 10 }}
-              style={{marginTop:hp('5%'),flex: 1,position:'absolute',height:height-(height*0.15),width:width-(width*0.05),borderRadius:10,margin:wp('3%')}}>
+              style={{marginTop:normalize(35),flex: 1,position:'absolute',height:height-(height*0.15),width:width-(width*0.05),borderRadius:10,margin:wp('3%')}}>
               <TouchableOpacity activeOpacity={1}  onPress={()=>{this.props.navigation.navigate('Details', {itemId: item})}}  >
                 <Text>  </Text>
                 </TouchableOpacity>
@@ -409,7 +411,7 @@ async componentWillMount() {
 
 
   render(){
-    console.log("Diagonal",diagonal);
+
 
       if(this.state.isLoading ){
             return(
@@ -427,7 +429,7 @@ async componentWillMount() {
        <StatusBar
           backgroundColor="black"
           animated />
-          <ScrollView   contentContainerStyle={{  flexGrow: 1 ,top:hp('0.9%')}}
+          <View   contentContainerStyle={{  flexGrow: 1 ,top:hp('0.9%')}}
           // refreshControl={
           //                <RefreshControl
           //                  refreshing={loading}
@@ -436,7 +438,7 @@ async componentWillMount() {
           >
             {this.renderArtciles()}
 
-                 </ScrollView>
+                 </View>
 
 
           <View style={{position:'absolute',zIndex:-20,backgroundColor:'#f3f3f3'}}>
@@ -486,8 +488,8 @@ async componentWillMount() {
     inner: {
       flex: 3,
       padding:6,
-      marginLeft:1,
-      marginRight:1
+      marginLeft:normalize(1),
+      marginRight:normalize(1)
 
     },
     text: {
@@ -499,7 +501,9 @@ async componentWillMount() {
     body: {
 
       color: 'black',
-      fontSize:normalize(15)
+      fontSize:normalize(15),
+      flexShrink:1
+
 
 
     },
@@ -507,7 +511,7 @@ async componentWillMount() {
   titleArrtibute:{
       color:'#679CEA',
       top:0,
-      fontSize:normalize(14),
+      fontSize:normalize(17),
 
       fontWeight: 'bold',
   }

@@ -30,11 +30,11 @@ componentWillMount() {
     if(docs.length>0)
     {
       this.setState({favourite:true});
-        console.log("HEYY");
+
     }
     else{
       this.setState({favourite:false});
-        console.log("222");
+
     }
       });
   }
@@ -69,10 +69,10 @@ onCancel() {
      Share.shareSingle(shareOptions);
   }
     _Favourite=()=>
-    { let { id,name} = this.props;
+    { let { id,name,img} = this.props;
 
 
-      db.insert({_id:id,name:name}, function (err, newDoc) {
+      db.insert({_id:id,name:name,img:img}, function (err, newDoc) {
           console.log(newDoc);
 
           ToastAndroid.show("Added to Bookmarks", ToastAndroid.SHORT);
@@ -81,7 +81,7 @@ onCancel() {
 
     }
     _unFavourite=()=>
-    { let { id,name} = this.props;
+    { let { id,name,img} = this.props;
 
       db.remove({ _id:id }, {}, function (err, numRemoved) {
 
@@ -92,7 +92,7 @@ onCancel() {
     }
   render() {
       let { id,name} = this.props;
-      console.log("name",this.props.name)
+
       this.state.id=id;
 
       this.state.name=name;

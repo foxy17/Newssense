@@ -1,0 +1,71 @@
+[16:16:30][liftinstall][INFO] yuzu installer
+[16:16:30][liftinstall][INFO] Starting fresh install
+[16:16:30][liftinstall][INFO] Server: V6([::1]:61124)
+[16:16:30][liftinstall][INFO] Server: V4(127.0.0.1:61124)
+[16:16:30][liftinstall::rest][INFO] Downloading configuration from "https://raw.githubusercontent.com/yuzu-emu/liftinstall/master/config.windows.v5.toml"...
+[16:16:31][liftinstall::rest][INFO] Configuration file downloaded successfully.
+[16:16:56][liftinstall::installer][INFO] Launching new updater...
+[16:16:58][liftinstall][INFO] yuzu installer
+[16:17:01][liftinstall][INFO] Swapping installer from C:\Users\Arnav\Desktop\App\app\ios\app\maintenancetool_new.exe to C:\Users\Arnav\Desktop\App\app\ios\app\yuzu_install.exe
+[16:17:01][liftinstall][INFO] yuzu installer
+[16:17:01][liftinstall][INFO] Parsed command line arguments from original instance
+[16:17:04][liftinstall][INFO] Starting fresh install
+[16:17:04][liftinstall][INFO] Server: V6([::1]:61167)
+[16:17:04][liftinstall][INFO] Server: V4(127.0.0.1:61167)
+[16:17:05][liftinstall::rest][INFO] Downloading configuration from "https://raw.githubusercontent.com/yuzu-emu/liftinstall/master/config.windows.v6.toml"...
+[16:17:06][liftinstall::rest][INFO] Configuration file downloaded successfully.
+[16:19:53][liftinstall::installer][INFO] Framework: Installing ["yuzu Nightly"] to "C:\\Users\\Arnav\\AppData\\Local\\yuzu"
+[16:19:53][liftinstall::installer][INFO] Dependency tree:
+InstallTask
+├── Pre EnsureOnlyInstanceTask
+├── Pre VerifyInstallDirTask (with clean-install = true)
+├── Pre InstallPackageTask (for "yuzu Nightly")
+│   ├── Pre DownloadPackageTask (for "yuzu Nightly")
+│   │   └── Pre ResolvePackageTask (for "yuzu Nightly")
+│   ├── Pre UninstallPackageTask (for "yuzu Nightly", optional = true)
+│   │   ├── Pre UninstallShortcutsTask (for "yuzu Nightly", optional = true)
+│   │   └── Post SaveDatabaseTask
+│   ├── Pre InstallShortcutsTask (for "yuzu Nightly")
+│   └── Post SaveDatabaseTask
+├── Pre SaveExecutableTask
+└── Pre InstallGlobalShortcutsTask
+    └── Post SaveDatabaseTask
+[16:19:55][liftinstall::tasks::resolver][INFO] Selected file: File { name: "yuzu-windows-msvc-20190611-7e2bcf0.zip", url: "https://github.com/yuzu-emu/yuzu-nightly/releases/download/nightly-2058/yuzu-windows-msvc-20190611-7e2bcf0.zip" }
+[16:24:06][liftinstall::native::natives][INFO] Generating shortcut @ "C:\\Users\\Arnav\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\yuzu Nightly.lnk"
+[16:24:06][liftinstall::tasks::install_pkg][INFO] Creating dir: "nightly"
+[16:24:06][liftinstall::tasks::install_pkg][INFO] Creating file: "nightly\\icudtl.dat"
+[16:24:06][liftinstall::tasks::install_pkg][INFO] Creating dir: "nightly\\imageformats"
+[16:24:06][liftinstall::tasks::install_pkg][INFO] Creating file: "nightly\\imageformats\\qgif.dll"
+[16:24:06][liftinstall::tasks::install_pkg][INFO] Creating file: "nightly\\imageformats\\qjpeg.dll"
+[16:24:06][liftinstall::tasks::install_pkg][INFO] Creating file: "nightly\\libgcc_s_seh-1.dll"
+[16:24:06][liftinstall::tasks::install_pkg][INFO] Creating file: "nightly\\libwinpthread-1.dll"
+[16:24:06][liftinstall::tasks::install_pkg][INFO] Creating file: "nightly\\license.txt"
+[16:24:06][liftinstall::tasks::install_pkg][INFO] Creating dir: "nightly\\platforms"
+[16:24:06][liftinstall::tasks::install_pkg][INFO] Creating file: "nightly\\platforms\\qwindows.dll"
+[16:24:06][liftinstall::tasks::install_pkg][INFO] Creating file: "nightly\\Qt5Core.dll"
+[16:24:06][liftinstall::tasks::install_pkg][INFO] Creating file: "nightly\\Qt5Gui.dll"
+[16:24:06][liftinstall::tasks::install_pkg][INFO] Creating file: "nightly\\Qt5Network.dll"
+[16:24:06][liftinstall::tasks::install_pkg][INFO] Creating file: "nightly\\Qt5OpenGL.dll"
+[16:24:06][liftinstall::tasks::install_pkg][INFO] Creating file: "nightly\\Qt5Positioning.dll"
+[16:24:06][liftinstall::tasks::install_pkg][INFO] Creating file: "nightly\\Qt5PrintSupport.dll"
+[16:24:06][liftinstall::tasks::install_pkg][INFO] Creating file: "nightly\\Qt5Qml.dll"
+[16:24:06][liftinstall::tasks::install_pkg][INFO] Creating file: "nightly\\Qt5Quick.dll"
+[16:24:06][liftinstall::tasks::install_pkg][INFO] Creating file: "nightly\\Qt5QuickWidgets.dll"
+[16:24:06][liftinstall::tasks::install_pkg][INFO] Creating file: "nightly\\Qt5WebChannel.dll"
+[16:24:06][liftinstall::tasks::install_pkg][INFO] Creating file: "nightly\\Qt5WebEngine.dll"
+[16:24:06][liftinstall::tasks::install_pkg][INFO] Creating file: "nightly\\Qt5WebEngineCore.dll"
+[16:24:07][liftinstall::tasks::install_pkg][INFO] Creating file: "nightly\\Qt5WebEngineWidgets.dll"
+[16:24:07][liftinstall::tasks::install_pkg][INFO] Creating file: "nightly\\Qt5Widgets.dll"
+[16:24:07][liftinstall::tasks::install_pkg][INFO] Creating file: "nightly\\QtWebEngineProcess.exe"
+[16:24:07][liftinstall::tasks::install_pkg][INFO] Creating file: "nightly\\qtwebengine_devtools_resources.pak"
+[16:24:07][liftinstall::tasks::install_pkg][INFO] Creating file: "nightly\\qtwebengine_resources.pak"
+[16:24:07][liftinstall::tasks::install_pkg][INFO] Creating file: "nightly\\qtwebengine_resources_100p.pak"
+[16:24:07][liftinstall::tasks::install_pkg][INFO] Creating file: "nightly\\qtwebengine_resources_200p.pak"
+[16:24:07][liftinstall::tasks::install_pkg][INFO] Creating file: "nightly\\README.md"
+[16:24:07][liftinstall::tasks::install_pkg][INFO] Creating file: "nightly\\SDL2.dll"
+[16:24:07][liftinstall::tasks::install_pkg][INFO] Creating dir: "nightly\\styles"
+[16:24:07][liftinstall::tasks::install_pkg][INFO] Creating file: "nightly\\styles\\qwindowsvistastyle.dll"
+[16:24:07][liftinstall::tasks::install_pkg][INFO] Creating file: "nightly\\unicorn.dll"
+[16:24:07][liftinstall::tasks::install_pkg][INFO] Creating file: "nightly\\yuzu-cmd.exe"
+[16:24:08][liftinstall::tasks::install_pkg][INFO] Creating file: "nightly\\yuzu.exe"
+[16:24:08][liftinstall::native::natives][INFO] Generating shortcut @ "C:\\Users\\Arnav\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\yuzu Maintenance Tool.lnk"
