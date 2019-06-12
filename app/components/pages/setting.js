@@ -44,7 +44,7 @@ export default class SettingsScreen extends Component {
       let shareOptions = {
         title: "Share This App",
         message: "Check Out This Awsome News App \n",
-        url: "",
+        url: "https://play.google.com/store/apps/details?id=com.app",
         subject: "Share This App"
       };
       Share.open(shareOptions).catch((err) => { err && console.log(err); });
