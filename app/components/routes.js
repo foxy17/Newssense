@@ -163,18 +163,31 @@ showAlert(title, body) {
     }
    componentDidMount() {
      Linking.addEventListener('url', this.handleUrl);
-     Linking.getInitialURL().then((url) => {
-       if (url) {
-         Linking.openURL(url);
-       }
-     }).catch(err => console.error('An error occurred', err));
      DeepLinking.addScheme('https://');
+    DeepLinking.addRoute('dashboard.newssense.co/:id', (response) => {
+
+      this.props.navigation.navigate('Article',{link:response});
+    });
+     const nav=this
+     const unsubscribe = firebase.links().onLink((url) => {
+        console.log("inital line",url);
+        DeepLinking.evaluateUrl(url);
+
+      });
+
+     firebase.links()
+    .getInitialLink()
+    .then((url) => {
+        if (url) {
+          DeepLinking.evaluateUrl(url);
+
+        } else {
+           // app NOT opened from a url
+        }
+    });
 
 
-     DeepLinking.addRoute('news119.herokuapp.com/:id', (response) => {
 
-       this.props.navigation.navigate('Article',{id:response});
-     });
 
 
    }
@@ -186,21 +199,21 @@ showAlert(title, body) {
        this.notificationListener();
        this.notificationOpenedListener();
      try {
-       Linking.removeEventListener('url', this.handleUrl);
+    unsubscribe();
      } catch (e) {
 
      } finally {
 
      }
    }
-
    handleUrl = ({ url }) => {
-     Linking.canOpenURL(url).then((supported) => {
-       if (supported) {
-         DeepLinking.evaluateUrl(url);
-       }
-     });
-   }
+       Linking.canOpenURL(url).then((supported) => {
+         if (supported) {
+           DeepLinking.evaluateUrl(url);
+         }
+       });
+     }
+
    async componentWillMount() {
      const isFirstLaunch = await checkIfFirstLaunch();
      this.setState({ isFirstLaunch, hasCheckedAsyncStorage: true });

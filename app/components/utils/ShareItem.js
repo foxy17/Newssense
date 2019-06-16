@@ -5,6 +5,8 @@ import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 import Share, {ShareSheet, Button} from 'react-native-share';
 import Datastore from 'react-native-local-mongodb';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import normalize from './normalize'
+import firebase from 'react-native-firebase';
 db = new Datastore({ filename: 'asyncStorageKey', autoload: true });
 export default class ShareItem extends Component {
   handleOnPress = () => {
@@ -49,24 +51,50 @@ onCancel() {
      this.setState({visible:true});
    }
    _onDone = () => {
+     var id='https://news.newssense.co/'+this.state.id;
+     var dm = new firebase.links.DynamicLink(
+              id,
+            'https://news.newssense.co'
+          ).android.setPackageName('com.newSense');
+          console.log(dm);
 
-     let shareOptions = {
-       title: "Share This Story",
-       message: "Read This Awsome Article:",
-       url: "https://news119.herokuapp.com/"+this.state.id,
-       subject: "Share Link"
-     };
-     Share.open(shareOptions).catch((err) => { err && console.log(err); });
+          firebase.links()
+    .createShortDynamicLink(dm, 'SHORT')
+    .then((url) => {
+      let shareOptions = {
+        title: "Share This Story",
+        message: "Read This Awsome Article:",
+        url: url,
+        subject: "Share Link"
+      };
+       Share.open(shareOptions).catch((err) => { err && console.log(err); });
+
+
+    });
+
+
+
     }
   _onShare= () =>{
-    let shareOptions = {
-      title: "Share This Story",
-      message: "Read This Awsome Article:\n  "+this.state.name,
-      url: "\n https://news119.herokuapp.com/"+this.state.id,
-      subject: "Share Link",
-      social: Share.Social.WHATSAPP
-    };
-     Share.shareSingle(shareOptions);
+    var id='https://news.newssense.co/'+this.state.id;
+    var dm = new firebase.links.DynamicLink(
+             id,
+           'https://news.newssense.co'
+         ).android.setPackageName('com.newSense');
+         console.log(dm);
+         firebase.links()
+   .createShortDynamicLink(dm, 'SHORT')
+   .then((url) => {
+     let shareOptions = {
+       title: "Share This Story",
+       message: "Read This Awsome Article:"+this.state.name+"\n",
+       url: url,
+       subject: "Share Link",
+       social: Share.Social.WHATSAPP
+     };
+    Share.shareSingle(shareOptions);
+   });
+
   }
     _Favourite=()=>
     { let { id,name,img} = this.props;
@@ -105,7 +133,7 @@ onCancel() {
              name='share-outline'
              type='material'
              color='#707070'
-             size= {wp('7%')}
+             size= {normalize(27)}
              onPress={this._onDone}
 
 
@@ -118,7 +146,7 @@ onCancel() {
           name='whatsapp'
           type='material'
           color='#707070'
-          size= {wp('7%')}
+          size= {normalize(27)}
           onPress={this._onShare}
 
         /></View>
@@ -127,7 +155,7 @@ onCancel() {
            name='bookmark'
            type='material'
            color='#707070'
-           size= {wp('7%')}
+           size= {normalize(27)}
            onPress={this._unFavourite}
          /></View>
 
@@ -143,7 +171,7 @@ onCancel() {
              name='share-outline'
              type='material'
              color='#707070'
-             size= {wp('7%')}
+             size= {normalize(27)}
              onPress={this._onDone}
 
 
@@ -156,7 +184,7 @@ onCancel() {
           name='whatsapp'
           type='material'
           color='#707070'
-          size= {wp('7%')}
+          size= {normalize(27)}
           onPress={this._onShare}
 
         /></View>
@@ -165,7 +193,7 @@ onCancel() {
            name='bookmark-border'
            type='material'
            color='#707070'
-           size= {wp('7%')}
+           size= {normalize(27)}
            onPress={this._Favourite}
          /></View>
 

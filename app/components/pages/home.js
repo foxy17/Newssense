@@ -3,7 +3,7 @@ import { View, Text,ActivityIndicator,StatusBar,
 FlatList,Image,Dimensions,Animated,ScrollView ,Platform, PixelRatio,TouchableHighlight ,RefreshControl,PanResponder,TouchableOpacity,TouchableWithoutFeedback,ImageBackground  } from "react-native";
 import { createStackNavigator, createAppContainer } from "react-navigation";
 const {width, height} = Dimensions.get('window');
-const diagonal=Math.sqrt((width*width)+(height*height));
+const diagonal=(height/width)/100;
 import normalize from '../utils/normalize'
 const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
 import DeepLinking from 'react-native-deep-linking';
@@ -16,8 +16,8 @@ import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-nativ
 import Share, {ShareSheet, Button} from 'react-native-share';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Toast from 'react-native-simple-toast';
-
-
+import CachedImage from 'react-native-image-cache-wrapper';
+import EStyleSheet from 'react-native-extended-stylesheet';
 
 export default  class HomeScreen extends Component {
   constructor(props){
@@ -164,20 +164,33 @@ async componentWillMount() {
   this.setState({ hasPointer:false, currentIndex: has });
 }
 
+ async  preload(data){
+
+    for(let i=0;i<data.length;i++){
+      var item=data[i];
+      var response =await Image.prefetch(item.img.data);
+      console.log("image",response);
+
+
+    }
+
+
+  }
 
 
   async componentDidMount(){
 
     const data = await AsyncStorage.getItem('ApiData')
-
+    this.state.len="false";
     if(data!=null) {
       try{
 
         this.setState({
-
+          len:"false",
           isLoading: false,
           loaded:true,
           dataSource: JSON.parse(data),
+          currentIndex:0
         })
       }catch(e) {
         console.warn("fetch Error: ", error)
@@ -185,29 +198,31 @@ async componentWillMount() {
       else {
         this.getData();
       }
-       this.timer = setInterval(()=> this.getData(), 3600000)
+       // this.timer = setInterval(()=> this.getData(), 3600000)
 
 }
   async getData(){
-
-    this.setState({
-
-      isLoading: true})
+    const component = this
+    AsyncStorage.setItem('POINTER', '0');
+    this.setState({isLoading: true})
     fetch('https://news119.herokuapp.com/getData')
       .then((response) => response.json())
       .then((responseJson) => {
 
-        Toast.show('Refreshed');
+
+
         this.setState({
 
-          isLoading: false,
           loaded:true,
           currentIndex:0,
-          dataSource: responseJson.data.sort((a,b)=>a.date<b.date),
-        }, function(){
+          dataSource: responseJson.data.sort((a,b)=>a.publishDate<b.publishDate),
+        }, async function(){
+            await component.preload(responseJson.data)
 
+              Toast.show('Refreshed');
+            component.setState({isLoading: false})
           AsyncStorage.setItem('ApiData',JSON.stringify(this.state.dataSource))
-          AsyncStorage.setItem('POINTER', '0');
+
 
         });
 
@@ -221,11 +236,12 @@ async componentWillMount() {
   renderArtciles=()=>{
 
     var AnimatedImage = Animated.createAnimatedComponent(ImageBackground);
-
+    this.state.len="false";
 
 
     var len =this.state.dataSource.length;
     return this.state.dataSource.map((item,i)=>{
+      console.log("len",this.state.len);
       // const shiftedIndex = (startingIndex + i) %  this.state.dataSource.length
       // const item = this.state.dataSource[shiftedIndex];
 
@@ -236,7 +252,7 @@ async componentWillMount() {
             return(
               <Animated.View key={item._id} {...this.state.panResponder.panHandlers} style={this.state.swiped_pan.getLayout()}>
 
-                <View style={{ marginTop:normalize(35), flex: 1,position:'absolute',height:height-(height*0.15),width:width-(width*0.05) ,
+                <View style={{ marginTop:normalize(37), flex: 1,position:'absolute',height:height-(height*0.15),width:width-(width*0.05) ,
                  backgroundColor:'white',borderRadius:10,margin:wp('3%'),shadowColor: '#003182',shadowOffset: { width: 0, height: 9 },shadowOpacity: 0.48,shadowRadius: 11.95,elevation:18}}>
 
 
@@ -268,7 +284,7 @@ async componentWillMount() {
 
               <Animated.View key={item._id} {...this.state.panResponder.panHandlers} style={this.state.swiped_pan.getLayout()}>
               <AnimatedImage  source={{ uri:item.img.data }}
-               imageStyle={{ borderRadius: 10 }} style={{marginTop:normalize(35),flex: 1,position:'absolute',height:height-(height*0.15),width:width-(width*0.05),borderRadius:50,margin:10,
+               imageStyle={{ borderRadius: 10 }} style={{marginTop:normalize(37),flex: 1,position:'absolute',height:height-(height*0.15),width:width-(width*0.05),borderRadius:50,margin:10,
             borderRadius:10,margin:wp('3%'),shadowColor: '#003182',shadowOffset: { width: 0, height: 9 },shadowOpacity: 0.48,shadowRadius: 11.95,elevation:18}}>
               <TouchableOpacity activeOpacity={1}  onPress={()=>{this.props.navigation.navigate('Details', {itemId: item})}}  >
                 <Text>    </Text>
@@ -288,7 +304,7 @@ async componentWillMount() {
         }
          if (i == this.state.currentIndex)
         {
-            if(len==i+1){ this.state.len="true"} //to chekc for last card
+            if(len==this.state.currentIndex+1){ this.state.len="true"} //to chekc for last card
 
 
                 if(item.special)
@@ -298,7 +314,7 @@ async componentWillMount() {
                   <Animated.View key={item._id} {...this.state.panResponder.panHandlers} style={[this.state.pan.getLayout()]}>
 
                         <AnimatedImage  source={{ uri:item.img.data }}
-                         imageStyle={{ borderRadius: 10 }} style={{marginTop:normalize(35),flex: 1,position:'absolute',height:height-(height*0.15),width:width-(width*0.05),
+                         imageStyle={{ borderRadius: 10 }} style={{marginTop:normalize(37),flex: 1,position:'absolute',height:height-(height*0.15),width:width-(width*0.05),
                          borderRadius:50,margin:wp('3%'),shadowColor: '#003182',shadowOffset: { width: 0, height: 9 },shadowOpacity: 0.48,shadowRadius: 11.95,elevation:18}}>
                         <TouchableOpacity activeOpacity={1} style={{height:height-(height*0.15),width:width-(width*0.05)}}  onPress={()=>{
                           let shareOptions = {
@@ -325,7 +341,7 @@ async componentWillMount() {
                       return(
                         <Animated.View key={item._id} {...this.state.panResponder.panHandlers} style={this.state.pan.getLayout()}>
 
-                          <View style={{ marginTop:normalize(35),flex: 1,position:'absolute',height:height-(height*0.15),width:width-(width*0.05),
+                          <View style={{ marginTop:normalize(37),flex: 1,position:'absolute',height:height-(height*0.15),width:width-(width*0.05),
                         backgroundColor:'white',borderRadius:10,margin:wp('3%'),shadowColor: '#003182',shadowOffset: { width: 0, height: 9 },shadowOpacity: 0.48,shadowRadius: 11.95,elevation:18}}>
 
 
@@ -362,7 +378,7 @@ async componentWillMount() {
             return(
               <Animated.View key={item._id} >
 
-                <View style={{ marginTop:normalize(35), flex: 1,position:'absolute',height:height-(height*0.15),width:width-(width*0.05),backgroundColor:'white',
+                <View style={{ marginTop:normalize(37), flex: 1,position:'absolute',height:height-(height*0.15),width:width-(width*0.05),backgroundColor:'white',
                 borderRadius:10,margin:wp('3%')}}>
 
 
@@ -392,7 +408,7 @@ async componentWillMount() {
 
             <Animated.View key={item._id} >
               <AnimatedImage  source={{ uri:item.img.data }}  imageStyle={{ borderRadius: 10 }}
-              style={{marginTop:normalize(35),flex: 1,position:'absolute',height:height-(height*0.15),width:width-(width*0.05),borderRadius:10,margin:wp('3%')}}>
+              style={{marginTop:normalize(37),flex: 1,position:'absolute',height:height-(height*0.15),width:width-(width*0.05),borderRadius:10,margin:wp('3%')}}>
               <TouchableOpacity activeOpacity={1}  onPress={()=>{this.props.navigation.navigate('Details', {itemId: item})}}  >
                 <Text>  </Text>
                 </TouchableOpacity>
@@ -428,7 +444,7 @@ async componentWillMount() {
        <StatusBar
           backgroundColor="black"
           animated />
-          <View   contentContainerStyle={{  flexGrow: 1 ,top:hp('0.9%')}}
+          <View   contentContainerStyle={{  flexGrow: 1 }}
           // refreshControl={
           //                <RefreshControl
           //                  refreshing={loading}
@@ -445,7 +461,7 @@ async componentWillMount() {
                           <View style={{  flex: 1,position:'absolute',height:height,width:width,backgroundColor:'white'}}>
                             <View  style={styles.inner}>
                               <View style={styles.inner}>
-                                <Text style={{color:'black',  top:hp('10%'),fontSize: wp('10%'),fontWeight: 'bold'}} >No More Cards</Text>
+                                <Text style={{color:'black',  left:wp('20%'),top:hp('10%'),fontSize: wp('10%'),fontWeight: 'bold'}} >No More Cards</Text>
 
                               </View>
                             </View >
@@ -461,7 +477,17 @@ async componentWillMount() {
       )
     }
   }
+  const stylesRem = EStyleSheet.create({
 
+    body: {
+      color: 'black',
+      fontSize:'3rem',
+      // fontSize:
+      flexShrink:1                             // relative REM unit
+    },
+
+
+  });
   const styles = {
     image: {
 
@@ -500,9 +526,11 @@ async componentWillMount() {
     },
     body: {
 
-      color: 'black',
-      fontSize:normalize(15),
-      flexShrink:1
+      color: '#545454',
+      // fontSize:normalize(780)*diagonal,
+      fontSize:wp('4%'),
+      flexShrink:1,
+      textAlign: 'justify',
 
 
 
@@ -517,7 +545,7 @@ async componentWillMount() {
   }
 ,
   titleText: {
-    color:'black',
+    color:'#545454',
     top:5,
    fontSize:normalize(17),
    fontWeight: 'bold',

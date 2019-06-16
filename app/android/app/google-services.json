@@ -1,34 +1,34 @@
 {
   "project_info": {
-    "project_number": "235567156174",
-    "firebase_url": "https://pushnotification-242907.firebaseio.com",
-    "project_id": "pushnotification-242907",
-    "storage_bucket": "pushnotification-242907.appspot.com"
+    "project_number": "373808066233",
+    "firebase_url": "https://newssense-646a3.firebaseio.com",
+    "project_id": "newssense-646a3",
+    "storage_bucket": "newssense-646a3.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:235567156174:android:6f9b857bd20411a1",
+        "mobilesdk_app_id": "1:373808066233:android:d019d89a2d681bfb",
         "android_client_info": {
-          "package_name": "com.app"
+          "package_name": "com.newSense"
         }
       },
       "oauth_client": [
         {
-          "client_id": "235567156174-duuoot03e2q00ajc0r83p5do71nqv2q8.apps.googleusercontent.com",
+          "client_id": "373808066233-d034lvlo0d56vlrab5rqs8am64ur0a9j.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDNZAuFPwRqedXOpSASfpuDSNW07lgTA1I"
+          "current_key": "AIzaSyCmtrpuXnEnopdTAxLdsxsGR6yVkr0JlKU"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "235567156174-duuoot03e2q00ajc0r83p5do71nqv2q8.apps.googleusercontent.com",
+              "client_id": "373808066233-d034lvlo0d56vlrab5rqs8am64ur0a9j.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

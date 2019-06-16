@@ -1,4 +1,4 @@
-package com.app;
+package com.newSense;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;

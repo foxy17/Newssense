@@ -12,7 +12,9 @@ export default class ExternalScreen extends Component {
   constructor(props){
     super(props);
     const { navigation } = this.props;
-    const { id } =  navigation.getParam('id');
+    console.log(navigation);
+    const { id } =  navigation.getParam('link');
+    console.log("ID",id);
 
     let link="https://news119.herokuapp.com/find/"+id;
     this.state ={ isLoading: "true",params:link,dataSource:{},img:''};
@@ -27,7 +29,7 @@ export default class ExternalScreen extends Component {
 
           isLoading: false,
           dataSource: responseJson.data,
-          img:responseJson.data.img.data,
+
         }, function(){
 
         });
@@ -48,6 +50,7 @@ var AnimatedImage = Animated.createAnimatedComponent(ImageBackground);
               </View>
             )}
         var item=this.state.dataSource;
+
 
 
             if(item.special==false){

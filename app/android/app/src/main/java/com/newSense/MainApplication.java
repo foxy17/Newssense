@@ -1,8 +1,9 @@
-package com.app;
+package com.newSense;
 
 import android.app.Application;
 import cl.json.ShareApplication;
 import com.facebook.react.ReactApplication;
+import com.RNFetchBlob.RNFetchBlobPackage;
 import com.dylanvann.fastimage.FastImageViewPackage;
 import com.chirag.RNMail.RNMail;
 import io.invertase.firebase.RNFirebasePackage;
@@ -32,6 +33,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNFetchBlobPackage(),
             new FastImageViewPackage(),
             new RNMail(),
             new RNFirebasePackage(),
