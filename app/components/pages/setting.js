@@ -140,6 +140,11 @@ export default class SettingsScreen extends Component {
               </Text>
             </Icon3.Button>
           </View>
+            <View style={styles.Bottom}>
+            <Text style={{textAlign:'center', fontSize: normalize(12)}} onPress={ ()=> Linking.openURL('http://213.190.4.69:3010/terms-and-conditions') } >Terms&Conditions</Text>
+             <Text style={{top:7,textAlign:'center', fontSize: normalize(12)}} onPress={ ()=> Linking.openURL('http://213.190.4.69:3010/privacy-policy') } >Privacy Policy</Text>
+
+            </View>
       </View>
       </AndroidBackHandler>
  );
@@ -167,9 +172,10 @@ const styles = StyleSheet.create({
   },
 
   Bottom:{
-    zIndex:1,
-  position: 'absolute',
-  top: 9,
-  right: 0
+    borderRadius:normalize(30),
+    backgroundColor: '#F3F3F3',
+    height: normalize(51),
+    top:normalize(hp('15%')),
+
   }
 });

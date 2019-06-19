@@ -8,6 +8,7 @@ import normalize from '../utils/normalize'
 const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
 import DeepLinking from 'react-native-deep-linking';
 import ShareItem from '../utils/ShareItem'
+import Time from '../utils/Time'
 import SettingButton from '../utils/settings'
 import {connect} from 'react-redux';
 import checkPointer from '../utils/checkPointer';
@@ -16,10 +17,20 @@ import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-nativ
 import Share, {ShareSheet, Button} from 'react-native-share';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Toast from 'react-native-simple-toast';
-import CachedImage from 'react-native-image-cache-wrapper';
+import en from 'javascript-time-ago/locale/en'
+
+import BackgroundTimer from 'react-native-background-timer';
+import firebase from 'react-native-firebase';
+import {
+    CachedImage,
+    ImageCacheProvider,
+    ImageCacheManager
+} from 'react-native-cached-images'
+const defaultImageCacheManager = ImageCacheManager();
 import EStyleSheet from 'react-native-extended-stylesheet';
 
 export default  class HomeScreen extends Component {
+
   constructor(props){
     super(props);
 
@@ -165,18 +176,23 @@ async componentWillMount() {
 }
 
  async  preload(data){
-
-    for(let i=0;i<data.length;i++){
+   var len;
+   if(data.length<10){len=data.length}
+   else {len=10}
+   console.log("LENGTH",len);
+    for(let i=0;i<3;i++){
       var item=data[i];
-      var response =await Image.prefetch(item.img.data);
-      console.log("image",response);
-
-
+      var response=await defaultImageCacheManager.downloadAndCacheUrl(item.img.data);
+      console.log(response);
     }
 
-
   }
-
+  clearCache() {
+          defaultImageCacheManager.clearCache()
+              .then(() => {
+                  console.log('Cache cleared');
+              });
+      }
 
   async componentDidMount(){
 
@@ -198,14 +214,24 @@ async componentWillMount() {
       else {
         this.getData();
       }
-       // this.timer = setInterval(()=> this.getData(), 3600000)
+      BackgroundTimer.runBackgroundTimer(() => {
+        this.getData();
+        },
+        10800000);
+        BackgroundTimer.runBackgroundTimer(() => {
+          this.clearCache();
+          },
+          86400000);
+
 
 }
   async getData(){
+
     const component = this
     AsyncStorage.setItem('POINTER', '0');
     this.setState({isLoading: true})
-    fetch('https://news119.herokuapp.com/getData')
+
+    fetch('http://dash.newssense.co/getData')
       .then((response) => response.json())
       .then((responseJson) => {
 
@@ -235,13 +261,13 @@ async componentWillMount() {
 
   renderArtciles=()=>{
 
-    var AnimatedImage = Animated.createAnimatedComponent(ImageBackground);
+    var AnimatedImage = Animated.createAnimatedComponent(CachedImage );
     this.state.len="false";
 
 
     var len =this.state.dataSource.length;
     return this.state.dataSource.map((item,i)=>{
-      console.log("len",this.state.len);
+
       // const shiftedIndex = (startingIndex + i) %  this.state.dataSource.length
       // const item = this.state.dataSource[shiftedIndex];
 
@@ -252,12 +278,12 @@ async componentWillMount() {
             return(
               <Animated.View key={item._id} {...this.state.panResponder.panHandlers} style={this.state.swiped_pan.getLayout()}>
 
-                <View style={{ marginTop:normalize(37), flex: 1,position:'absolute',height:height-(height*0.15),width:width-(width*0.05) ,
+                <View style={{ marginTop:normalize(40), flex: 1,position:'absolute',height:height-(height*0.14),width:width-(width*0.05) ,
                  backgroundColor:'white',borderRadius:10,margin:wp('3%'),shadowColor: '#003182',shadowOffset: { width: 0, height: 9 },shadowOpacity: 0.48,shadowRadius: 11.95,elevation:18}}>
 
 
                   < View style={styles.Imagebody}>
-                    <Image source={{ uri:item.img.data }} style={styles.image} />
+                    <CachedImage  source={{ uri:item.img.data }} style={styles.image} />
                   </View>
 
                   <View  style={styles.inner}>
@@ -267,6 +293,10 @@ async componentWillMount() {
                       <Text style={styles.titleText} >{item.title}﻿</Text>
                       <View>
                         <Text style={styles.body}>{item.body}﻿</Text>
+                      </View>
+                      <View>
+                        <Text style={{marginTop:normalize(16),fontSize:normalize(10),color:'#afafaf'}}>Source:{item.source}</Text>
+                        <Time date={item.publishDate} />
                       </View>
                     </View>
                   </View >
@@ -283,13 +313,13 @@ async componentWillMount() {
             return(
 
               <Animated.View key={item._id} {...this.state.panResponder.panHandlers} style={this.state.swiped_pan.getLayout()}>
-              <AnimatedImage  source={{ uri:item.img.data }}
-               imageStyle={{ borderRadius: 10 }} style={{marginTop:normalize(37),flex: 1,position:'absolute',height:height-(height*0.15),width:width-(width*0.05),borderRadius:50,margin:10,
+              <CachedImage  source={{ uri:item.img.data }}
+               imageStyle={{ borderRadius: 10 }} style={{marginTop:normalize(40),flex: 1,position:'absolute',height:height-(height*0.14),width:width-(width*0.05),borderRadius:50,margin:10,
             borderRadius:10,margin:wp('3%'),shadowColor: '#003182',shadowOffset: { width: 0, height: 9 },shadowOpacity: 0.48,shadowRadius: 11.95,elevation:18}}>
               <TouchableOpacity activeOpacity={1}  onPress={()=>{this.props.navigation.navigate('Details', {itemId: item})}}  >
                 <Text>    </Text>
                 </TouchableOpacity>
-              </AnimatedImage>
+              </CachedImage>
 
             </Animated.View>
               )
@@ -313,23 +343,32 @@ async componentWillMount() {
 
                   <Animated.View key={item._id} {...this.state.panResponder.panHandlers} style={[this.state.pan.getLayout()]}>
 
-                        <AnimatedImage  source={{ uri:item.img.data }}
-                         imageStyle={{ borderRadius: 10 }} style={{marginTop:normalize(37),flex: 1,position:'absolute',height:height-(height*0.15),width:width-(width*0.05),
+                        <CachedImage  source={{ uri:item.img.data }}
+                         imageStyle={{ borderRadius: 10 }} style={{marginTop:normalize(40),flex: 1,position:'absolute',height:height-(height*0.14),width:width-(width*0.05),
                          borderRadius:50,margin:wp('3%'),shadowColor: '#003182',shadowOffset: { width: 0, height: 9 },shadowOpacity: 0.48,shadowRadius: 11.95,elevation:18}}>
-                        <TouchableOpacity activeOpacity={1} style={{height:height-(height*0.15),width:width-(width*0.05)}}  onPress={()=>{
-                          let shareOptions = {
-                           title: "Share This Story",
-                           message: "Read This Awsome Article :\n "+item.title,
-                           url: "\n https://news119.herokuapp.com/"+item._id,
-                           subject: "Share Link",
+                        <TouchableOpacity activeOpacity={1} style={{height:height-(height*0.14),width:width-(width*0.05)}}  onPress={()=>{
+                          var idshort='https://news.newssense.co/'+item._id;
+                          var dm = new firebase.links.DynamicLink(
+                                   idshort,
+                                 'https://news.newssense.co'
+                               ).android.setPackageName('com.newSense');
+                               console.log(dm);
 
-                         };
-                           Share.open(shareOptions).catch((err) => { err && console.log(err); });
-                       }}
+                          firebase.links()
+                         .createShortDynamicLink(dm, 'SHORT')
+                         .then((url) => {
+                           let shareOptions = {
+                             title: "Share This Story",
+                             message: "Read This Awsome Article: "+item.title,
+                             url: url,
+                             subject: "Share Link"
+                           };
+                            Share.open(shareOptions).catch((err) => { err && console.log(err); });
+                       })}}
                         >
                             <Text>  </Text>
                           </TouchableOpacity>
-                        </AnimatedImage>
+                        </CachedImage>
                   </Animated.View>
 
 
@@ -341,12 +380,12 @@ async componentWillMount() {
                       return(
                         <Animated.View key={item._id} {...this.state.panResponder.panHandlers} style={this.state.pan.getLayout()}>
 
-                          <View style={{ marginTop:normalize(37),flex: 1,position:'absolute',height:height-(height*0.15),width:width-(width*0.05),
+                          <View style={{ marginTop:normalize(40),flex: 1,position:'absolute',height:height-(height*0.14),width:width-(width*0.05),
                         backgroundColor:'white',borderRadius:10,margin:wp('3%'),shadowColor: '#003182',shadowOffset: { width: 0, height: 9 },shadowOpacity: 0.48,shadowRadius: 11.95,elevation:18}}>
 
 
                             < View style={styles.Imagebody}>
-                              <Image source={{ uri:item.img.data }} style={styles.image} />
+                              <CachedImage  source={{ uri:item.img.data }} style={styles.image} />
                             </View>
 
                             <View  style={styles.inner}>
@@ -356,11 +395,14 @@ async componentWillMount() {
                               <View style={styles.inner}>
                               <Text style={styles.titleArrtibute}>{item.category}</Text>
                                 <Text style={styles.titleText} >{item.title}﻿</Text>
-                                <View>
-                                  <Text numberOfLines={hp('2.5%')} style={styles.body}>{item.body}﻿</Text>
-
-
+                                <View >
+                                  <Text style={styles.body}>{item.body}﻿</Text>
                                 </View>
+                                <View >
+                                  <Text style={{marginTop:normalize(16),fontSize:normalize(10),color:'#afafaf'}}>Source:{item.source}</Text>
+                                  <Time date={item.publishDate} />
+                                </View>
+
                               </View>
 
 
@@ -378,12 +420,12 @@ async componentWillMount() {
             return(
               <Animated.View key={item._id} >
 
-                <View style={{ marginTop:normalize(37), flex: 1,position:'absolute',height:height-(height*0.15),width:width-(width*0.05),backgroundColor:'white',
+                <View style={{ marginTop:normalize(40), flex: 1,position:'absolute',height:height-(height*0.14),width:width-(width*0.05),backgroundColor:'white',
                 borderRadius:10,margin:wp('3%')}}>
 
 
                   < View style={styles.Imagebody}>
-                    <Image source={{ uri:item.img.data }} style={styles.image} />
+                    <CachedImage  source={{ uri:item.img.data }} style={styles.image} />
                   </View>
 
                   <View  style={styles.inner}>
@@ -393,6 +435,10 @@ async componentWillMount() {
                       <Text style={styles.titleText} >{item.title}﻿</Text>
                       <View>
                         <Text style={styles.body}>{item.body}﻿</Text>
+                      </View>
+                      <View >
+                        <Text style={{marginTop:normalize(16),fontSize:normalize(10),color:'#afafaf'}}>Source:{item.source}</Text>
+                        <Time date={item.publishDate} />
                       </View>
                     </View>
                   </View >
@@ -407,12 +453,12 @@ async componentWillMount() {
           return(
 
             <Animated.View key={item._id} >
-              <AnimatedImage  source={{ uri:item.img.data }}  imageStyle={{ borderRadius: 10 }}
-              style={{marginTop:normalize(37),flex: 1,position:'absolute',height:height-(height*0.15),width:width-(width*0.05),borderRadius:10,margin:wp('3%')}}>
+              <CachedImage  source={{ uri:item.img.data }}  imageStyle={{ borderRadius: 10 }}
+              style={{marginTop:normalize(40),flex: 1,position:'absolute',height:height-(height*0.14),width:width-(width*0.05),borderRadius:10,margin:wp('3%')}}>
               <TouchableOpacity activeOpacity={1}  onPress={()=>{this.props.navigation.navigate('Details', {itemId: item})}}  >
                 <Text>  </Text>
                 </TouchableOpacity>
-              </AnimatedImage>
+              </CachedImage>
 
           </Animated.View>
             )
@@ -431,7 +477,7 @@ async componentWillMount() {
       if(this.state.isLoading ){
             return(
               <View >
-                <Image source={require('../images/load.gif')}    style={{left:wp('1%') ,width: wp('100'), height: hp('100')}}/>
+                <CachedImage  source={require('../images/load.gif')}    style={{left:wp('1%') ,width: wp('100'), height: hp('100')}}/>
               </View>
             )}
 
@@ -441,38 +487,19 @@ async componentWillMount() {
       <SettingButton navigate={this.props.navigation.navigate} parentMethod={this.getData.bind(this)}  />
 
 
-       <StatusBar
-          backgroundColor="black"
-          animated />
-          <View   contentContainerStyle={{  flexGrow: 1 }}
-          // refreshControl={
-          //                <RefreshControl
-          //                  refreshing={loading}
-          //                  onRefresh={refresh}
-          //                />}
-          >
-            {this.renderArtciles()}
-
-                 </View>
+       <StatusBar backgroundColor="black" animated />
+            <View   contentContainerStyle={{  flexGrow: 1 }}>
+              {this.renderArtciles()}
+             </View>
 
 
           <View style={{position:'absolute',zIndex:-20,backgroundColor:'#f3f3f3'}}>
 
-                          <View style={{  flex: 1,position:'absolute',height:height,width:width,backgroundColor:'white'}}>
-                            <View  style={styles.inner}>
-                              <View style={styles.inner}>
-                                <Text style={{color:'black',  left:wp('20%'),top:hp('10%'),fontSize: wp('10%'),fontWeight: 'bold'}} >No More Cards</Text>
-
-                              </View>
-                            </View >
-
-
+                          <View style={{ flex:3, textAlign: 'center',position:'absolute',height:height,width:width,backgroundColor:'white'}}>
+                                <Text style={{color:'black',  top:hp('40%'),textAlign: 'center',fontSize: wp('5%'),fontWeight: 'bold'}} >No More Cards</Text>
                           </View>
           </View>
-
          </View>
-
-
 
       )
     }
@@ -528,7 +555,7 @@ async componentWillMount() {
 
       color: '#545454',
       // fontSize:normalize(780)*diagonal,
-      fontSize:wp('4%'),
+      fontSize:normalize(15),
       flexShrink:1,
       textAlign: 'justify',
 
@@ -545,7 +572,7 @@ async componentWillMount() {
   }
 ,
   titleText: {
-    color:'#545454',
+    color:'#222',
     top:5,
    fontSize:normalize(17),
    fontWeight: 'bold',

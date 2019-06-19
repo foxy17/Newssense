@@ -5,6 +5,7 @@ const {width, height} = Dimensions.get('window');
 import ShareItem from '../utils/ShareItem'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import normalize from '../utils/normalize'
+import Time from '../utils/Time'
 export default class ExternalScreen extends Component {
   static navigationOptions = {
    title: 'Article',
@@ -71,6 +72,10 @@ var AnimatedImage = Animated.createAnimatedComponent(ImageBackground);
               <Text style={styles.titleText} >{item.title}﻿</Text>
               <View>
                 <Text style={styles.body}>{item.body}﻿</Text>
+              </View>
+              <View>
+                <Text style={{marginTop:normalize(16),fontSize:normalize(10),color:'#afafaf'}}>Source:{item.source}</Text>
+                <Time date={item.publishDate} />
               </View>
             </View>
           </View >

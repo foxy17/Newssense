@@ -6,6 +6,12 @@ db = new Datastore({ filename: 'asyncStorageKey', autoload: true });
 import Swipeout from 'react-native-swipeout';
 import { AndroidBackHandler } from 'react-navigation-backhandler';
 import normalize from '../utils/normalize'
+import {
+    CachedImage,
+    ImageCacheProvider,
+    ImageCacheManager
+} from 'react-native-cached-images'
+
 export default class BookmarksScreen extends Component {
   constructor(props) {
      super(props);
@@ -66,8 +72,9 @@ export default class BookmarksScreen extends Component {
                 autoClose= {true}
                 backgroundColor= 'transparent'>
                 <TouchableOpacity style={{flexDirection:'row',marginBottom:normalize(5)}} onPress={()=>{console.log(data._id);this.props.navigation.navigate('SingleBookmark', {id: data._id})}}>
-                <Image   style={{width: normalize(60), height: normalize(60),padding:normalize(1)}} source={{uri:data.img}}/>
-                <Text  style={{  flex: 1, flexWrap: 'wrap',color:'black',fontSize: normalize(16)}}> {data.name}</Text>
+                <CachedImage   style={{width: normalize(60), height: normalize(60),padding:normalize(1)}} source={{uri:data.img}}/>
+
+                <Text  style={{  textAlign:'center',flex: 1,color:'black',fontSize: normalize(16)}}> {data.name}</Text>
               </TouchableOpacity>
             </Swipeout>
             </View>

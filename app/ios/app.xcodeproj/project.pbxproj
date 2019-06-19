@@ -64,8 +64,8 @@
 		129D7335CB714CB5BC687757 /* libLRDRCTSimpleToast.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B9A61ED6185F466F9C9CF59F /* libLRDRCTSimpleToast.a */; };
 		D031EB462EE94314B239F502 /* libRNMail.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E32BBB7723E04D86924FD16E /* libRNMail.a */; };
 		336B44303CDD47D7B818E756 /* RNMailTests.xctest in Resources */ = {isa = PBXBuildFile; fileRef = 199F1E61AC9C42EBBD201CD4 /* RNMailTests.xctest */; };
-		9F4F699C095A412E9EB39F18 /* libFastImage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C489C625BD69458FA48C984F /* libFastImage.a */; };
 		2B1AB027C8AE4820BEB4719B /* libRNFetchBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F3A1E9F94B645D78CB4208B /* libRNFetchBlob.a */; };
+		2BFA4C79E57549B094C7885D /* libRNBackgroundTimer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E23559EEBA9B4D6CADBB6B6B /* libRNBackgroundTimer.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -405,10 +405,10 @@
 		E44F025D498E4EA1820FF69E /* RNMail.xcodeproj */ = {isa = PBXFileReference; name = "RNMail.xcodeproj"; path = "../node_modules/react-native-mail/RNMail.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		E32BBB7723E04D86924FD16E /* libRNMail.a */ = {isa = PBXFileReference; name = "libRNMail.a"; path = "libRNMail.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		199F1E61AC9C42EBBD201CD4 /* RNMailTests.xctest */ = {isa = PBXFileReference; name = "RNMailTests.xctest"; path = "RNMailTests.xctest"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.cfbundle; explicitFileType = undefined; includeInIndex = 0; };
-		A9A3CA9317E24FA49CBCCD91 /* FastImage.xcodeproj */ = {isa = PBXFileReference; name = "FastImage.xcodeproj"; path = "../node_modules/react-native-fast-image/ios/FastImage.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
-		C489C625BD69458FA48C984F /* libFastImage.a */ = {isa = PBXFileReference; name = "libFastImage.a"; path = "libFastImage.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		4709C4AE68204B7388791B8A /* RNFetchBlob.xcodeproj */ = {isa = PBXFileReference; name = "RNFetchBlob.xcodeproj"; path = "../node_modules/rn-fetch-blob/ios/RNFetchBlob.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		6F3A1E9F94B645D78CB4208B /* libRNFetchBlob.a */ = {isa = PBXFileReference; name = "libRNFetchBlob.a"; path = "libRNFetchBlob.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		1B14802B8852494A8CEAC5AE /* RNBackgroundTimer.xcodeproj */ = {isa = PBXFileReference; name = "RNBackgroundTimer.xcodeproj"; path = "../node_modules/react-native-background-timer/ios/RNBackgroundTimer.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		E23559EEBA9B4D6CADBB6B6B /* libRNBackgroundTimer.a */ = {isa = PBXFileReference; name = "libRNBackgroundTimer.a"; path = "libRNBackgroundTimer.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -445,8 +445,8 @@
 				129D7335CB714CB5BC687757 /* libLRDRCTSimpleToast.a in Frameworks */,
 				D031EB462EE94314B239F502 /* libRNMail.a in Frameworks */,
 				336B44303CDD47D7B818E756 /* RNMailTests.xctest in Resources */,
-				9F4F699C095A412E9EB39F18 /* libFastImage.a in Frameworks */,
 				2B1AB027C8AE4820BEB4719B /* libRNFetchBlob.a in Frameworks */,
+				2BFA4C79E57549B094C7885D /* libRNBackgroundTimer.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -645,8 +645,8 @@
 				BC118B6F504642BABF60CC72 /* RNFirebase.xcodeproj */,
 				E421BBEFF0C94B98A78F5947 /* LRDRCTSimpleToast.xcodeproj */,
 				E44F025D498E4EA1820FF69E /* RNMail.xcodeproj */,
-				A9A3CA9317E24FA49CBCCD91 /* FastImage.xcodeproj */,
 				4709C4AE68204B7388791B8A /* RNFetchBlob.xcodeproj */,
+				1B14802B8852494A8CEAC5AE /* RNBackgroundTimer.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1313,7 +1313,6 @@
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/app.app/app";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1324,8 +1323,8 @@
 					"$(SRCROOT)\..\node_modules\react-native-firebase\ios\RNFirebase/**",
 					"$(SRCROOT)\..\node_modules\react-native-simple-toast\ios\LRDRCTSimpleToast",
 					"$(SRCROOT)\..\node_modules\react-native-mail\RNMail",
-					"$(SRCROOT)\..\node_modules\react-native-fast-image\ios\FastImage/**",
 					"$(SRCROOT)\..\node_modules\rn-fetch-blob\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-background-timer\ios",
 				);
 			};
 			name = Debug;
@@ -1347,7 +1346,6 @@
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/app.app/app";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1358,8 +1356,8 @@
 					"$(SRCROOT)\..\node_modules\react-native-firebase\ios\RNFirebase/**",
 					"$(SRCROOT)\..\node_modules\react-native-simple-toast\ios\LRDRCTSimpleToast",
 					"$(SRCROOT)\..\node_modules\react-native-mail\RNMail",
-					"$(SRCROOT)\..\node_modules\react-native-fast-image\ios\FastImage/**",
 					"$(SRCROOT)\..\node_modules\rn-fetch-blob\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-background-timer\ios",
 				);
 			};
 			name = Release;
@@ -1389,8 +1387,8 @@
 					"$(SRCROOT)\..\node_modules\react-native-firebase\ios\RNFirebase/**",
 					"$(SRCROOT)\..\node_modules\react-native-simple-toast\ios\LRDRCTSimpleToast",
 					"$(SRCROOT)\..\node_modules\react-native-mail\RNMail",
-					"$(SRCROOT)\..\node_modules\react-native-fast-image\ios\FastImage/**",
 					"$(SRCROOT)\..\node_modules\rn-fetch-blob\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-background-timer\ios",
 				);
 			};
 			name = Debug;
@@ -1419,8 +1417,8 @@
 					"$(SRCROOT)\..\node_modules\react-native-firebase\ios\RNFirebase/**",
 					"$(SRCROOT)\..\node_modules\react-native-simple-toast\ios\LRDRCTSimpleToast",
 					"$(SRCROOT)\..\node_modules\react-native-mail\RNMail",
-					"$(SRCROOT)\..\node_modules\react-native-fast-image\ios\FastImage/**",
 					"$(SRCROOT)\..\node_modules\rn-fetch-blob\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-background-timer\ios",
 				);
 			};
 			name = Release;
@@ -1450,7 +1448,6 @@
 				TVOS_DEPLOYMENT_TARGET = 9.2;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1461,8 +1458,8 @@
 					"$(SRCROOT)\..\node_modules\react-native-firebase\ios\RNFirebase/**",
 					"$(SRCROOT)\..\node_modules\react-native-simple-toast\ios\LRDRCTSimpleToast",
 					"$(SRCROOT)\..\node_modules\react-native-mail\RNMail",
-					"$(SRCROOT)\..\node_modules\react-native-fast-image\ios\FastImage/**",
 					"$(SRCROOT)\..\node_modules\rn-fetch-blob\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-background-timer\ios",
 				);
 			};
 			name = Debug;
@@ -1492,7 +1489,6 @@
 				TVOS_DEPLOYMENT_TARGET = 9.2;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1503,8 +1499,8 @@
 					"$(SRCROOT)\..\node_modules\react-native-firebase\ios\RNFirebase/**",
 					"$(SRCROOT)\..\node_modules\react-native-simple-toast\ios\LRDRCTSimpleToast",
 					"$(SRCROOT)\..\node_modules\react-native-mail\RNMail",
-					"$(SRCROOT)\..\node_modules\react-native-fast-image\ios\FastImage/**",
 					"$(SRCROOT)\..\node_modules\rn-fetch-blob\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-background-timer\ios",
 				);
 			};
 			name = Release;
@@ -1533,7 +1529,6 @@
 				TVOS_DEPLOYMENT_TARGET = 10.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1544,8 +1539,8 @@
 					"$(SRCROOT)\..\node_modules\react-native-firebase\ios\RNFirebase/**",
 					"$(SRCROOT)\..\node_modules\react-native-simple-toast\ios\LRDRCTSimpleToast",
 					"$(SRCROOT)\..\node_modules\react-native-mail\RNMail",
-					"$(SRCROOT)\..\node_modules\react-native-fast-image\ios\FastImage/**",
 					"$(SRCROOT)\..\node_modules\rn-fetch-blob\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-background-timer\ios",
 				);
 			};
 			name = Debug;
@@ -1574,7 +1569,6 @@
 				TVOS_DEPLOYMENT_TARGET = 10.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1585,8 +1579,8 @@
 					"$(SRCROOT)\..\node_modules\react-native-firebase\ios\RNFirebase/**",
 					"$(SRCROOT)\..\node_modules\react-native-simple-toast\ios\LRDRCTSimpleToast",
 					"$(SRCROOT)\..\node_modules\react-native-mail\RNMail",
-					"$(SRCROOT)\..\node_modules\react-native-fast-image\ios\FastImage/**",
 					"$(SRCROOT)\..\node_modules\rn-fetch-blob\ios/**",
+					"$(SRCROOT)\..\node_modules\react-native-background-timer\ios",
 				);
 			};
 			name = Release;

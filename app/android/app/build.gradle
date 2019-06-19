@@ -106,8 +106,8 @@ android {
         applicationId "com.newSense"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode 5
+        versionName "0.0.2"
     }
     signingConfigs {
        release {
@@ -150,8 +150,8 @@ android {
 }
 
 dependencies {
+    implementation project(':react-native-background-timer')
     implementation project(':rn-fetch-blob')
-    implementation project(':react-native-fast-image')
     implementation project(':react-native-mail')
     implementation project(':react-native-firebase')
     implementation project(':react-native-push-notification')

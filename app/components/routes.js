@@ -164,7 +164,7 @@ showAlert(title, body) {
    componentDidMount() {
      Linking.addEventListener('url', this.handleUrl);
      DeepLinking.addScheme('https://');
-    DeepLinking.addRoute('dashboard.newssense.co/:id', (response) => {
+    DeepLinking.addRoute('news.newssense.co/:id', (response) => {
 
       this.props.navigation.navigate('Article',{link:response});
     });

@@ -217,12 +217,12 @@ const styles = StyleSheet.create({
     zIndex:1,
     position: 'absolute',
   top: hp('0.5%'),
-  right: wp('20%'),
+  right: wp('10%'),
   },
   bookmark:{
     zIndex:1,
   position: 'absolute',
   top:  hp('0.5%'),
-  right: wp('10%'),
+  right: wp('20%'),
   }
 });

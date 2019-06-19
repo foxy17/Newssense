@@ -3,8 +3,8 @@ package com.newSense;
 import android.app.Application;
 import cl.json.ShareApplication;
 import com.facebook.react.ReactApplication;
+import com.ocetnik.timer.BackgroundTimerPackage;
 import com.RNFetchBlob.RNFetchBlobPackage;
-import com.dylanvann.fastimage.FastImageViewPackage;
 import com.chirag.RNMail.RNMail;
 import io.invertase.firebase.RNFirebasePackage;
 import io.invertase.firebase.links.RNFirebaseLinksPackage;
@@ -33,8 +33,8 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new BackgroundTimerPackage(),
             new RNFetchBlobPackage(),
-            new FastImageViewPackage(),
             new RNMail(),
             new RNFirebasePackage(),
              new RNFirebaseLinksPackage() ,
