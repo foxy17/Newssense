@@ -19,7 +19,7 @@ export default class Time extends Component {
         final="Today"
       }
       else{
-        final=datePublished.getDate()+"th "+month.slice(4,7)
+        final=datePublished.getDate()+month.slice(4,7)
       }
       return(
           <View><Text style={{fontSize:normalize(10),color:'#afafaf'}}>{final} </Text></View>

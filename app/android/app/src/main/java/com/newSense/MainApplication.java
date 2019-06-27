@@ -3,12 +3,14 @@ package com.newSense;
 import android.app.Application;
 import cl.json.ShareApplication;
 import com.facebook.react.ReactApplication;
+import com.dylanvann.fastimage.FastImageViewPackage;
 import com.ocetnik.timer.BackgroundTimerPackage;
 import com.RNFetchBlob.RNFetchBlobPackage;
 import com.chirag.RNMail.RNMail;
 import io.invertase.firebase.RNFirebasePackage;
 import io.invertase.firebase.links.RNFirebaseLinksPackage;
-import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
+import io.invertase.firebase.notifications.RNFirebaseNotificationsPackage;
+import io.invertase.firebase.messaging.RNFirebaseMessagingPackage;
 import cl.json.RNSharePackage;
 import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 import com.oblador.vectoricons.VectorIconsPackage;
@@ -33,16 +35,18 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new FastImageViewPackage(),
             new BackgroundTimerPackage(),
             new RNFetchBlobPackage(),
             new RNMail(),
             new RNFirebasePackage(),
              new RNFirebaseLinksPackage() ,
-            new ReactNativePushNotificationPackage(),
             new RNSharePackage(),
             new AsyncStoragePackage(),
             new VectorIconsPackage(),
-            new RNGestureHandlerPackage()
+            new RNGestureHandlerPackage(),
+			new RNFirebaseMessagingPackage(),
+      new RNFirebaseNotificationsPackage()
       );
     }
 
