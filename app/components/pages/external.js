@@ -3,6 +3,8 @@ import { View, Text,ActivityIndicator,Dimensions,Image,Animated,ImageBackground,
 import { createStackNavigator, createAppContainer } from "react-navigation";
 const {width, height} = Dimensions.get('window');
 import ShareItem from '../utils/ShareItem'
+import HomeScreen from './home'
+
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import normalize from '../utils/normalize'
 import Time from '../utils/Time'
@@ -42,6 +44,10 @@ export default class ExternalScreen extends Component {
   }
 
   render() {
+    console.log("External")
+    // return(
+    //   <HomeScreen  navigation.navigate={this.props.navigation.navigate} />
+    // )
 
 var AnimatedImage = Animated.createAnimatedComponent(ImageBackground);
       if(this.state.isLoading){
@@ -101,7 +107,7 @@ var AnimatedImage = Animated.createAnimatedComponent(ImageBackground);
 
           }
 
-        }
+    }
 }
  const styles = {
     image: {

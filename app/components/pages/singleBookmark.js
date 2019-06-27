@@ -28,7 +28,7 @@ export default class SingleBookmarkScreen extends Component {
 
           isLoading: false,
           dataSource: responseJson.data,
-          img:responseJson.data.img.data,
+          img:responseJson.data.img,
         }, function(){
 
         });

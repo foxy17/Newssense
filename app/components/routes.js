@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text ,Platform,Linking } from "react-native";
 import checkIfFirstLaunch from './utils/init';
-import { createStackNavigator, createAppContainer } from "react-navigation";
+import { createStackNavigator, createAppContainer,NavigationActions } from "react-navigation";
 import DeepLinking from 'react-native-deep-linking';
 import store from './redux/Store';
 import {AppContainer , AppContainerIntro} from './navigator';
@@ -165,14 +165,15 @@ showAlert(title, body) {
      Linking.addEventListener('url', this.handleUrl);
      DeepLinking.addScheme('https://');
     DeepLinking.addRoute('news.newssense.co/:id', (response) => {
+      console.log("ID",response);
 
-      this.props.navigation.navigate('Article',{link:response});
+
     });
      const nav=this
      const unsubscribe = firebase.links().onLink((url) => {
         console.log("inital line",url);
         DeepLinking.evaluateUrl(url);
-
+             this.props.navigation.navigate('Article',{link:response});
       });
 
      firebase.links()
