@@ -140,7 +140,7 @@ onCancel() {
              name='share'
              type='entypo'
              color='#000000'
-             size= {normalize(27)}
+             size= {normalize(23)}
              onPress={this._onDone}
 
 
@@ -153,7 +153,7 @@ onCancel() {
           name='whatsapp'
           type='material'
           color='#000000'
-          size= {normalize(27)}
+          size= {normalize(23)}
           onPress={this._onShare}
 
         /></View>
@@ -162,7 +162,7 @@ onCancel() {
            name='bookmark'
 
            color='#000000'
-           size= {normalize(26)}
+           size= {normalize(23)}
            onPress={this._unFavourite}
          /></View>
 
