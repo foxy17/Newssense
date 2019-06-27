@@ -34,11 +34,13 @@ export default  class HomeScreen extends Component {
   constructor(props){
     super(props);
 
-    this.state ={ isLoading: true,len:"false",views:0,Pointer:0,hasPointer:true,
-    currentIndex:0,pan: new Animated.ValueXY(0),
+
+    this.state ={ isLoading: true,len:"false",views:0,Pointer:0,hasPointer:true
+    ,currentIndex:5,
+    pan: new Animated.ValueXY(0),
     swiped_pan: new Animated.ValueXY({x:-width,y:0}),
     };
-
+      console.log("hete",this.state.currentIndex);
     this.state.panResponder = PanResponder.create({
       onStartShouldSetPanResponderCapture: (evt, gestureState) => false,
       onMoveShouldSetPanResponderCapture: (evt, gestureState) => {
@@ -81,13 +83,13 @@ export default  class HomeScreen extends Component {
       ]) (e, gestureState)
     }
   }, onPanResponderTerminate: (evt, gestureState) => {
-    if(this.state.len=="true" &&( -gestureState.vx >0.1 || -gestureState.dx >= wp('30%')))
+    if(this.state.len=="true" &&( -gestureState.vx >0.1 || -gestureState.dx >= wp('5%')))
     {
       Animated.spring(this.state.pan, {
           toValue: ({ x: 0, y: 0 })
       }).start()
     }
-  else if (this.state.currentIndex > 0 && (gestureState.dx > wp('30%') || gestureState.vx > 0.1)) {
+  else if (this.state.currentIndex > 0 && (gestureState.dx > wp('5%') || gestureState.vx > 0.05)) {
         Animated.timing(this.state.swiped_pan, {
             toValue: ({ x: 0, y: 0 }),
             duration: 200
@@ -98,7 +100,7 @@ export default  class HomeScreen extends Component {
 
         })
     }
-    else if (-gestureState.vx >0.1 || -gestureState.dx >= wp('30%')) {
+    else if (-gestureState.vx >0.05 || -gestureState.dx >= wp('5%')) {
       Animated.timing(this.state.pan, {
         toValue: ({ x: -width, y: 0 }),
         duration:200
@@ -122,7 +124,7 @@ export default  class HomeScreen extends Component {
     }
       },
       onPanResponderRelease: (e,gestureState) => {
-        if(this.state.len=="true" &&( -gestureState.vx >0.01 || -gestureState.dx >= wp('30%')))
+        if(this.state.len=="true" &&( -gestureState.vx >0.01 || -gestureState.dx >= wp('5%')))
         {
           Animated.spring(this.state.pan, {
               toValue: ({ x: 0, y: 0 })
@@ -134,17 +136,18 @@ export default  class HomeScreen extends Component {
                 duration: 200
             }).start(() => {
                 AsyncStorage.setItem('POINTER', (this.state.currentIndex-1).toString());
+                console.log(AsyncStorage.getItem('POINTER'));
                 this.setState({ currentIndex: this.state.currentIndex - 1 ,len:"false"})
                 this.state.swiped_pan.setValue({ x: -width, y: 0 })
 
             })
         }
-        else if (-gestureState.vx >0.1 || -gestureState.dx >= wp('30%')) {
+        else if (-gestureState.vx >0.01 || -gestureState.dx >= wp('5%')) {
           Animated.timing(this.state.pan, {
             toValue: ({ x: -width, y: 0 }),
             duration:200
           }).start(() => {
-
+            console.log( AsyncStorage.getItem('POINTER'));
             AsyncStorage.setItem('POINTER', (this.state.currentIndex+1).toString());
             this.setState({ currentIndex: this.state.currentIndex + 1 },()=>{this.state.pan.setValue({ x: 0, y: 0 })})
           })
@@ -171,8 +174,10 @@ export default  class HomeScreen extends Component {
 async componentWillMount() {
 
   const has = await checkPointer();
-
-  this.setState({ hasPointer:false, currentIndex: has });
+  console.log("P",parseInt(has));
+  this.state.currentIndex=has;
+  console.log(this.state.currentIndex);
+  this.setState({ hasPointer:false, random: parseInt(has) });
 }
 
  async  preload(data){
@@ -206,7 +211,7 @@ async componentWillMount() {
           isLoading: false,
           loaded:true,
           dataSource: JSON.parse(data),
-          currentIndex:0
+
         })
       }catch(e) {
         console.warn("fetch Error: ", error)
@@ -267,6 +272,7 @@ async componentWillMount() {
 
     var len =this.state.dataSource.length;
     return this.state.dataSource.map((item,i)=>{
+        console.log(this.state.hasPointer)
 
       // const shiftedIndex = (startingIndex + i) %  this.state.dataSource.length
       // const item = this.state.dataSource[shiftedIndex];
@@ -473,13 +479,14 @@ async componentWillMount() {
 
   render(){
 
-
+    console.log(this.state.hasPointer)
       if(this.state.isLoading ){
             return(
               <View >
                 <CachedImage  source={require('../images/load.gif')}    style={{left:wp('1%') ,width: wp('100'), height: hp('100')}}/>
               </View>
             )}
+
 
       return(
 

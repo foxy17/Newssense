@@ -8,14 +8,14 @@ import normalize from '../utils/normalize'
 import Time from '../utils/Time'
 export default class SingleBookmarkScreen extends Component {
   static navigationOptions = {
-   title: 'Article',
+   title: 'SingleBookmark',
  };
   constructor(props){
     super(props);
     const { navigation } = this.props;
     const { id } =  navigation.getParam('id');
 
-    let link="https://news119.herokuapp.com/find/"+id;
+    let link="http://dash.newssense.co/find/"+id;
     this.state ={ isLoading: "true",params:link,dataSource:{},img:''};
 
   }

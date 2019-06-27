@@ -74,48 +74,7 @@ export default class SettingsScreen extends Component {
            </Icon3.Button>
          </View>
 
-          <View  style={styles.upper} >
-
-            <View  style={{flexDirection: 'row',marginLeft:5, justifyContent:'space-around' }}>
-                <View  style={{flexDirection: 'row',marginTop:normalize(10)}}>
-                    <Icon3 name="notifications" size={normalize(32)} color="#2A2E43"  />
-                </View>
-
-                  <View style={{right:wp('5%'),marginTop:normalize(9)}}>
-                      <Text style={{ left:wp('3%'),fontFamily: 'Arial', fontSize: wp('7%') ,color:'black',justifyContent:'center'}}>
-                        Notification
-                      </Text >
-                  </View>
-
-                  <SwitchToggle
-                   containerStyle={{
-                     marginTop: normalize(16),
-
-                  width: wp('10%'),
-                  height: hp('3%'),
-                  borderRadius: wp('10%'),
-                  backgroundColor: '#1D7FFF',
-                  padding: 0,
-                  margin:5
-
-                   }}
-                   circleStyle={{
-
-                     width: wp('5%'),
-                       height: wp('5%'),
-                       borderRadius: 19,
-                       backgroundColor: 'white',  // rgb(102,134,205)
-                   }}
-                   switchOn={this.state.isOnDefaultToggleSwitch}
-                   onPress={this.onPress2}
-                   circleColorOff='#2A2E43'
-                   circleColorOn='#2A2E43'
-                   backgroundColorOn='#1D7FFF'
-                   backgroundColorOff='#F4F4F4'
-                   duration={500}
-                 />
-            </View>
-          </View>
+        
           <View style={styles.upper}>
             <Icon3.Button borderRadius={30} raised name="feedback" backgroundColor="white" color='#2A2E43' size={normalize(32)}
             paddingHorizontal={normalize(14 )} paddingVertical={normalize(5)} onPress={this._mail}>

@@ -1,12 +1,16 @@
 import React, { Component } from 'react';
 import { View, ToastAndroid,Text, TouchableOpacity, StyleSheet  } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
+import IconShare from 'react-native-vector-icons/Entypo';
 import Share, {ShareSheet, Button} from 'react-native-share';
 import Datastore from 'react-native-local-mongodb';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import normalize from './normalize'
 import firebase from 'react-native-firebase';
+import { createIconSetFromFontello } from 'react-native-vector-icons';
+import fontelloConfig from '../../config.json';
+const IconCustom = createIconSetFromFontello(fontelloConfig);
 db = new Datastore({ filename: 'asyncStorageKey', autoload: true });
 export default class ShareItem extends Component {
   handleOnPress = () => {
@@ -63,7 +67,7 @@ onCancel() {
     .then((url) => {
       let shareOptions = {
         title: "Share This Story",
-        message: "Read This Awsome Article:",
+        message: "Checkout this news:"+"\n"+this.state.name+"\n",
         url: url,
         subject: "Share Link"
       };
@@ -77,6 +81,7 @@ onCancel() {
     }
   _onShare= () =>{
     var id='https://news.newssense.co/'+this.state.id;
+     ToastAndroid.show("Opening Whatsapp", ToastAndroid.SHORT);
     var dm = new firebase.links.DynamicLink(
              id,
            'https://news.newssense.co'
@@ -87,12 +92,14 @@ onCancel() {
    .then((url) => {
      let shareOptions = {
        title: "Share This Story",
-       message: "Read This Awsome Article:"+this.state.name+"\n",
+       message: "Checkout this news:"+"\n"+this.state.name+"\n",
        url: url,
        subject: "Share Link",
        social: Share.Social.WHATSAPP
      };
+
     Share.shareSingle(shareOptions);
+
    });
 
   }
@@ -128,11 +135,11 @@ onCancel() {
     {
       return (
         <View >
-            <View  style={styles.shareButton}><Icon2
+            <View  style={styles.shareButton}><IconShare
              raised
-             name='share-outline'
-             type='material'
-             color='#707070'
+             name='share'
+             type='entypo'
+             color='#000000'
              size= {normalize(27)}
              onPress={this._onDone}
 
@@ -145,7 +152,7 @@ onCancel() {
           raised
           name='whatsapp'
           type='material'
-          color='#707070'
+          color='#000000'
           size= {normalize(27)}
           onPress={this._onShare}
 
@@ -153,9 +160,9 @@ onCancel() {
           <View style={styles.bookmark}><Icon
            raised
            name='bookmark'
-           type='material'
-           color='#707070'
-           size= {normalize(27)}
+
+           color='#000000'
+           size= {normalize(26)}
            onPress={this._unFavourite}
          /></View>
 
@@ -166,12 +173,12 @@ onCancel() {
       return (
         <View>
 
-            <View  style={styles.shareButton}><Icon2
+            <View  style={styles.shareButton}><IconShare
              raised
-             name='share-outline'
-             type='material'
-             color='#707070'
-             size= {normalize(27)}
+             name='share'
+             type='entypo'
+             color='#000000'
+             size= {normalize(23)}
              onPress={this._onDone}
 
 
@@ -183,17 +190,17 @@ onCancel() {
           raised
           name='whatsapp'
           type='material'
-          color='#707070'
-          size= {normalize(27)}
+          color='#000000'
+          size= {normalize(23)}
           onPress={this._onShare}
 
         /></View>
           <View style={styles.bookmark}><Icon
            raised
-           name='bookmark-border'
-           type='material'
-           color='#707070'
-           size= {normalize(27)}
+           name='bookmark-o'
+           type='10523-200'
+           color='#000000'
+           size= {normalize(23)}
            onPress={this._Favourite}
          /></View>
 
@@ -216,8 +223,8 @@ const styles = StyleSheet.create({
   shareWhatsapp:{
     zIndex:1,
     position: 'absolute',
-  top: hp('0.5%'),
-  right: wp('10%'),
+  top: hp('0.3%'),
+  right: wp('9%'),
   },
   bookmark:{
     zIndex:1,
