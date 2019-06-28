@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text ,Platform,Linking } from "react-native";
 import checkIfFirstLaunch from './utils/init';
-import { createStackNavigator, createAppContainer,NavigationActions } from "react-navigation";
+import { createStackNavigator, createAppContainer,NavigationActions,StackActions } from "react-navigation";
 import DeepLinking from 'react-native-deep-linking';
 import store from './redux/Store';
 import {AppContainer , AppContainerIntro} from './navigator';
@@ -116,6 +116,17 @@ console.log("GCM Token====>>>>>>>>",token);
      DeepLinking.addScheme('https://');
     DeepLinking.addRoute('news.newssense.co/:id', (response) => {
       console.log("ID response",response.id);
+      try{
+        const resetAction = StackActions.reset({
+        index: 0,
+        actions: [NavigationActions.navigate({routeName: 'Article', params:{link:response}})],
+        key: null,
+      });
+      this.props.navigation.dispatch(resetAction);
+      }
+      catch(e){
+        console.log(e);
+      }
       this.props.navigation.navigate('Article',{link:response});
 
 
@@ -147,17 +158,11 @@ console.log("GCM Token====>>>>>>>>",token);
    componentWillUnmount() {
      // this.notificationListener();
      // this.notificationOpenedListener();
-     this.notificationDisplayedListener();
+
        this.notificationListener();
        this.notificationOpenedListener();
 
-     try {
-    unsubscribe();
-     } catch (e) {
 
-     } finally {
-
-     }
    }
    handleUrl = ({ url }) => {
        Linking.canOpenURL(url).then((supported) => {

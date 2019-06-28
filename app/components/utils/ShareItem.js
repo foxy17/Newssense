@@ -56,6 +56,7 @@ onCancel() {
    }
    _onDone = () => {
      var id='https://news.newssense.co/'+this.state.id;
+      ToastAndroid.show("Wait A Moment", ToastAndroid.SHORT);
      var dm = new firebase.links.DynamicLink(
               id,
             'https://news.newssense.co'

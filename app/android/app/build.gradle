@@ -106,7 +106,7 @@ android {
         applicationId "com.newSense"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 9
+        versionCode 10
         versionName "0.0.5"
     }
     signingConfigs {

@@ -7,7 +7,7 @@ export default class Time extends Component {
         super(props);
     }
     render(){
-      let {date} = this.props;
+      let {date,source} = this.props;
       // console.log(date,"Publish");
       var datePublished=new Date(date);
       // console.log("Date pusblish",datePublished);
@@ -16,13 +16,16 @@ export default class Time extends Component {
       const month = datePublished.toLocaleString('en-us', { month: 'long' });
       var final;
       if(date1.getMonth()===datePublished.getMonth() && date1.getDate()===datePublished.getDate()){
-        final="Today"
+        final=" / Today"
       }
       else{
-        final=datePublished.getDate()+month.slice(4,7)
+        final=" / "+datePublished.getDate()+" "+month.slice(4,7)
       }
       return(
-          <View><Text style={{fontSize:normalize(10),color:'#afafaf'}}>{final} </Text></View>
+          <View style={{flexDirection:'row'}} >
+          <Text style={{marginTop:normalize(16),fontSize:normalize(10),color:'#afafaf'}}>source:{source}</Text>
+          <Text style={{marginTop:normalize(16),fontSize:normalize(10),color:'#afafaf'}}>{final} </Text>
+          </View>
       )
 
 

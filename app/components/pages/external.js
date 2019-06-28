@@ -18,15 +18,15 @@ export default class ExternalScreen extends Component {
   constructor(props){
     super(props);
     const { navigation } = this.props;
-    console.log(navigation);
     const { id } =  navigation.getParam('link');
-    console.log("ID",id);
-
-    let link="https://news119.herokuapp.com/find/"+id;
+    let link="http://dash.newssense.co/find/"+id;
     this.state ={ isLoading: "true",params:link,dataSource:{},img:''};
 
   }
   componentDidMount(){
+      const { navigation } = this.props;
+        const { id } =  navigation.getParam('link');
+      this.setState({id:id});
     return fetch(this.state.params)
       .then((response) => response.json())
       .then((responseJson) => {
@@ -47,6 +47,7 @@ export default class ExternalScreen extends Component {
   }
 
   render() {
+
 
 var AnimatedImage = Animated.createAnimatedComponent(ImageBackground);
       if(this.state.isLoading){
@@ -79,8 +80,8 @@ var AnimatedImage = Animated.createAnimatedComponent(ImageBackground);
                 <Text style={styles.body}>{item.body}﻿</Text>
               </View>
               <View>
-                <Text style={{marginTop:normalize(16),fontSize:normalize(10),color:'#afafaf'}}>Source:{item.source}</Text>
-                <Time date={item.publishDate} />
+              <Time date={item.publishDate} source={item.source}/>
+              <Text style={{marginTop:normalize(2),fontSize:normalize(10),color:'#afafaf'}}>curated by {item.post}</Text>
               </View>
             </View>
           </View >

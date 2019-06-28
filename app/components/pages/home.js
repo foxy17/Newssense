@@ -246,7 +246,7 @@ async componentWillMount() {
 
           loaded:true,
           currentIndex:0,
-          dataSource: responseJson.data.sort((a,b)=>a.publishDate<b.publishDate),
+          dataSource: responseJson.data.sort((a,b)=>a.date<b.date),
         }, async function(){
             await component.preload(responseJson.data)
 
@@ -301,8 +301,8 @@ async componentWillMount() {
                         <Text style={styles.body}>{item.body}﻿</Text>
                       </View>
                       <View>
-                        <Text style={{marginTop:normalize(16),fontSize:normalize(10),color:'#afafaf'}}>Source:{item.source}</Text>
-                        <Time date={item.publishDate} />
+                      <Time date={item.date} source={item.source}/>
+                      <Text style={{marginTop:normalize(2),fontSize:normalize(10),color:'#afafaf'}}>curated by {item.post}</Text>
                       </View>
                     </View>
                   </View >
@@ -405,8 +405,8 @@ async componentWillMount() {
                                   <Text style={styles.body}>{item.body}﻿</Text>
                                 </View>
                                 <View >
-                                  <Text style={{marginTop:normalize(16),fontSize:normalize(10),color:'#afafaf'}}>Source:{item.source}</Text>
-                                  <Time date={item.publishDate} />
+                                  <Time date={item.date} source={item.source}/>
+                                  <Text style={{marginTop:normalize(2),fontSize:normalize(10),color:'#afafaf'}}>curated by {item.post}</Text>
                                 </View>
 
                               </View>
@@ -443,9 +443,10 @@ async componentWillMount() {
                         <Text style={styles.body}>{item.body}﻿</Text>
                       </View>
                       <View >
-                        <Text style={{marginTop:normalize(16),fontSize:normalize(10),color:'#afafaf'}}>Source:{item.source}</Text>
-                        <Time date={item.publishDate} />
+                      <Time date={item.date} source={item.source}/>
+                      <Text style={{marginTop:normalize(2),fontSize:normalize(10),color:'#afafaf'}}>curated by {item.post}</Text>
                       </View>
+
                     </View>
                   </View >
 

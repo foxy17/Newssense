@@ -43,7 +43,7 @@ export default class SingleBookmarkScreen extends Component {
     const { navigation } = this.props;
     const id = navigation.getParam('id', 'NO-ID');
     console.log("HEYY"+id);
-    this.state.params="https://news119.herokuapp.com/find/"+id;
+    this.state.params="http://dash.newssense.co/find/"+id;
      StatusBar.setBackgroundColor('black', true);
       if(this.state.isLoading){
             return(
@@ -71,8 +71,8 @@ export default class SingleBookmarkScreen extends Component {
                       <Text style={styles.body}>{item.body}﻿</Text>
                     </View>
                     <View>
-                      <Text style={{marginTop:normalize(16),fontSize:normalize(10),color:'#afafaf'}}>Source:{item.source}</Text>
-                      <Time date={item.publishDate} />
+                    <Time date={item.publishDate} source={item.source}/>
+                    <Text style={{marginTop:normalize(2),fontSize:normalize(10),color:'#afafaf'}}>curated by {item.post}</Text>
                     </View>
                   </View>
                 </View >

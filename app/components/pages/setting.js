@@ -34,7 +34,7 @@ export default class SettingsScreen extends Component {
       this.setState({ isOnDefaultToggleSwitch: !this.state.isOnDefaultToggleSwitch });
     }
     handleClick= ()=> {
-      var link='market://details?id=myandroidappid'
+      var link='market://details?id=com.newSense';
     Linking.canOpenURL(link).then(supported => {
         supported && Linking.openURL(link);
     }, (err) => console.log(err));
@@ -43,10 +43,11 @@ export default class SettingsScreen extends Component {
 
       let shareOptions = {
         title: "Share This App",
-        message: "Check Out This Awsome News App \n",
-        url: "https://play.google.com/store/apps/details?id=com.app",
+        message: "Check Out This Awsome News App \n"+"https://play.google.com/store/apps/details?id=com.newSense",
+        
         subject: "Share This App"
       };
+      console.log(shareOptions);
       Share.open(shareOptions).catch((err) => { err && console.log(err); });
      }
      _mail=()=>{ Linking.openURL('mailto: newsense.19@gmail.com?subject=Feedback') }
@@ -74,7 +75,7 @@ export default class SettingsScreen extends Component {
            </Icon3.Button>
          </View>
 
-        
+
           <View style={styles.upper}>
             <Icon3.Button borderRadius={30} raised name="feedback" backgroundColor="white" color='#2A2E43' size={normalize(32)}
             paddingHorizontal={normalize(14 )} paddingVertical={normalize(5)} onPress={this._mail}>
