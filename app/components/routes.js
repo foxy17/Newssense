@@ -22,17 +22,6 @@ export default class Routes extends React.Component {
    }
 
 
-showAlert(title, body) {
-
-  Alert.alert(
-    title, body,
-    [
-        { text: 'OK', onPress: () => console.log('OK Pressed') },
-    ],
-    { cancelable: false },
-  );
-}
-
    async componentDidMount() {
      this.checkPermission();
       // this.createNotificationListeners();
@@ -72,42 +61,24 @@ showAlert(title, body) {
      }
    }
    componentDidMount() {
-
- this.notificationOpenedListener = firebase.notifications().onNotificationOpened((notificationOpen: NotificationOpen) => {
-    console.log(notificationOpen,"Opened listener");
-    console.log(notificationOpen.notification._data.type,"notificationOpen");
-    firebase.notifications().removeDeliveredNotification(notificationOpen.notification._notificationId)
-    });
-    firebase.notifications().getInitialNotification()
-  .then((notificationOpen: NotificationOpen) => {
-    if (notificationOpen) {
-
-      console.log(notificationOpen,"notificationOpen");
-      console.log(notificationOpen.notification._data.type,"notificationOpen");
-      firebase.notifications().removeDeliveredNotification(notificationOpen.notification._notificationId)
+     firebase.messaging().hasPermission()
+  .then(enabled => {
+    if (enabled) {
+      console.log("user has permissions");
+    } else {
+      try {
+     firebase.messaging().requestPermission();
+          // User has authorised
+      } catch (error) {
+          // User has rejected permissions
+      }
     }
-});
-const channel = new firebase.notifications.Android.Channel('test-channel', 'test-channel', firebase.notifications.Android.Importance.Max)
-.setDescription('My apps test channel');
-firebase.notifications().android.createChannel(channel);
-this.notificationListener = firebase.notifications().onNotification((notification) => {
-    const { title, body } = notification;
-    const localNotification = new firebase.notifications.Notification()
-                    .setNotificationId(notification.notificationId)
-                    .setTitle(title)
-                    .android.setChannelId('test-channel')
-                    .android.setSmallIcon('ic_icon')
-                    .android.setLargeIcon('ic_launcher')
-                    .android.setShowWhen(true)
-                    .android.setBigText(body)
-                    .android.setColor('#2089FF')
-                    .setBody(body);
+  });
+  this.messageListener = firebase.messaging().onMessage((message: RemoteMessage) => {
+        // Process your message as required
+    });
 
-    firebase.notifications().displayNotification(localNotification).catch(err => {console.log(err); alert("Error On Notification")});
 
-  console.log(notification);
-
-});
 firebase.messaging().getToken().then(token => {
 console.log("GCM Token====>>>>>>>>",token);
  AsyncStorage.setItem('fcmToken', token);});
@@ -131,6 +102,52 @@ console.log("GCM Token====>>>>>>>>",token);
 
 
     });
+    this.notificationOpenedListener = firebase.notifications().onNotificationOpened((notificationOpen: NotificationOpen) => {
+       var id=notificationOpen.notification._data.id;
+       console.log(id,"Datastore");
+           this.props.navigation.navigate('Article',{link:id});
+         const resetAction = StackActions.reset({
+         index: 0,
+         actions: [NavigationActions.navigate({routeName: 'Article', params:{link:id}})],
+         key: null,
+       });
+       this.props.navigation.dispatch(resetAction);
+
+       firebase.notifications().removeDeliveredNotification(notificationOpen.notification._notificationId)
+       });
+       firebase.notifications().getInitialNotification()
+     .then((notificationOpen: NotificationOpen) => {
+       if (notificationOpen) {
+
+
+         firebase.notifications().removeDeliveredNotification(notificationOpen.notification._notificationId)
+       }
+   });
+   const channel = new firebase.notifications.Android.Channel('test-channel', 'test-channel', firebase.notifications.Android.Importance.Max)
+   .setDescription('My apps test channel');
+   firebase.notifications().android.createChannel(channel);
+   this.notificationListener = firebase.notifications().onNotification((notification) => {
+       const { title, body } = notification;
+       var data=notification._data.key;
+
+
+       const localNotification = new firebase.notifications.Notification()
+                       .setNotificationId(notification.notificationId)
+                       .setTitle(title)
+                       .android.setChannelId('test-channel')
+                       .android.setSmallIcon('ic_icon')
+                       .android.setLargeIcon('ic_launcher')
+                       .android.setShowWhen(true)
+                       .android.setBigText(body)
+                       .android.setColor('#2089FF')
+                       .setData({id:data})
+                       .setBody(body);
+
+       firebase.notifications().displayNotification(localNotification).catch(err => {console.log(err); alert("Error On Notification")});
+
+  
+
+   });
      const nav=this
      const unsubscribe = firebase.links().onLink((url) => {
         console.log("inital line",url);
@@ -158,7 +175,7 @@ console.log("GCM Token====>>>>>>>>",token);
    componentWillUnmount() {
      // this.notificationListener();
      // this.notificationOpenedListener();
-
+      this.messageListener();
        this.notificationListener();
        this.notificationOpenedListener();
 

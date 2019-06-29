@@ -6,6 +6,7 @@ import {
   FlatList,Image,
   StyleSheet,Alert,Button,TouchableOpacity,Linking,Platform,ImageBackground,StatusBar
 } from 'react-native';
+import {StackActions ,NavigationActions} from "react-navigation";
 import AppIntroSlider from 'react-native-app-intro-slider';
 import Icon from 'react-native-vector-icons/FontAwesome';
 const slides = [
@@ -56,7 +57,17 @@ export default class IntroScreen extends Component {
 
  _onDone = () => {
 
-    this.props.navigation.navigate('Home');
+   try{
+     const resetAction = StackActions.reset({
+     index: 0,
+     actions: [NavigationActions.navigate({routeName: 'Home'})],
+     key: null,
+   });
+   this.props.navigation.dispatch(resetAction);
+   }
+   catch(e){
+     console.log(e);
+   }
   }
   _renderDoneButton = () => {
    return (

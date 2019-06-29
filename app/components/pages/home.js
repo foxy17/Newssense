@@ -185,7 +185,7 @@ async componentWillMount() {
    if(data.length<10){len=data.length}
    else {len=10}
    console.log("LENGTH",len);
-    for(let i=0;i<3;i++){
+    for(let i=0;i<10;i++){
       var item=data[i];
       var response=await defaultImageCacheManager.downloadAndCacheUrl(item.img.data);
       console.log(response);
@@ -252,6 +252,7 @@ async componentWillMount() {
 
               Toast.show('Refreshed');
             component.setState({isLoading: false})
+
           AsyncStorage.setItem('ApiData',JSON.stringify(this.state.dataSource))
 
 
@@ -265,12 +266,13 @@ async componentWillMount() {
 
 
   renderArtciles=()=>{
-
+    var len =this.state.dataSource.length;
     var AnimatedImage = Animated.createAnimatedComponent(CachedImage );
     this.state.len="false";
 
 
-    var len =this.state.dataSource.length;
+
+
     return this.state.dataSource.map((item,i)=>{
         console.log(this.state.hasPointer)
 
@@ -384,7 +386,7 @@ async componentWillMount() {
                 else {
 
                       return(
-                        <Animated.View key={item._id} {...this.state.panResponder.panHandlers} style={this.state.pan.getLayout()}>
+                        <Animated.View  ref={r=>this.refs=r} key={item._id} {...this.state.panResponder.panHandlers} style={this.state.pan.getLayout()}>
 
                           <View style={{ marginTop:normalize(40),flex: 1,position:'absolute',height:height-(height*0.14),width:width-(width*0.05),
                         backgroundColor:'white',borderRadius:10,margin:wp('3%'),shadowColor: '#003182',shadowOffset: { width: 0, height: 9 },shadowOpacity: 0.48,shadowRadius: 11.95,elevation:18}}>
@@ -498,6 +500,7 @@ async componentWillMount() {
        <StatusBar backgroundColor="black" animated />
             <View   contentContainerStyle={{  flexGrow: 1 }}>
               {this.renderArtciles()}
+
              </View>
 
 

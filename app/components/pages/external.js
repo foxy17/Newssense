@@ -2,7 +2,8 @@ import React,{Component} from "react";
 import { View, Text,ActivityIndicator,Dimensions,Image,Animated,ImageBackground,TouchableOpacity } from "react-native";
 import { createStackNavigator, createAppContainer } from "react-navigation";
 const {width, height} = Dimensions.get('window');
-import ShareItem from '../utils/ShareItem'
+import ShareItem from '../utils/ShareItem';
+import { AndroidBackHandler } from 'react-navigation-backhandler';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import normalize from '../utils/normalize'
 import {
@@ -19,10 +20,22 @@ export default class ExternalScreen extends Component {
     super(props);
     const { navigation } = this.props;
     const { id } =  navigation.getParam('link');
-    let link="http://dash.newssense.co/find/"+id;
+    let link="";
+  if(id!=undefined){
+      link="http://dash.newssense.co/find/"+id;
+  }
+  else{
+      link="http://dash.newssense.co/find/"+this.props.navigation.state.params.link;
+  }
+
+
     this.state ={ isLoading: "true",params:link,dataSource:{},img:''};
 
   }
+  onBackButtonPressAndroid = () => {
+       this.props.navigation.navigate('Home');
+     return false;
+   };
   componentDidMount(){
       const { navigation } = this.props;
         const { id } =  navigation.getParam('link');
@@ -47,7 +60,8 @@ export default class ExternalScreen extends Component {
   }
 
   render() {
-
+    console.log(this.state.params,"LINK");
+    console.log(this.props.navigation.state.params.link,"LINKSS");
 
 var AnimatedImage = Animated.createAnimatedComponent(ImageBackground);
       if(this.state.isLoading){
@@ -62,6 +76,7 @@ var AnimatedImage = Animated.createAnimatedComponent(ImageBackground);
 
             if(item.special==false){
               return(
+
         <View style={{flex:1,backgroundColor:'#f3f3f3'}}>
         <View style={{ marginTop:hp('5%'), flex: 1,position:'absolute',height:height-(height*0.15),width:width-(width*0.05) ,
          backgroundColor:'white',borderRadius:10,margin:wp('3%'),shadowColor: '#003182',shadowOffset: { width: 0, height: 9 },shadowOpacity: 0.48,shadowRadius: 11.95,elevation:18}}>
@@ -95,6 +110,7 @@ var AnimatedImage = Animated.createAnimatedComponent(ImageBackground);
             return(
 
               <Animated.View key={item._id} >
+
                 <AnimatedImage  source={{ uri:item.img.data }}  imageStyle={{ borderRadius: 10 }}
                 style={{marginTop:normalize(35),flex: 1,position:'absolute',height:height-(height*0.15),width:width-(width*0.05),borderRadius:10,margin:wp('3%')}}>
                 <TouchableOpacity activeOpacity={1}  onPress={()=>{this.props.navigation.navigate('Details', {itemId: item})}}  >
@@ -103,6 +119,7 @@ var AnimatedImage = Animated.createAnimatedComponent(ImageBackground);
                 </AnimatedImage>
 
             </Animated.View>
+            
           )
 
           }
