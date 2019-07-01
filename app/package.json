@@ -39,6 +39,7 @@
     "react-native-share": "^1.2.0",
     "react-native-simple-toast": "0.0.8",
     "react-native-size-matters": "^0.2.1",
+    "react-native-snap-carousel": "^3.8.0",
     "react-native-swipeout": "^2.3.6",
     "react-native-swiper-animated": "^1.5.3",
     "react-native-switch-toggle": "^1.1.0",

@@ -1,8 +1,9 @@
 import React,{Component} from "react";
-import { View, Text,ActivityIndicator,Dimensions,Image,Animated,ImageBackground,TouchableOpacity } from "react-native";
+import { View, Text,ActivityIndicator,Dimensions,Image,NetInfo,Animated,ImageBackground,TouchableOpacity ,Alert} from "react-native";
 import { createStackNavigator, createAppContainer } from "react-navigation";
 const {width, height} = Dimensions.get('window');
 import ShareItem from '../utils/ShareItem';
+import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 import { AndroidBackHandler } from 'react-navigation-backhandler';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import normalize from '../utils/normalize'
@@ -37,26 +38,46 @@ export default class ExternalScreen extends Component {
      return false;
    };
   componentDidMount(){
-      const { navigation } = this.props;
-        const { id } =  navigation.getParam('link');
-      this.setState({id:id});
-    return fetch(this.state.params)
-      .then((response) => response.json())
-      .then((responseJson) => {
+    const { navigation } = this.props;
+      const { id } =  navigation.getParam('link');
+    this.setState({id:id});
+    NetInfo.isConnected.fetch().done((isConnected) => {
 
-        this.setState({
+      if(isConnected == true)
+      {
+        return fetch(this.state.params)
+          .then((response) => response.json())
+          .then((responseJson) => {
 
-          isLoading: false,
-          dataSource: responseJson.data,
+            this.setState({
 
-        }, function(){
+              isLoading: false,
+              dataSource: responseJson.data,
 
-        });
+            }, function(){
 
-      })
-      .catch((error) =>{
-        console.error(error);
-      });
+            });
+
+          })
+          .catch((error) =>{
+            console.error(error);
+          });
+      }
+      else
+      {
+        Alert.alert(
+            'Network Connection',
+            'No Internet Please Try Again Later',
+            [
+             {text: 'OK', onPress: () =>   this.props.navigation.goBack()},
+            ],
+            )
+
+      }
+
+    });
+
+
   }
 
   render() {
@@ -78,7 +99,10 @@ var AnimatedImage = Animated.createAnimatedComponent(ImageBackground);
               return(
 
         <View style={{flex:1,backgroundColor:'#f3f3f3'}}>
-        <View style={{ marginTop:hp('5%'), flex: 1,position:'absolute',height:height-(height*0.15),width:width-(width*0.05) ,
+        <Icon2  name="close-circle" size={normalize(25)} color="black" style={{ shadowColor: 'red',
+        shadowOpacity: 0.5,shadowRadius: 5,shadowOffset: {width: 0 , height: 1, }, position: 'absolute',alignSelf:'flex-end',right:wp('4%'),top:hp('1%')}}
+        onPress={() => { this.props.navigation.goBack()}}/>
+        <View style={{ marginTop:hp('7%'), flex: 1,position:'absolute',height:height-(height*0.15),width:width-(width*0.05) ,
          backgroundColor:'white',borderRadius:10,margin:wp('3%'),shadowColor: '#003182',shadowOffset: { width: 0, height: 9 },shadowOpacity: 0.48,shadowRadius: 11.95,elevation:18}}>
 
 
@@ -119,7 +143,7 @@ var AnimatedImage = Animated.createAnimatedComponent(ImageBackground);
                 </AnimatedImage>
 
             </Animated.View>
-            
+
           )
 
           }

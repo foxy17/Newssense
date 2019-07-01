@@ -67,7 +67,8 @@ const handleCustomTransition = ({ scenes }) => {
 let ReduxAppContainer= connect(mapStateToProps, mapDispatchToProps)(HomeScreen);
 const AppNavigator = createStackNavigator(
   {
-  Home: {screen:ReduxAppContainer,key:"Home"},
+  Home: {screen:HomeScreen, path: 'news/:id',key:'home'},
+
   Details: {screen:DetailsScreen,header: {style: {
           backgroundColor: '#00cafe'
         }}},
@@ -89,7 +90,8 @@ const AppNavigator = createStackNavigator(
 const AppContainer = createAppContainer(AppNavigator);
 const AppNavigatorIntro = createStackNavigator(
   {
-  Home: {screen:ReduxAppContainer,key:"Home"},
+  Home: {screen:HomeScreen, path: 'news/:id',key:'home'},
+
   Details: {screen:DetailsScreen,style: {
           backgroundColor: '#00cafe'
         }},

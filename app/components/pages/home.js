@@ -1,6 +1,6 @@
 import React,{Component} from "react";
 import { View, Text,ActivityIndicator,StatusBar,
-FlatList,Image,Dimensions,Animated,ScrollView ,Platform, PixelRatio,TouchableHighlight ,RefreshControl,PanResponder,TouchableOpacity,TouchableWithoutFeedback,ImageBackground  } from "react-native";
+FlatList,Image,Dimensions,Animated,Alert,ScrollView ,NetInfo ,Platform, PixelRatio,TouchableHighlight ,RefreshControl,PanResponder,TouchableOpacity,TouchableWithoutFeedback,ImageBackground  } from "react-native";
 import { createStackNavigator, createAppContainer } from "react-navigation";
 const {width, height} = Dimensions.get('window');
 const diagonal=(height/width)/100;
@@ -18,6 +18,7 @@ import Share, {ShareSheet, Button} from 'react-native-share';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Toast from 'react-native-simple-toast';
 import en from 'javascript-time-ago/locale/en'
+import Carousel , { Pagination } from 'react-native-snap-carousel';
 
 import BackgroundTimer from 'react-native-background-timer';
 import firebase from 'react-native-firebase';
@@ -30,13 +31,15 @@ const defaultImageCacheManager = ImageCacheManager();
 import EStyleSheet from 'react-native-extended-stylesheet';
 
 export default  class HomeScreen extends Component {
-
+  static navigationOptions = {
+   title: 'Home',
+ };
   constructor(props){
     super(props);
 
 
     this.state ={ isLoading: true,len:"false",views:0,Pointer:0,hasPointer:true
-    ,currentIndex:5,
+    ,currentIndex:5,connection_Status : "",
     pan: new Animated.ValueXY(0),
     swiped_pan: new Animated.ValueXY({x:-width,y:0}),
     };
@@ -199,7 +202,37 @@ async componentWillMount() {
               });
       }
 
+
+      componentWillUnmount() {
+
+          NetInfo.isConnected.removeEventListener(
+              'connectionChange',
+              this._handleConnectivityChange
+
+          );
+
+        }
+
+
   async componentDidMount(){
+    NetInfo.isConnected.addEventListener(
+        'connectionChange',
+        this._handleConnectivityChange
+
+    );
+
+    NetInfo.isConnected.fetch().done((isConnected) => {
+
+      if(isConnected == true)
+      {
+        this.setState({connection_Status : "Online"})
+      }
+      else
+      {
+        this.setState({connection_Status : "Offline"})
+      }
+
+    });
 
     const data = await AsyncStorage.getItem('ApiData')
     this.state.len="false";
@@ -221,17 +254,34 @@ async componentWillMount() {
       }
       BackgroundTimer.runBackgroundTimer(() => {
         this.getData();
-        },
-        10800000);
-        BackgroundTimer.runBackgroundTimer(() => {
           this.clearCache();
-          },
-          86400000);
+        },
+        1800000);
+
 
 
 }
-  async getData(){
 
+_handleConnectivityChange = (isConnected) => {
+
+    if(isConnected == true)
+      {
+        this.setState({connection_Status : "Online"})
+      }
+      else
+      {
+        this.setState({connection_Status : "Offline"})
+      }
+  };
+
+
+componentWillReceiveProps(nextProps){
+  console.log("PRops redcvied")
+}
+  async getData(){
+    console.log(this.state.connection_Status)
+    if(this.state.connection_Status=="Online")
+    {
     const component = this
     AsyncStorage.setItem('POINTER', '0');
     this.setState({isLoading: true})
@@ -245,7 +295,7 @@ async componentWillMount() {
         this.setState({
 
           loaded:true,
-          currentIndex:0,
+          random:0,
           dataSource: responseJson.data.sort((a,b)=>a.date<b.date),
         }, async function(){
             await component.preload(responseJson.data)
@@ -257,232 +307,138 @@ async componentWillMount() {
 
 
         });
-
       })
       .catch((error) =>{
         console.error(error);
       });
+    }
+    else{
+  this.setState({isLoading: true,random:0})
+
+  await AsyncStorage.setItem('POINTER', '0');
+  this.setState({isLoading: false})
+  Alert.alert(
+      'Network Connection',
+      'No Internet Please Try Again Later',
+      [
+       {text: 'OK', onPress: () => console.log('OK Pressed')},
+      ],
+      )
+    }
   }
 
-
-  renderArtciles=()=>{
-    var len =this.state.dataSource.length;
-    var AnimatedImage = Animated.createAnimatedComponent(CachedImage );
-    this.state.len="false";
-
-
-
-
-    return this.state.dataSource.map((item,i)=>{
-        console.log(this.state.hasPointer)
-
-      // const shiftedIndex = (startingIndex + i) %  this.state.dataSource.length
-      // const item = this.state.dataSource[shiftedIndex];
-
-        if (i == this.state.currentIndex-1)
+  _renderItem ({item, index}) {
+    if(item.special)
         {
-          if(item.special==false)
-          {
-            return(
-              <Animated.View key={item._id} {...this.state.panResponder.panHandlers} style={this.state.swiped_pan.getLayout()}>
-
-                <View style={{ marginTop:normalize(40), flex: 1,position:'absolute',height:height-(height*0.14),width:width-(width*0.05) ,
-                 backgroundColor:'white',borderRadius:10,margin:wp('3%'),shadowColor: '#003182',shadowOffset: { width: 0, height: 9 },shadowOpacity: 0.48,shadowRadius: 11.95,elevation:18}}>
-
-
-                  < View style={styles.Imagebody}>
-                    <CachedImage  source={{ uri:item.img.data }} style={styles.image} />
-                  </View>
-
-                  <View  style={styles.inner}>
-                  <ShareItem id={item._id} name={item.title} img={item.img.data}/>
-                    <View style={styles.inner}>
-                    <Text style={styles.titleArrtibute}>{item.category}</Text>
-                      <Text style={styles.titleText} >{item.title}﻿</Text>
-                      <View>
-                        <Text style={styles.body}>{item.body}﻿</Text>
-                      </View>
-                      <View>
-                      <Time date={item.date} source={item.source}/>
-                      <Text style={{marginTop:normalize(2),fontSize:normalize(10),color:'#afafaf'}}>curated by {item.post}</Text>
-                      </View>
-                    </View>
-                  </View >
-
-
-                  </View>
-
-            </Animated.View>
-
-          )
-
-          }
-          else{
-            return(
-
-              <Animated.View key={item._id} {...this.state.panResponder.panHandlers} style={this.state.swiped_pan.getLayout()}>
-              <CachedImage  source={{ uri:item.img.data }}
-               imageStyle={{ borderRadius: 10 }} style={{marginTop:normalize(40),flex: 1,position:'absolute',height:height-(height*0.14),width:width-(width*0.05),borderRadius:50,margin:10,
-            borderRadius:10,margin:wp('3%'),shadowColor: '#003182',shadowOffset: { width: 0, height: 9 },shadowOpacity: 0.48,shadowRadius: 11.95,elevation:18}}>
-              <TouchableOpacity activeOpacity={1}  onPress={()=>{this.props.navigation.navigate('Details', {itemId: item})}}  >
-                <Text>    </Text>
-                </TouchableOpacity>
-              </CachedImage>
-
-            </Animated.View>
-              )
-          }
-
-
-
-        }
-        else if (i < this.state.currentIndex)
-        {
-          return null
-        }
-         if (i == this.state.currentIndex)
-        {
-            if(len==this.state.currentIndex+1){ this.state.len="true"} //to chekc for last card
-
-
-                if(item.special)
-                {
-                  return(
-
-                  <Animated.View key={item._id} {...this.state.panResponder.panHandlers} style={[this.state.pan.getLayout()]}>
-
-                        <CachedImage  source={{ uri:item.img.data }}
-                         imageStyle={{ borderRadius: 10 }} style={{marginTop:normalize(40),flex: 1,position:'absolute',height:height-(height*0.14),width:width-(width*0.05),
-                         borderRadius:50,margin:wp('3%'),shadowColor: '#003182',shadowOffset: { width: 0, height: 9 },shadowOpacity: 0.48,shadowRadius: 11.95,elevation:18}}>
-                        <TouchableOpacity activeOpacity={1} style={{height:height-(height*0.14),width:width-(width*0.05)}}  onPress={()=>{
-                          var idshort='https://news.newssense.co/'+item._id;
-                          var dm = new firebase.links.DynamicLink(
-                                   idshort,
-                                 'https://news.newssense.co'
-                               ).android.setPackageName('com.newSense');
-                               console.log(dm);
-
-                          firebase.links()
-                         .createShortDynamicLink(dm, 'SHORT')
-                         .then((url) => {
-                           let shareOptions = {
-                             title: "Share This Story",
-                             message: "Read This Awsome Article: "+item.title,
-                             url: url,
-                             subject: "Share Link"
-                           };
-                            Share.open(shareOptions).catch((err) => { err && console.log(err); });
-                       })}}
-                        >
-                            <Text>  </Text>
-                          </TouchableOpacity>
-                        </CachedImage>
-                  </Animated.View>
-
-
-
-                  )
-                }
-                else {
-
-                      return(
-                        <Animated.View  ref={r=>this.refs=r} key={item._id} {...this.state.panResponder.panHandlers} style={this.state.pan.getLayout()}>
-
-                          <View style={{ marginTop:normalize(40),flex: 1,position:'absolute',height:height-(height*0.14),width:width-(width*0.05),
-                        backgroundColor:'white',borderRadius:10,margin:wp('3%'),shadowColor: '#003182',shadowOffset: { width: 0, height: 9 },shadowOpacity: 0.48,shadowRadius: 11.95,elevation:18}}>
-
-
-                            < View style={styles.Imagebody}>
-                              <CachedImage  source={{ uri:item.img.data }} style={styles.image} />
-                            </View>
-
-                            <View  style={styles.inner}>
-
-                            <ShareItem id={item._id} name={item.title} img={item.img.data} />
-
-                              <View style={styles.inner}>
-                              <Text style={styles.titleArrtibute}>{item.category}</Text>
-                                <Text style={styles.titleText} >{item.title}﻿</Text>
-                                <View >
-                                  <Text style={styles.body}>{item.body}﻿</Text>
-                                </View>
-                                <View >
-                                  <Time date={item.date} source={item.source}/>
-                                  <Text style={{marginTop:normalize(2),fontSize:normalize(10),color:'#afafaf'}}>curated by {item.post}</Text>
-                                </View>
-
-                              </View>
-
-
-
-                            </View>
-                          </View>
-
-                      </Animated.View>
-
-                    )
-                }
-        }
-      else{
-          if(item.special==false){
-            return(
-              <Animated.View key={item._id} >
-
-                <View style={{ marginTop:normalize(40), flex: 1,position:'absolute',height:height-(height*0.14),width:width-(width*0.05),backgroundColor:'white',
-                borderRadius:10,margin:wp('3%')}}>
-
-
-                  < View style={styles.Imagebody}>
-                    <CachedImage  source={{ uri:item.img.data }} style={styles.image} />
-                  </View>
-
-                  <View  style={styles.inner}>
-                  <ShareItem  id={item._id} name={item.title} img={item.img.data} />
-                    <View style={styles.inner}>
-                    <Text style={styles.titleArrtibute}>{item.category}</Text>
-                      <Text style={styles.titleText} >{item.title}﻿</Text>
-                      <View>
-                        <Text style={styles.body}>{item.body}﻿</Text>
-                      </View>
-                      <View >
-                      <Time date={item.date} source={item.source}/>
-                      <Text style={{marginTop:normalize(2),fontSize:normalize(10),color:'#afafaf'}}>curated by {item.post}</Text>
-                      </View>
-
-                    </View>
-                  </View >
-
-
-                </View>
-            </Animated.View>
-          )
-        }
-
-        else{
           return(
 
-            <Animated.View key={item._id} >
-              <CachedImage  source={{ uri:item.img.data }}  imageStyle={{ borderRadius: 10 }}
-              style={{marginTop:normalize(40),flex: 1,position:'absolute',height:height-(height*0.14),width:width-(width*0.05),borderRadius:10,margin:wp('3%')}}>
-              <TouchableOpacity activeOpacity={1}  onPress={()=>{this.props.navigation.navigate('Details', {itemId: item})}}  >
-                <Text>  </Text>
-                </TouchableOpacity>
-              </CachedImage>
+          <Animated.View >
 
+                <CachedImage  source={{ uri:item.img.data }}
+                 imageStyle={{ borderRadius: 10 }} style={{marginTop:normalize(40),flex: 1,position:'absolute',height:height-(height*0.14),width:width-(width*0.05),
+                 borderRadius:50,margin:wp('3%'),shadowColor: '#003182',shadowOffset: { width: 0, height: 9 },shadowOpacity: 0.48,shadowRadius: 11.95,elevation:18}}>
+                <TouchableOpacity activeOpacity={1} style={{height:height-(height*0.14),width:width-(width*0.05)}}  onPress={()=>{
+                  var idshort='https://news.newssense.co/'+item._id;
+                  var dm = new firebase.links.DynamicLink(
+                           idshort,
+                         'https://news.newssense.co'
+                       ).android.setPackageName('com.newSense');
+                       console.log(dm);
+
+                  firebase.links()
+                 .createShortDynamicLink(dm, 'SHORT')
+                 .then((url) => {
+                   let shareOptions = {
+                     title: "Share This Story",
+                     message: "Read This Awsome Article: "+item.title,
+                     url: url,
+                     subject: "Share Link"
+                   };
+                    Share.open(shareOptions).catch((err) => { err && console.log(err); });
+               })}}
+                >
+                    <Text>  </Text>
+                  </TouchableOpacity>
+                </CachedImage>
           </Animated.View>
+
+
+
+          )
+        }
+        else {
+
+              return(
+                <Animated.View >
+
+                  <View style={{ marginTop:normalize(40),flex: 1,position:'absolute',height:height-(height*0.14),width:width-(width*0.05),
+                backgroundColor:'white',borderRadius:10,margin:wp('3%'),shadowColor: '#003182',shadowOffset: { width: 0, height: 9 },shadowOpacity: 0.48,shadowRadius: 11.95,elevation:18}}>
+
+
+                    < View style={styles.Imagebody}>
+                      <CachedImage  source={{ uri:item.img.data }} style={styles.image} />
+                    </View>
+
+                    <View  style={styles.inner}>
+
+                    <ShareItem id={item._id} name={item.title} img={item.img.data} />
+
+                      <View style={styles.inner}>
+                      <Text style={styles.titleArrtibute}>{item.category}</Text>
+                        <Text style={styles.titleText} >{item.title}﻿</Text>
+                        <View >
+                          <Text style={styles.body}>{item.body}﻿</Text>
+                        </View>
+                        <View >
+                          <Time date={item.date} source={item.source}/>
+                          <Text style={{marginTop:normalize(2),fontSize:normalize(10),color:'#afafaf'}}>curated by {item.post}</Text>
+                        </View>
+
+                      </View>
+                    </View>
+                  </View>
+
+              </Animated.View>
+
             )
         }
-      }
-
-    }
-  ).reverse()
-}
+     }
 
 
+     get pagination () {
+             const { dataSource, activeSlide } = this.state;
+             return (
+                 <Pagination
+                   dotsLength={dataSource.length}
+                   activeDotIndex={activeSlide}
+                   containerStyle={{ backgroundColor: 'rgba(0, 0, 0, 0.75)' }}
+                   dotStyle={{
+                       width: 10,
+                       height: 10,
+                       borderRadius: 5,
+                       marginHorizontal: 8,
+                       backgroundColor: 'rgba(255, 255, 255, 0.92)'
+                   }}
+                   inactiveDotStyle={{
+                       // Define styles for inactive dots here
+                   }}
+                   inactiveDotOpacity={0.4}
+                   inactiveDotScale={0.6}
+                 />
+             );
+         }
 
   render(){
+    const { navigation } = this.props;
+    try{
+      console.log(navigation.getParam('link'));
+    }
+    catch(e)
+    {
 
-    console.log(this.state.hasPointer)
+    }
+
+
       if(this.state.isLoading ){
             return(
               <View >
@@ -496,20 +452,26 @@ async componentWillMount() {
       <View style={{flex:1}}>
       <SettingButton navigate={this.props.navigation.navigate} parentMethod={this.getData.bind(this)}  />
 
-
        <StatusBar backgroundColor="black" animated />
-            <View   contentContainerStyle={{  flexGrow: 1 }}>
-              {this.renderArtciles()}
 
-             </View>
+            <Carousel
+             firstItem={this.state.random}
+              ref={(c) => { this._carousel = c; }}
+              data={this.state.dataSource}
+              renderItem={this._renderItem}
+              sliderWidth={width}
+              itemWidth={width}
+              swipeThreshold={0}
+              sliderHeight={height-(height*0.14)}
+              sliderHeight	={height-(height*0.14)}
+              contentContainerCustomStyle={{shadowColor: '#003182',shadowOffset: { width: 0, height: 9 },shadowOpacity: 0.48,shadowRadius: 11.95,elevation:18}}
+              containerCustomStyle={{shadowColor: '#003182',shadowOffset: { width: 0, height: 9 },shadowOpacity: 0.48,shadowRadius: 11.95,elevation:18}}
+              onSnapToItem={(index) =>   AsyncStorage.setItem('POINTER', (index).toString()) }
+              useScrollView
+            />
 
 
-          <View style={{position:'absolute',zIndex:-20,backgroundColor:'#f3f3f3'}}>
 
-                          <View style={{ flex:3, textAlign: 'center',position:'absolute',height:height,width:width,backgroundColor:'white'}}>
-                                <Text style={{color:'black',  top:hp('40%'),textAlign: 'center',fontSize: wp('5%'),fontWeight: 'bold'}} >No More Cards</Text>
-                          </View>
-          </View>
          </View>
 
       )

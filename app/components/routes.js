@@ -87,31 +87,18 @@ console.log("GCM Token====>>>>>>>>",token);
      DeepLinking.addScheme('https://');
     DeepLinking.addRoute('news.newssense.co/:id', (response) => {
       console.log("ID response",response.id);
-      try{
-        const resetAction = StackActions.reset({
-        index: 0,
-        actions: [NavigationActions.navigate({routeName: 'Article', params:{link:response}})],
-        key: null,
-      });
-      this.props.navigation.dispatch(resetAction);
-      }
-      catch(e){
-        console.log(e);
-      }
-      this.props.navigation.navigate('Article',{link:response});
+      this.props.navigation.dispatch(StackActions.popToTop());
+
+    this.props.navigation.navigate({routeName: 'Article', params:{link:response.id}});
 
 
     });
     this.notificationOpenedListener = firebase.notifications().onNotificationOpened((notificationOpen: NotificationOpen) => {
        var id=notificationOpen.notification._data.id;
        console.log(id,"Datastore");
-           this.props.navigation.navigate('Article',{link:id});
-         const resetAction = StackActions.reset({
-         index: 0,
-         actions: [NavigationActions.navigate({routeName: 'Article', params:{link:id}})],
-         key: null,
-       });
-       this.props.navigation.dispatch(resetAction);
+       his.props.navigation.dispatch(StackActions.popToTop());
+
+     this.props.navigation.navigate({routeName: 'Article', params:{link:id}});
 
        firebase.notifications().removeDeliveredNotification(notificationOpen.notification._notificationId)
        });
@@ -145,7 +132,7 @@ console.log("GCM Token====>>>>>>>>",token);
 
        firebase.notifications().displayNotification(localNotification).catch(err => {console.log(err); alert("Error On Notification")});
 
-  
+
 
    });
      const nav=this
