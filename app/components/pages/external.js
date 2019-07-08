@@ -22,6 +22,7 @@ export default class ExternalScreen extends Component {
     const { navigation } = this.props;
     const { id } =  navigation.getParam('link');
     let link="";
+    console.log(navigation);
   if(id!=undefined){
       link="http://dash.newssense.co/find/"+id;
   }

@@ -94,10 +94,12 @@ console.log("GCM Token====>>>>>>>>",token);
 
     });
     this.notificationOpenedListener = firebase.notifications().onNotificationOpened((notificationOpen: NotificationOpen) => {
-       var id=notificationOpen.notification._data.id;
-       console.log(id,"Datastore");
-       his.props.navigation.dispatch(StackActions.popToTop());
 
+       var id=notificationOpen.notification._data.id==undefined?notificationOpen.notification._data.key:notificationOpen.notification._data.id;
+       console.log(id,"Datastore");
+        console.log("inside onNotificationOpened")
+
+this.props.navigation.dispatch(StackActions.popToTop());
      this.props.navigation.navigate({routeName: 'Article', params:{link:id}});
 
        firebase.notifications().removeDeliveredNotification(notificationOpen.notification._notificationId)
@@ -105,7 +107,10 @@ console.log("GCM Token====>>>>>>>>",token);
        firebase.notifications().getInitialNotification()
      .then((notificationOpen: NotificationOpen) => {
        if (notificationOpen) {
-
+         console.log("inside inital");
+          console.log(notificationOpen);
+           var id=notificationOpen.notification._data.key;
+           this.props.navigation.navigate({routeName: 'Article', params:{link:id}});
 
          firebase.notifications().removeDeliveredNotification(notificationOpen.notification._notificationId)
        }

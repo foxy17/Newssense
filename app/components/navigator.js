@@ -4,6 +4,7 @@ import HomeScreen from './pages/home';
 import DetailsScreen from './pages/detail';
 import IntroScreen from './pages/intro';
 import ExternalScreen from './pages/external';
+import WebScreen from './pages/web';
 import SettingsScreen from './pages/setting';
 import BookmarksScreen from './pages/bookmarks';
 import SingleBookmarkScreen from './pages/singleBookmark';
@@ -73,6 +74,7 @@ const AppNavigator = createStackNavigator(
           backgroundColor: '#00cafe'
         }}},
   Intro:IntroScreen,
+  Web:WebScreen,
   Article: { screen: ExternalScreen, path: 'news/:id', },
   Settings:SettingsScreen,
   Bookmarks:BookmarksScreen,
@@ -96,6 +98,7 @@ const AppNavigatorIntro = createStackNavigator(
           backgroundColor: '#00cafe'
         }},
   Intro:IntroScreen,
+  Web:WebScreen,
   Article: { screen: ExternalScreen, path: 'news/:id', },
   Settings:SettingsScreen,
     Bookmarks:BookmarksScreen,

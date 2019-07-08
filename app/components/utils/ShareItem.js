@@ -31,7 +31,7 @@ componentWillMount() {
     let { id,name} = this.props;
 
   db.find({ _id: id}, (err, docs) =>{
-    console.log(docs.length);
+  
 
     if(docs.length>0)
     {
