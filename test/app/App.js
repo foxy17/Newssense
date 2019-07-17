@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlatList, ActivityIndicator, Text, View  } from 'react-native';
+import { FlatList, ActivityIndicator, Text, View ,Image } from 'react-native';
 
 export default class FetchExample extends React.Component {
 
@@ -9,15 +9,15 @@ export default class FetchExample extends React.Component {
   }
 
   componentDidMount(){
-    return fetch('https://facebook.github.io/react-native/movies.json')
+    return fetch('https://news119.herokuapp.com/getData')
       .then((response) => response.json())
       .then((responseJson) => {
-
+		console.log(responseJson.data.length);
         this.setState({
           isLoading: false,
-          dataSource: responseJson.movies,
+          dataSource: responseJson.data,
         }, function(){
-
+		
         });
 
       })
@@ -42,8 +42,11 @@ export default class FetchExample extends React.Component {
       <View style={{flex: 1, paddingTop:20}}>
         <FlatList
           data={this.state.dataSource}
-          renderItem={({item}) => <Text>{item.title}, {item.releaseYear}</Text>}
-          keyExtractor={({id}, index) => id}
+          renderItem={({item}) => <View><Text>{item.title}, {item.img.data}</Text><Image
+          style={{width: 50, height: 50}}
+          source={{uri: 'item.img.data'}}
+        /></View>}
+          keyExtractor={(item, index) => item._id}
         />
       </View>
     );

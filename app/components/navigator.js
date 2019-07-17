@@ -63,6 +63,11 @@ const handleCustomTransition = ({ scenes }) => {
     && nextScene.route.routeName === 'Settings') {
     return fromBottom();
   }
+  if (prevScene
+    && prevScene.route.routeName === 'Home'
+    && nextScene.route.routeName === 'Web') {
+    return fromBottom();
+  }
   return fadeIn();
 }
 let ReduxAppContainer= connect(mapStateToProps, mapDispatchToProps)(HomeScreen);

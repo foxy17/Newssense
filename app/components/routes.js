@@ -190,7 +190,7 @@ this.props.navigation.dispatch(StackActions.popToTop());
 
    render() {
      const { hasCheckedAsyncStorage, isFirstLaunch } = this.state;
-     console.log("HEYA",this.state.notif)
+
      if (!hasCheckedAsyncStorage) {
        return null;
      }

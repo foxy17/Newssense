@@ -72,6 +72,7 @@
 		F5128DF612C84F49ADA4F39E /* libRNBackgroundFetch.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B73F07BC9C74D6386282F84 /* libRNBackgroundFetch.a */; };
 		89E8B04F8402495FB4C50186 /* TSBackgroundFetch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C6440A1EE4134E76A3497A88 /* TSBackgroundFetch.framework */; };
 		B29849EE2CD049A792F80D5E /* RNBackgroundFetch+AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 63A77057D83449938929C17B /* RNBackgroundFetch+AppDelegate.m */; };
+		A563DD7BC9934199A73B41DE /* libRNCWebView.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 03636E790ACC453190A1188B /* libRNCWebView.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -423,6 +424,8 @@
 		6B73F07BC9C74D6386282F84 /* libRNBackgroundFetch.a */ = {isa = PBXFileReference; name = "libRNBackgroundFetch.a"; path = "libRNBackgroundFetch.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		C6440A1EE4134E76A3497A88 /* TSBackgroundFetch.framework */ = {isa = PBXFileReference; name = "TSBackgroundFetch.framework"; path = "../node_modules/react-native-background-fetch/ios/RNBackgroundFetch/TSBackgroundFetch.framework"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = wrapper.framework; explicitFileType = undefined; includeInIndex = 0; };
 		63A77057D83449938929C17B /* RNBackgroundFetch+AppDelegate.m */ = {isa = PBXFileReference; name = "RNBackgroundFetch+AppDelegate.m"; path = "../node_modules/react-native-background-fetch/ios/RNBackgroundFetch/RNBackgroundFetch+AppDelegate.m"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; explicitFileType = undefined; includeInIndex = 0; };
+		D58AC67C30E1455E87B48124 /* RNCWebView.xcodeproj */ = {isa = PBXFileReference; name = "RNCWebView.xcodeproj"; path = "../node_modules/react-native-webview/ios/RNCWebView.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		03636E790ACC453190A1188B /* libRNCWebView.a */ = {isa = PBXFileReference; name = "libRNCWebView.a"; path = "libRNCWebView.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -464,6 +467,7 @@
 				320BFA29AEBE4F27AF059AB2 /* libFastImage.a in Frameworks */,
 				F5128DF612C84F49ADA4F39E /* libRNBackgroundFetch.a in Frameworks */,
 				89E8B04F8402495FB4C50186 /* TSBackgroundFetch.framework in Frameworks */,
+				A563DD7BC9934199A73B41DE /* libRNCWebView.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -668,6 +672,7 @@
 				1B14802B8852494A8CEAC5AE /* RNBackgroundTimer.xcodeproj */,
 				4DB9869E1A454BC181DE3ADD /* FastImage.xcodeproj */,
 				FE0CF7B774D94ABBBCC4FB5D /* RNBackgroundFetch.xcodeproj */,
+				D58AC67C30E1455E87B48124 /* RNCWebView.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1347,6 +1352,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1361,6 +1367,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-background-timer\ios",
 					"$(SRCROOT)\..\node_modules\react-native-fast-image\ios\FastImage/**",
 					"$(SRCROOT)\..\node_modules\react-native-background-fetch\ios\RNBackgroundFetch/**",
+					"$(SRCROOT)\..\node_modules\react-native-webview\ios",
 				);
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(PROJECT_DIR)/..\node_modules\react-native-background-fetch\ios/**",
@@ -1386,6 +1393,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1400,6 +1408,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-background-timer\ios",
 					"$(SRCROOT)\..\node_modules\react-native-fast-image\ios\FastImage/**",
 					"$(SRCROOT)\..\node_modules\react-native-background-fetch\ios\RNBackgroundFetch/**",
+					"$(SRCROOT)\..\node_modules\react-native-webview\ios",
 				);
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(PROJECT_DIR)/..\node_modules\react-native-background-fetch\ios/**",
@@ -1436,6 +1445,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-background-timer\ios",
 					"$(SRCROOT)\..\node_modules\react-native-fast-image\ios\FastImage/**",
 					"$(SRCROOT)\..\node_modules\react-native-background-fetch\ios\RNBackgroundFetch/**",
+					"$(SRCROOT)\..\node_modules\react-native-webview\ios",
 				);
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(PROJECT_DIR)/..\node_modules\react-native-background-fetch\ios/**",
@@ -1471,6 +1481,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-background-timer\ios",
 					"$(SRCROOT)\..\node_modules\react-native-fast-image\ios\FastImage/**",
 					"$(SRCROOT)\..\node_modules\react-native-background-fetch\ios\RNBackgroundFetch/**",
+					"$(SRCROOT)\..\node_modules\react-native-webview\ios",
 				);
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(PROJECT_DIR)/..\node_modules\react-native-background-fetch\ios/**",
@@ -1504,6 +1515,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1518,6 +1530,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-background-timer\ios",
 					"$(SRCROOT)\..\node_modules\react-native-fast-image\ios\FastImage/**",
 					"$(SRCROOT)\..\node_modules\react-native-background-fetch\ios\RNBackgroundFetch/**",
+					"$(SRCROOT)\..\node_modules\react-native-webview\ios",
 				);
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(PROJECT_DIR)/..\node_modules\react-native-background-fetch\ios/**",
@@ -1551,6 +1564,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1565,6 +1579,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-background-timer\ios",
 					"$(SRCROOT)\..\node_modules\react-native-fast-image\ios\FastImage/**",
 					"$(SRCROOT)\..\node_modules\react-native-background-fetch\ios\RNBackgroundFetch/**",
+					"$(SRCROOT)\..\node_modules\react-native-webview\ios",
 				);
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(PROJECT_DIR)/..\node_modules\react-native-background-fetch\ios/**",
@@ -1597,6 +1612,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1611,6 +1627,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-background-timer\ios",
 					"$(SRCROOT)\..\node_modules\react-native-fast-image\ios\FastImage/**",
 					"$(SRCROOT)\..\node_modules\react-native-background-fetch\ios\RNBackgroundFetch/**",
+					"$(SRCROOT)\..\node_modules\react-native-webview\ios",
 				);
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(PROJECT_DIR)/..\node_modules\react-native-background-fetch\ios/**",
@@ -1643,6 +1660,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1657,6 +1675,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-background-timer\ios",
 					"$(SRCROOT)\..\node_modules\react-native-fast-image\ios\FastImage/**",
 					"$(SRCROOT)\..\node_modules\react-native-background-fetch\ios\RNBackgroundFetch/**",
+					"$(SRCROOT)\..\node_modules\react-native-webview\ios",
 				);
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(PROJECT_DIR)/..\node_modules\react-native-background-fetch\ios/**",

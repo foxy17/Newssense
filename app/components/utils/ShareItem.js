@@ -31,7 +31,7 @@ componentWillMount() {
     let { id,name} = this.props;
 
   db.find({ _id: id}, (err, docs) =>{
-  
+
 
     if(docs.length>0)
     {
@@ -60,7 +60,7 @@ onCancel() {
      var dm = new firebase.links.DynamicLink(
               id,
             'https://news.newssense.co'
-          ).android.setPackageName('com.newSense');
+          ).social.setImageUrl(this.state.pic).social.setTitle(this.state.name).android.setPackageName('com.newSense');
           console.log(dm);
 
           firebase.links()
@@ -127,8 +127,8 @@ onCancel() {
 
     }
   render() {
-      let { id,name} = this.props;
-
+      let { id,name,img} = this.props;
+      this.state.pic=img;
       this.state.id=id;
 
       this.state.name=name;

@@ -135,7 +135,9 @@ var AnimatedImage = Animated.createAnimatedComponent(ImageBackground);
             return(
 
               <Animated.View key={item._id} >
-
+              <Icon2  name="close-circle" size={normalize(25)} color="black" style={{ shadowColor: 'red',
+              shadowOpacity: 0.5,shadowRadius: 5,shadowOffset: {width: 0 , height: 1, }, position: 'absolute',alignSelf:'flex-end',right:wp('4%'),top:hp('1%')}}
+              onPress={() => { this.props.navigation.goBack()}}/>
                 <AnimatedImage  source={{ uri:item.img.data }}  imageStyle={{ borderRadius: 10 }}
                 style={{marginTop:normalize(35),flex: 1,position:'absolute',height:height-(height*0.15),width:width-(width*0.05),borderRadius:10,margin:wp('3%')}}>
                 <TouchableOpacity activeOpacity={1}  onPress={()=>{this.props.navigation.navigate('Details', {itemId: item})}}  >

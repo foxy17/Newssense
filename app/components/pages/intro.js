@@ -6,6 +6,7 @@ import {
   FlatList,Image,
   StyleSheet,Alert,Button,TouchableOpacity,Linking,Platform,ImageBackground,StatusBar
 } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 import {StackActions ,NavigationActions} from "react-navigation";
 import AppIntroSlider from 'react-native-app-intro-slider';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -54,7 +55,13 @@ export default class IntroScreen extends Component {
    index:0
  }}
 
+async componentDidMount(){
+  await fetch('https://news119.herokuapp.com/getData')
+    .then((response) => response.json()).then((responseJson) => {
+         AsyncStorage.setItem('ApiData',JSON.stringify(responseJson.data.sort((a,b)=>a.publishDate<b.publishDate)))
+      });
 
+}
  _onDone = () => {
 
    try{
