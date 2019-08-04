@@ -26,11 +26,7 @@
             <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
         </intent-filter>
     </service>
-    <service android:name="io.invertase.firebase.messaging.RNFirebaseInstanceIdService">
-      <intent-filter>
-          <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
-      </intent-filter>
-    </service>
+
 	<!-- For background messaging -->
 	<service android:name="io.invertase.firebase.messaging.RNFirebaseBackgroundMessagingService" />
   <receiver android:name="io.invertase.firebase.notifications.RNFirebaseNotificationReceiver"></receiver>
@@ -60,8 +56,8 @@
           <action android:name="android.intent.action.VIEW" />
           <category android:name="android.intent.category.DEFAULT" />
           <category android:name="android.intent.category.BROWSABLE" />
-          <data android:scheme="https" android:host="dashboard.newssense.co" />
-            <data android:scheme="http" android:host="dashboard.newssense.co" />
+          <data android:scheme="https" android:host="dash.newssense.co" />
+            <data android:scheme="http" android:host="dash.newssense.co" />
 
 
         </intent-filter>

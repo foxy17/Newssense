@@ -3,7 +3,7 @@ import { View, Text,ActivityIndicator,Dimensions,Image,NetInfo,Animated,ImageBac
 import { createStackNavigator, createAppContainer } from "react-navigation";
 const {width, height} = Dimensions.get('window');
 import ShareItem from '../utils/ShareItem';
-import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icon2 from 'react-native-vector-icons/MaterialIcons';
 import { AndroidBackHandler } from 'react-navigation-backhandler';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import normalize from '../utils/normalize'
@@ -95,14 +95,18 @@ var AnimatedImage = Animated.createAnimatedComponent(ImageBackground);
         var item=this.state.dataSource;
 
 
-
+        console.log(item);
             if(item.special==false){
               return(
 
         <View style={{flex:1,backgroundColor:'#f3f3f3'}}>
-        <Icon2  name="close-circle" size={normalize(25)} color="black" style={{ shadowColor: 'red',
-        shadowOpacity: 0.5,shadowRadius: 5,shadowOffset: {width: 0 , height: 1, }, position: 'absolute',alignSelf:'flex-end',right:wp('4%'),top:hp('1%')}}
-        onPress={() => { this.props.navigation.goBack()}}/>
+        <Icon2.Button  raised name="arrow-back" backgroundColor="#f3f3f3" color='#2A2E43' size={normalize(32)}
+        paddingHorizontal={normalize(12 )} paddingVertical={normalize(5)}   onPress={() => { this.props.navigation.goBack()}}
+        >
+            <Text style={{ left:wp('0%'),padding:normalize(8),fontFamily: 'Arial', fontSize: normalize(20)  ,color:'black',justifyContent:'center'}}>
+          All News
+          </Text>
+        </Icon2.Button>
         <View style={{ marginTop:hp('7%'), flex: 1,position:'absolute',height:height-(height*0.15),width:width-(width*0.05) ,
          backgroundColor:'white',borderRadius:10,margin:wp('3%'),shadowColor: '#003182',shadowOffset: { width: 0, height: 9 },shadowOpacity: 0.48,shadowRadius: 11.95,elevation:18}}>
 

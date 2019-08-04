@@ -6,6 +6,8 @@ import ShareItem from '../utils/ShareItem'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import normalize from '../utils/normalize'
 import Time from '../utils/Time'
+import Icon2 from 'react-native-vector-icons/MaterialIcons';
+import { AndroidBackHandler } from 'react-navigation-backhandler';
 export default class SingleBookmarkScreen extends Component {
   static navigationOptions = {
    title: 'SingleBookmark',
@@ -48,13 +50,20 @@ export default class SingleBookmarkScreen extends Component {
       if(this.state.isLoading){
             return(
               <View >
-                <ActivityIndicator />
+                <Image  source={require('../images/load.gif')}    style={{left:wp('1%') ,width: wp('100'), height: hp('100')}}/>
               </View>
             )}
             var item=this.state.dataSource;
             return(
               <View style={{flex:1,backgroundColor:'#f3f3f3'}}>
-              <View style={{ marginTop:hp('5%'), flex: 1,position:'absolute',height:height-(height*0.15),width:width-(width*0.05) ,
+              <Icon2.Button  raised name="arrow-back" backgroundColor="#f3f3f3" color='#2A2E43' size={normalize(32)}
+              paddingHorizontal={normalize(12 )} paddingVertical={normalize(5)}   onPress={() => { this.props.navigation.goBack()}}
+              >
+                  <Text style={{ left:wp('0%'),padding:normalize(8),fontFamily: 'Arial', fontSize: normalize(20)  ,color:'black',justifyContent:'center'}}>
+                All News
+                </Text>
+              </Icon2.Button>
+              <View style={{ marginTop:hp('7%'), flex: 1,position:'absolute',height:height-(height*0.15),width:width-(width*0.05) ,
                backgroundColor:'white',borderRadius:10,margin:wp('3%'),shadowColor: '#003182',shadowOffset: { width: 0, height: 9 },shadowOpacity: 0.48,shadowRadius: 11.95,elevation:18}}>
 
 

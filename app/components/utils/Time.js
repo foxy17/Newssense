@@ -15,18 +15,25 @@ export default class Time extends Component {
       // console.log(date1.getDate(),"Current")
       const month = datePublished.toLocaleString('en-us', { month: 'long' });
       var final;
-      if(date1.getMonth()===datePublished.getMonth() && date1.getDate()===datePublished.getDate()){
+      if(date1.getMonth()<=datePublished.getMonth() && date1.getDate()<=datePublished.getDate()){
         final=" / Today"
+        return(
+            <View style={{flexDirection:'row'}} >
+            <Text style={{marginTop:normalize(16),fontSize:normalize(10),color:'#afafaf'}}>source:{source}</Text>
+            <Text style={{marginTop:normalize(16),fontSize:normalize(10),color:'#afafaf'}}>{final} </Text>
+            </View>
+        )
       }
       else{
         final=" / "+datePublished.getDate()+" "+month.slice(4,7)
+        return(
+            <View style={{flexDirection:'row'}} >
+            <Text style={{marginTop:normalize(16),fontSize:normalize(10),color:'#afafaf'}}>source:{source}</Text>
+            <Text style={{marginTop:normalize(16),fontSize:normalize(10),color:'#afafaf'}}>{final} </Text>
+            </View>
+        )
       }
-      return(
-          <View style={{flexDirection:'row'}} >
-          <Text style={{marginTop:normalize(16),fontSize:normalize(10),color:'#afafaf'}}>source:{source}</Text>
-          <Text style={{marginTop:normalize(16),fontSize:normalize(10),color:'#afafaf'}}>{final} </Text>
-          </View>
-      )
+
 
 
 

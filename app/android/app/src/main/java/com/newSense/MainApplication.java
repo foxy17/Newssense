@@ -3,6 +3,7 @@ package com.newSense;
 import android.app.Application;
 import cl.json.ShareApplication;
 import com.facebook.react.ReactApplication;
+import com.airship.customwebview.CustomWebViewPackage;
 import com.reactnativecommunity.webview.RNCWebViewPackage;
 import com.transistorsoft.rnbackgroundfetch.RNBackgroundFetchPackage;
 import com.dylanvann.fastimage.FastImageViewPackage;
@@ -37,6 +38,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new CustomWebViewPackage(),
             new RNCWebViewPackage(),
             new RNBackgroundFetchPackage(),
             new FastImageViewPackage(),

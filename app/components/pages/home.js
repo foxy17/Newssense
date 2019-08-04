@@ -10,7 +10,6 @@ import DeepLinking from 'react-native-deep-linking';
 import ShareItem from '../utils/ShareItem'
 import Time from '../utils/Time'
 import SettingButton from '../utils/settings'
-import {connect} from 'react-redux';
 import checkPointer from '../utils/checkPointer';
 import { createMaterialBottomTabNavigator } from "react-navigation-material-bottom-tabs";
 import AsyncStorage from '@react-native-community/async-storage';
@@ -19,9 +18,10 @@ import Share, {ShareSheet, Button} from 'react-native-share';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Toast from 'react-native-simple-toast';
 import en from 'javascript-time-ago/locale/en'
-
+import BackgroundTimer from 'react-native-background-timer';
 import Carousel , { Pagination } from 'react-native-snap-carousel';
-
+import ActionButton from 'react-native-action-button';
+// import NetInfo from "@react-native-community/netinfo";
 import firebase from 'react-native-firebase';
 import {
     CachedImage,
@@ -29,7 +29,7 @@ import {
     ImageCacheManager
 } from 'react-native-cached-images'
 const defaultImageCacheManager = ImageCacheManager();
-import EStyleSheet from 'react-native-extended-stylesheet';
+
 
 
 export default  class HomeScreen extends Component {
@@ -50,6 +50,11 @@ export default  class HomeScreen extends Component {
 
 
 async componentWillMount() {
+  const timeoutId =BackgroundTimer.setTimeout(() => {
+      console.log("TIMER");
+    this.background();
+    },
+    3000);
 
   const has = await checkPointer();
 
@@ -98,16 +103,16 @@ async componentWillMount() {
       }
 
 
-      componentWillUnmount() {
+componentWillUnmount() {
 
 
-          NetInfo.isConnected.removeEventListener(
-              'connectionChange',
-              this._handleConnectivityChange
+    NetInfo.isConnected.removeEventListener(
+        'connectionChange',
+        this._handleConnectivityChange
 
-          );
+    );
 
-        }
+  }
 
 
   async componentDidMount(){
@@ -130,30 +135,87 @@ async componentWillMount() {
 
     });
 
+
     const data = await AsyncStorage.getItem('ApiData')
     this.state.len="false";
     if(data!=null) {
-      try{
-
-        this.setState({
-          len:"false",
-          isLoading: false,
-          loaded:true,
-          dataSource: JSON.parse(data),
-
-        })
-      }catch(e) {
-        console.warn("fetch Error: ", error)
-     }}
+      var length;
+      if(this.state.connection_Status=="Online"){
+        await fetch('https://news119.herokuapp.com/getLength')
+          .then((response) => response.json()).then((responseJson) => {
+              length=responseJson.length;
+              console.log("LENGTH",length)
+              }
+            )
+            var wide=await AsyncStorage.getItem('length');
+            console.log("INIT+",wide)
+            wide=parseInt(wide);
+            var diff=length-wide;
+            if(wide==null){
+              this.getData();
+            }
+            else if(diff>20){
+              Toast.show(diff+' New Articles Added,Refreshing your feed');
+              this.getData();
+            }
+            else{
+                this.setState({
+                  len:"false",
+                  isLoading: false,
+                  loaded:true,
+                  dataSource: JSON.parse(data),
+            })}
+          }
+          else{
+            Alert.alert(
+                'Network Connection',
+                'No Internet Please Try Again Later',
+                [
+                 {text: 'OK', onPress: () => console.log('OK Pressed')},
+                ],
+                )
+                this.setState({
+                  len:"false",
+                  isLoading: false,
+                  loaded:true,
+                  dataSource: JSON.parse(data),
+            })
+          }
+     }
       else {
         this.getData();
       }
 
 
-
-
 }
+async background(){
+  console.log("Status",this.state.connection_Status)
+  if(this.state.connection_Status=="Online")
+  { var length;
+    await fetch('https://news119.herokuapp.com/getLength')
+      .then((response) => response.json()).then((responseJson) => {
+          length=responseJson.length;
+          console.log("LENGTH",length)
+          }
+        )
+        var wide=await AsyncStorage.getItem('length');
+        wide=parseInt(wide);
+        var diff=length-wide;
+        if(diff<=0){
+            Toast.show('Your Feed Is Up To Date ');
 
+
+        }
+        else if (diff>0){
+        Toast.show(diff+' New Articles Added, Refresh To View Them');
+
+
+      }
+    }
+    else{
+        Toast.show('Slow/No Internet Connection ');
+    }
+}
 _handleConnectivityChange = (isConnected) => {
 
     if(isConnected == true)
@@ -167,9 +229,6 @@ _handleConnectivityChange = (isConnected) => {
   };
 
 
-componentWillReceiveProps(nextProps){
-  console.log("PRops redcvied")
-}
   async getData(){
 
     if(this.state.connection_Status=="Online")
@@ -191,50 +250,43 @@ componentWillReceiveProps(nextProps){
           clearTimeout(timeout);
           console.log(responseJson.data.length);
         this.setState({
-         length:responseJson.data.length,
+          length:responseJson.length,
           loaded:true,
           random:0,
 
           dataSource: responseJson.data.sort((a,b)=>a.publishDate<b.publishDate),
         }, async function(){
-            console.log("TRIGGER")
-          var id=parseInt(await AsyncStorage.getItem('id'));
 
-          if(id){
-
-            var index = this.state.dataSource.findIndex(function(item, i){
-            return item._id === id
-          });
-           this.state.random=index
-        }
+          // var id=parseInt(await AsyncStorage.getItem('id'));
+        //
+        //   if(id){
+        //
+        //     var index = this.state.dataSource.findIndex(function(item, i){
+        //     return item._id === id
+        //   });
+        //    this.state.random=index
+        // }
             await component.preload(responseJson.data)
             this.setState({isLoading:false});
+
             const oldLen = await AsyncStorage.getItem('length');
             console.log(oldLen)
               Toast.show('Refreshed');
               if (oldLen == undefined){
-                  AsyncStorage.setItem('length',String(this.state.length))
+                await AsyncStorage.setItem('length',String(this.state.length))
               }
               else{
-                var wide=await AsyncStorage.getItem('length');
-                console.log("OLD",wide)
-                wide=parseInt(wide);
+                var wide=parseInt(oldLen);
                 var diff=this.state.length-wide;
-                if(diff==0){
-                      Toast.show("No New Articles");
+                if(diff<=0){
+                    Toast.show('Your Feed Is Up To Date ');
                 }
-                else{
+                else if(diff>0){
                   Toast.show('New Articles Added '+diff);
                    await AsyncStorage.setItem('length',String(this.state.length))
                 }
-                console.log("diffrecne",diff)
-
               }
-
-
           AsyncStorage.setItem('ApiData',JSON.stringify(this.state.dataSource))
-
-
           });
         }
         else{
@@ -243,7 +295,7 @@ componentWillReceiveProps(nextProps){
               'Network Timeout',
               'Slow internet or no connection please close the app and try again',
               [
-               {text: 'OK', onPress: () => this.getData()},
+               {text: 'OK'},
               ],
               )
 
@@ -271,12 +323,7 @@ componentWillReceiveProps(nextProps){
       )
     }
   }
-  setModalVisible(visible) {
-    this.setState({modalVisible: visible});
-  }
-  setUrl(visible) {
-    this.setState({url: this.state.dataSource[visible].url});
-  }
+
   _renderItem ({item, index}) {
 
     if(item.special)
@@ -322,7 +369,7 @@ componentWillReceiveProps(nextProps){
               return(
 
 
-                <View >
+                <View>
 
                   <View style={{ marginTop:normalize(40),flex: 1,position:'absolute',height:height-(height*0.14),width:width-(width*0.05),
                 backgroundColor:'white',borderRadius:10,margin:wp('3%'),shadowColor: '#003182',shadowOffset: { width: 0, height: 9 },shadowOpacity: 0.48,shadowRadius: 11.95,elevation:18}}>
@@ -364,20 +411,22 @@ componentWillReceiveProps(nextProps){
 
 
   render(){
+
     const getItemLayout = (data, index) => (
       {height:height-(height*0.14),width:width-(width*0.05)}
     );
+
       if(this.state.isLoading ){
             return(
               <View >
                 <CachedImage  source={require('../images/load.gif')}    style={{left:wp('1%') ,width: wp('100'), height: hp('100')}}/>
               </View>
             )}
-
+        var itemIndex=this.state.random;
       return(
 
       <View style={{flex:1}}>
-      <SettingButton navigate={this.props.navigation.navigate} parentMethod={this.getData.bind(this)}  />
+      <SettingButton navigate={this.props.navigation.navigate} parentMethod={this.getData.bind(this)} button={"Article"}  />
 
        <StatusBar backgroundColor="black" animated />
 
@@ -398,28 +447,34 @@ componentWillReceiveProps(nextProps){
               getItemLayout={getItemLayout}
               sliderHeight={height-(height*0.14)}
               sliderHeight	={height-(height*0.14)}
-              contentContainerCustomStyle={{shadowColor: '#003182',shadowOffset: { width: 0, height: 9 },shadowOpacity: 0.48,shadowRadius: 11.95,elevation:18}}
-              containerCustomStyle={{shadowColor: '#003182',shadowOffset: { width: 0, height: 9 },shadowOpacity: 0.48,shadowRadius: 11.95,elevation:18}}
+              contentContainerCustomStyle={{shadowColor: '#003182',shadowOffset: { width: 0, height: 9 },shadowOpacity: 0.48,shadowRadius: 11.95,elevation: 1}}
+              containerCustomStyle={{shadowColor: '#003182',shadowOffset: { width: 0, height: 9 },shadowOpacity: 0.48,shadowRadius: 11.95,elevation: 1}}
               onSnapToItem={(index) => { itemIndex=index;} }
-              onBeforeSnapToItem={(index) => AsyncStorage.setItem('POINTER', (index).toString()) }
+              onBeforeSnapToItem={(index) => AsyncStorage.setItem('POINTER', (index+1).toString()) }
 
             />
 
 
-            <View style={{ bottom:normalize(2),height:normalize(45),backgroundColor:'#8E10EC',flexDirection:'row',elevation:1,zIndex:0,bottom:normalize(3),overflow:'visible' ,borderRadius: 5}}>
-            <TouchableOpacity underlayColor='#8e0eed'style={{left:normalize(30),position: 'absolute',zIndex:5}}onPress={()=>
-               {
-                 this.props.navigation.navigate({ routeName: 'Web',params:{url:this.state.dataSource[itemIndex].url} });
+            <TouchableOpacity
+            style={{
+              color:'black',
+              position:'absolute',
+              bottom:hp('5%'),
+              width: normalize(50),
+              height: normalize(50),
+              backgroundColor: '#1D7FFF',
+              alignItems: 'center',
+              justifyContent: 'center',
+                borderRadius: 30,
+                right:normalize(20),
 
-                this.setModalVisible(!this.state.modalVisible);
-              }} >
+                 elevation: 2
+            }}
+  onPress={()=> this.props.navigation.navigate({ routeName: 'Web',params:{url:this.state.dataSource[itemIndex].url} })}
+  >
+<Icon name="readme"  size={34} color="white" />
+</TouchableOpacity>
 
-            <View>
-              <Icon name="readme" size={normalize(30)}  color='white' />
-              <Text style={{color:'white',fontSize:normalize(9)}}>Read More</Text>
-            </View>
-            </TouchableOpacity>
-            </View>
 
 
 
@@ -430,17 +485,7 @@ componentWillReceiveProps(nextProps){
       )
     }
   }
-  const stylesRem = EStyleSheet.create({
 
-    body: {
-      color: 'black',
-      fontSize:'3rem',
-      // fontSize:
-      flexShrink:1                             // relative REM unit
-    },
-
-
-  });
   const styles = {
     image: {
 

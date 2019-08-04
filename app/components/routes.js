@@ -93,6 +93,13 @@ console.log("GCM Token====>>>>>>>>",token);
 
 
     });
+    DeepLinking.addRoute('video.newssense.co/:id', (response) => {
+      console.log("ID response",response.id);
+
+    this.props.navigation.navigate({routeName: 'Video', params:{link:response.id}});
+
+
+    });
     this.notificationOpenedListener = firebase.notifications().onNotificationOpened((notificationOpen: NotificationOpen) => {
 
        var id=notificationOpen.notification._data.id==undefined?notificationOpen.notification._data.key:notificationOpen.notification._data.id;

@@ -1,7 +1,9 @@
 import { createStackNavigator, createAppContainer } from "react-navigation";
 import {AsyncStorage} from 'react-native';
 import HomeScreen from './pages/home';
-import DetailsScreen from './pages/detail';
+import VideoScreen from './pages/videoList';
+import Video from './pages/video';
+import SingleVideo from './pages/singleVideo';
 import IntroScreen from './pages/intro';
 import ExternalScreen from './pages/external';
 import WebScreen from './pages/web';
@@ -74,10 +76,9 @@ let ReduxAppContainer= connect(mapStateToProps, mapDispatchToProps)(HomeScreen);
 const AppNavigator = createStackNavigator(
   {
   Home: {screen:HomeScreen, path: 'news/:id',key:'home'},
-
-  Details: {screen:DetailsScreen,header: {style: {
-          backgroundColor: '#00cafe'
-        }}},
+  VideoList:VideoScreen,
+  Video:Video,
+  SingleVideo:SingleVideo,
   Intro:IntroScreen,
   Web:WebScreen,
   Article: { screen: ExternalScreen, path: 'news/:id', },
@@ -98,11 +99,10 @@ const AppContainer = createAppContainer(AppNavigator);
 const AppNavigatorIntro = createStackNavigator(
   {
   Home: {screen:HomeScreen, path: 'news/:id',key:'home'},
-
-  Details: {screen:DetailsScreen,style: {
-          backgroundColor: '#00cafe'
-        }},
   Intro:IntroScreen,
+  VideoList:VideoScreen,
+    Video:Video,
+    SingleVideo:SingleVideo,
   Web:WebScreen,
   Article: { screen: ExternalScreen, path: 'news/:id', },
   Settings:SettingsScreen,

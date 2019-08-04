@@ -56,7 +56,12 @@ export default class BookmarksScreen extends Component {
            </View>)
         }
         else{
-           console.log("222"+JSON.stringify(this.state.data));
+           console.log("222"+this.state.data);
+           if(this.state.data==undefined){
+             return(
+               <View style={{flex:1}}><Text>No Bookmarks</Text></View>
+             )
+           }
             return this.state.data.map((data) => {
               let swipeBtns = [{
                 text: 'Delete',
